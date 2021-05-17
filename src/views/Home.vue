@@ -1,18 +1,20 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+    <a
+      href="https://accounts.spotify.com/authorize?client_id=24bee78ac1814d0889acd52600b8eedb&response_type=code&redirect_uri=http://localhost:8080&scope=user-read-private%20user-read-email&state=34fFs29kd09"
+      >Log in
+    </a>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
 
 export default {
-  name: "Home",
-  components: {
-    HelloWorld,
+  data() {
+    return {
+      redirectURI: "http://localhost:8080/about"
+    };
   },
 };
 </script>
