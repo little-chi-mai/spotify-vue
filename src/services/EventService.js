@@ -13,8 +13,14 @@ const apiClient = axios.create({
 
 export default {
   getUserInfo() {
-    return apiClient.get("/api/user-info");
+    return apiClient.get("/api/user/info");
   },
+  getUserPlaylists() {
+    return apiClient.get("/api/user/playlists")
+  },
+  getPlaylistInfo(id) {
+    return apiClient.get(`/api/playlist/${id}`);
+  }
 
   // getEvent(id) {
   //   return apiClient.get("/events/" + id);

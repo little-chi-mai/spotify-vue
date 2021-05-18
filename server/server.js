@@ -44,16 +44,32 @@ server
   .use(cors())
   .use(cookieParser());
 
-// server.get("/hey", (req, res) => res.send("ho!"));
+// SERVER-SIDE ROUTES ///////////////////////////////
 
-server.get("/api/login", function (req, res) {
+server.get("/api/login", logIn);
+
+server.get("/api/callback", callback);
+
+server.get("/api/user/info", getUserInfo);
+
+server.get("/api/playlist/:id", getPlaylistInfo);
+
+// server.get("/api/user/playlists", getUserPlaylists);
+
+server.listen(port, hostname, () => {
+  console.log(`Server running at http://${hostname}:${port}/`);
+});
+
+// function getAccessToken(req, res) {
+//   res.sendFile(path.join(__dirname, "../dist", "index.html"));
+// }
+
+function logIn(req, res) {
   console.log("SOMEONE WENT TO /api/login");
   const state = generateRandomString(16);
   res.cookie(stateKey, state);
-
   // this app requests authorization
   const scope = "user-read-private user-read-email";
-
   res.redirect(
     "https://accounts.spotify.com/authorize?" +
       querystring.stringify({
@@ -64,23 +80,7 @@ server.get("/api/login", function (req, res) {
         state: state,
       })
   );
-});
-
-// Get an access token and 'save' it using a setter
-
-server.get("/api/callback", callback);
-
-// server.get("/api/access-token", getAccessToken);
-
-server.get("/api/user-info", getUserInfo);
-
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});
-
-// function getAccessToken(req, res) {
-//   res.sendFile(path.join(__dirname, "../dist", "index.html"));
-// }
+}
 
 function callback(req, res) {
   console.log(spotifyApi);
@@ -93,7 +93,6 @@ function callback(req, res) {
       console.log("The token expires in " + data.body["expires_in"]);
       console.log("The access token is " + data.body["access_token"]);
       console.log("The refresh token is " + data.body["refresh_token"]);
-
       // Set the access token on the API object to use it in later calls
       console.log("data.body", data.body);
       spotifyApi.setAccessToken(data.body["access_token"]);
@@ -103,28 +102,37 @@ function callback(req, res) {
       res.redirect("http://localhost:8080/loggedin");
       return spotifyApi.getMe();
     })
-    // .then(function (data) {
-    //   // "Retrieved data for Faruk Sahin"
-    //   console.log("Retrieved data for " + data.body["display_name"]);
-
-    //   // "Email is farukemresahin@gmail.com"
-    //   console.log("Email is " + data.body.email);
-
-    //   // "Image URL is http://media.giphy.com/media/Aab07O5PYOmQ/giphy.gif"
-    //   console.log("Image URL is " + data.body.images[0].url);
-
-    //   // "This user has a premium account"
-    //   console.log("This user has a " + data.body.product + " account");
-    //   res.status(200).json(data.body);
-    // })
     .catch(function (err) {
       console.log("Something went wrong:", err);
     });
 }
 
 function getUserInfo(req, res) {
-  spotifyApi.getMe().then(function(data) {
-    res.status(200).json(data.body);
-  }
+  let result = {};
+  spotifyApi
+    .getMe()
+    .then(function (data) {
+      result.userInfo = data.body;
+      spotifyApi.getUserPlaylists(data.body.id).then(function (data1) {
+        console.log("Retrieved playlists", data1.body);
+        result.userPlaylists = data1.body;
+        res.status(200).json(result);
+      });
+    })
+    .catch(function (err) {
+      console.log("Something went wrong!", err);
+    });
+}
+
+function getPlaylistInfo(req, res) {
+  const id = req.params.id;
+  spotifyApi.getPlaylist(id).then(
+    function (data) {
+      console.log("Some information about this playlist", data.body);
+      res.status(200).json(data.body);
+    },
+    function (err) {
+      console.log("Something went wrong!", err);
+    }
   );
 }

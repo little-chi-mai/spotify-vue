@@ -2,6 +2,8 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import LoggedIn from "../components/LoggedIn.vue";
+import Playlist from "../components/Playlist.vue";
+
 
 Vue.use(VueRouter);
 
@@ -18,6 +20,11 @@ const routes = [
     path: "/loggedin",
     name: "Logged In",
     component: LoggedIn,
+  },
+  {
+    path: "/playlist",
+    name: "Playlist",
+    component: Playlist,
   },
   {
     path: "/",
