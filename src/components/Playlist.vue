@@ -1,32 +1,39 @@
 <template>
-  <div v-if="id">
-    <h1>Playlist coming soon</h1>
+  <div v-if="name">
+    <h1>Playlist name: {{ name }}</h1>
+    <a :href="url" target="_blank"
+      >Click to listen to this playlist on Spotify</a
+    >
+    <div v-for="item in tracks.items" :key="item.track.id">
+      <p>{{ item.track.name }}</p>
+      <a :href="item.track.external_urls.spotify" target="_blank">
+        <img :src="item.track.album.images[2].url" @hover="playMusic" alt="" />
+      </a>
+      <audio controls>
+        <source :src="item.track.preview_url" type="audio/mpeg" />
+        <!-- <source src="horse.mp3" type="audio/mpeg"> -->
+        Your browser does not support the audio element.
+      </audio>
+    </div>
+
+    <!-- <p>{{ track.track.name }}</p> -->
   </div>
 </template>
 
 <script>
-import EventService from "@/services/EventService.js";
+// import EventService from "@/services/EventService.js";
 
 export default {
   props: {
-    id: String,
+    name: String,
+    tracks: Object,
+    url: String,
   },
   data() {
-    return {
-      playlistInfo: {},
-    };
+    return {};
   },
-  mounted() {
-    EventService.getPlaylistInfo(this.id)
-      .then((response) => {
-        // this.events = response.data;
-        console.log(response.data);
-        // this.userInfo = response.data.userInfo;
-        // this.userPlaylists = response.data.userPlaylists;
-      })
-      .catch((error) => {
-        console.log("There was an error:" + error.response);
-      });
+  methods: {
+    playMusic() {},
   },
 };
 </script>

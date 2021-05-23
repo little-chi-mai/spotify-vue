@@ -20,6 +20,12 @@ export default {
   },
   getPlaylistInfo(id) {
     return apiClient.get(`/api/playlist/${id}`);
+  },
+  getRecentPlayedTracks() {
+    return apiClient.get('/api/recenttracks');
+  },
+  uploadImage() {
+    return apiClient.get('/api/user/uploadimage');
   }
 
   // getEvent(id) {

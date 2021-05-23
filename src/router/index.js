@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import LoggedIn from "../components/LoggedIn.vue";
 import Playlist from "../components/Playlist.vue";
+import UploadImage from "../components/UploadImage.vue";
 
 
 Vue.use(VueRouter);
@@ -25,6 +26,11 @@ const routes = [
     path: "/playlist",
     name: "Playlist",
     component: Playlist,
+  },
+  {
+    path: "/uploadimage",
+    name: "UploadImage",
+    component: UploadImage,
   },
   {
     path: "/",
