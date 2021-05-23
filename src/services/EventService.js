@@ -11,24 +11,30 @@ const apiClient = axios.create({
   },
 });
 
+// const adobeAPI = axios.create({
+//   baseURL: "https://image.adobe.io/sensei/cutout ",
+//   headers: {
+//     Authorization: "Bearer",
+//   },
+// });
+
 export default {
   getUserInfo() {
     return apiClient.get("/api/user/info");
   },
   getUserPlaylists() {
-    return apiClient.get("/api/user/playlists")
+    return apiClient.get("/api/user/playlists");
   },
   getPlaylistInfo(id) {
     return apiClient.get(`/api/playlist/${id}`);
   },
   getRecentPlayedTracks() {
-    return apiClient.get('/api/recenttracks');
+    return apiClient.get("/api/recenttracks");
   },
   uploadImage() {
-    return apiClient.get('/api/user/uploadimage');
+    return apiClient.get("/api/user/uploadimage");
+  },
+  getArtistTracks(id) {
+    return apiClient.get(`/api/tracks/artist/${id}`);
   }
-
-  // getEvent(id) {
-  //   return apiClient.get("/events/" + id);
-  // },
 };

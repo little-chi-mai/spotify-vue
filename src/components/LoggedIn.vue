@@ -22,6 +22,7 @@
     <Playlist :tracks="tracks" :name="name" :url="url" />
 
     <RecentPlayedTracks />
+    
   </div>
 </template>
 

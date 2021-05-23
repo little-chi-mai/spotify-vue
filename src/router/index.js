@@ -4,7 +4,8 @@ import Home from "../views/Home.vue";
 import LoggedIn from "../components/LoggedIn.vue";
 import Playlist from "../components/Playlist.vue";
 import UploadImage from "../components/UploadImage.vue";
-
+import CloudinaryVue from "cloudinary-vue";
+import { Cloudinary as CloudinaryCore } from "cloudinary-core";
 
 Vue.use(VueRouter);
 
@@ -45,4 +46,12 @@ const router = new VueRouter({
   routes,
 });
 
+// all Cloudinary components:
+Vue.use(CloudinaryVue, {
+  configuration: { cloudName: "mai-boo" },
+});
+
+const cloudinary = new CloudinaryCore({ cloud_name: "mai-boo", secure: true });
+
+export { cloudinary };
 export default router;

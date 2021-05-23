@@ -58,6 +58,8 @@ server.get("/api/recenttracks", getRecentPlayedTracks);
 
 server.get("/api/user/uploadimage", uploadImage);
 
+server.get("/api/tracks/artist/:id", getArtistTracks);
+
 // server.get("/api/user/playlists", getUserPlaylists);
 
 server.listen(port, hostname, () => {
@@ -161,6 +163,22 @@ function getRecentPlayedTracks(req, res) {
         console.log("Something went wrong!", err);
       }
     );
+}
+
+function getArtistTracks(req, res) {
+  // spotifyApi.scope = "user-read-recently-played";
+  const id = req.params.id;
+  console.log("spotifyApi", spotifyApi);
+
+  spotifyApi.getArtistTopTracks(id, "AU").then(
+    function (data) {
+      console.log(data.body);
+      res.status(200).json(data.body.tracks);
+    },
+    function (err) {
+      console.log("Something went wrong!", err);
+    }
+  );
 }
 
 function uploadImage(req, res) {}
