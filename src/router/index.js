@@ -1,11 +1,13 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
+import CloudinaryVue from "cloudinary-vue";
+import { Cloudinary as CloudinaryCore } from "cloudinary-core";
+
 import Home from "../views/Home.vue";
 import LoggedIn from "../components/LoggedIn.vue";
 import Playlist from "../components/Playlist.vue";
 import UploadImage from "../components/UploadImage.vue";
-import CloudinaryVue from "cloudinary-vue";
-import { Cloudinary as CloudinaryCore } from "cloudinary-core";
+import Logout from "../components/Logout.vue"
 
 Vue.use(VueRouter);
 
@@ -32,6 +34,11 @@ const routes = [
     path: "/uploadimage",
     name: "UploadImage",
     component: UploadImage,
+  },
+  {
+    path: "/logout",
+    name: "Logout",
+    component: Logout,
   },
   {
     path: "/",

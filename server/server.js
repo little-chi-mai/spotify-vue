@@ -48,6 +48,8 @@ server
 
 server.get("/api/login", logIn);
 
+server.post("/api/logout", logout);
+
 server.get("/api/callback", callback);
 
 server.get("/api/user/info", getUserInfo);
@@ -56,9 +58,11 @@ server.get("/api/playlist/:id", getPlaylistInfo);
 
 server.get("/api/recenttracks", getRecentPlayedTracks);
 
-server.get("/api/user/uploadimage", uploadImage);
+// server.get("/api/user/uploadimage", uploadImage);
 
 server.get("/api/tracks/artist/:id", getArtistTracks);
+
+server.post("/api/playlist/create", createPlaylist);
 
 // server.get("/api/user/playlists", getUserPlaylists);
 
@@ -73,9 +77,11 @@ server.listen(port, hostname, () => {
 function logIn(req, res) {
   console.log("SOMEONE WENT TO /api/login");
   const state = generateRandomString(16);
-  res.cookie(stateKey, state);
+  console.log("COOKIE", state);
+  res.cookie(stateKey, state, { path: "/" });
   // this app requests authorization
-  const scope = "user-read-private user-read-email user-read-recently-played";
+  const scope =
+    "user-read-private user-read-email user-read-recently-played playlist-modify-public playlist-modify-private";
   res.redirect(
     "https://accounts.spotify.com/authorize?" +
       querystring.stringify({
@@ -86,6 +92,14 @@ function logIn(req, res) {
         state: state,
       })
   );
+}
+
+function logout(req, res) {
+  console.log("LOGGING OUT");
+  res.clearCookie(stateKey, { path: "/" });
+  spotifyApi.setAccessToken("");
+
+  res.status(200).json("logged out!");
 }
 
 function callback(req, res) {
@@ -103,9 +117,9 @@ function callback(req, res) {
       console.log("data.body", data.body);
       spotifyApi.setAccessToken(data.body["access_token"]);
       spotifyApi.setRefreshToken(data.body["refresh_token"]);
-      console.log("spotifyApi AFTER REQUIRE", spotifyApi);
+      // console.log("spotifyApi AFTER REQUIRE", spotifyApi);
       // console.log(spotifyApi.getMe());
-      res.redirect("http://localhost:8080/loggedin");
+      res.redirect("http://localhost:8080");
     })
     .catch(function (err) {
       console.log("Something went wrong:", err);
@@ -119,7 +133,7 @@ function getUserInfo(req, res) {
     .then(function (data) {
       result.userInfo = data.body;
       spotifyApi.getUserPlaylists(data.body.id).then(function (data1) {
-        console.log("Retrieved playlists", data1.body);
+        // console.log("Retrieved playlists", data1.body);
         result.userPlaylists = data1.body;
         res.status(200).json(result);
       });
@@ -131,8 +145,8 @@ function getUserInfo(req, res) {
 
 function getPlaylistInfo(req, res) {
   const id = req.params.id;
-  console.log("PLAYLIST ID", id);
-  console.log("spotifyApi", spotifyApi);
+  // console.log("PLAYLIST ID", id);
+  // console.log("spotifyApi", spotifyApi);
   spotifyApi.getPlaylist(id).then(
     function (data) {
       console.log("Some information about this playlist", data.body);
@@ -146,7 +160,7 @@ function getPlaylistInfo(req, res) {
 
 function getRecentPlayedTracks(req, res) {
   spotifyApi.scope = "user-read-recently-played";
-  console.log("spotifyApi", spotifyApi);
+  // console.log("spotifyApi", spotifyApi);
 
   spotifyApi
     .getMyRecentlyPlayedTracks({
@@ -155,7 +169,7 @@ function getRecentPlayedTracks(req, res) {
     .then(
       function (data) {
         // Output items
-        console.log("Your 20 most recently played tracks are:");
+        // console.log("Your 20 most recently played tracks are:");
         data.body.items.forEach((item) => console.log(item.track));
         res.status(200).json(data.body.items);
       },
@@ -181,4 +195,19 @@ function getArtistTracks(req, res) {
   );
 }
 
-function uploadImage(req, res) {}
+function createPlaylist(req, res) {
+  spotifyApi
+    .createPlaylist("My playlist", {
+      description: "My description",
+      public: true,
+    })
+    .then(
+      function (data) {
+        console.log("DATA", data);
+        console.log("Created playlist!");
+      },
+      function (err) {
+        console.log("Something went wrong!", err);
+      }
+    );
+}

@@ -22,6 +22,9 @@ export default {
   getUserInfo() {
     return apiClient.get("/api/user/info");
   },
+  logout() {
+    return apiClient.post("/api/logout");
+  },
   getUserPlaylists() {
     return apiClient.get("/api/user/playlists");
   },
@@ -36,5 +39,8 @@ export default {
   },
   getArtistTracks(id) {
     return apiClient.get(`/api/tracks/artist/${id}`);
+  },
+  createPlaylist() {
+    return apiClient.post('/api/playlist/create')
   }
 };

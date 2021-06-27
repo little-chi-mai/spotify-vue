@@ -2,6 +2,8 @@ body {
   background-color: #080808; }
 
 * {
+  box-sizing: border-box;
   color: whitesmoke; }
-  * a img {
-    cursor: pointer; }
+
+a img {
+  cursor: pointer; }
