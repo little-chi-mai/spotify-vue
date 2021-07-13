@@ -41,6 +41,7 @@ img {
 
 .intro {
   display: flex;
+
   justify-content: center;
 }
 

@@ -38,9 +38,22 @@ export default {
     return apiClient.get("/api/user/uploadimage");
   },
   getArtistTracks(id) {
-    return apiClient.get(`/api/tracks/artist/${id}`);
+    return apiClient.get(`/api/artist/${id}/tracks`);
+  },
+  getArtistInfo(id) {
+    return apiClient.get(`/api/artist/${id}/info`);
+  },
+  getArtistAlbums(id) {
+    return apiClient.get(`/api/artist/${id}/albums`);
   },
   createPlaylist() {
-    return apiClient.post('/api/playlist/create')
-  }
+    return apiClient.post('/api/playlist/create');
+  },
+  getAlbum(id) {
+    return apiClient.get(`/api/album/${id}`);
+  },
+  getTopTracks() {
+    return apiClient.get(`/api/toptracks`);
+  },
+
 };

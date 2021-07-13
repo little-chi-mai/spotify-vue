@@ -8,14 +8,12 @@
         <p>Email: {{ userInfo.email }}</p>
       </div>
     </div>
-    
-    
 
     <h2>Your playlists</h2>
     <button @click="createPlaylist">Create playlist</button>
 
-    <div v-for="playlist in userPlaylists.items" :key="playlist.id">
-      <p>{{ playlist.name }}</p>
+    <div class="list-info" v-for="playlist in userPlaylists.items" :key="playlist.id">
+      <h3>{{ playlist.name }}</h3>
 
       <img
         class="playlist"
@@ -24,13 +22,27 @@
         alt=""
         @click="getPlaylistInfo(playlist.id)"
       />
+
+      <img
+        class="playlist"
+        v-if="!playlist.images[0]"
+        src="../assets/album.png"
+        alt=""
+        @click="getPlaylistInfo(playlist.id)"
+      />
     </div>
 
     <Playlist :tracks="tracks" :name="name" :url="url" />
-    <iframe v-if="playlistId" :src="'https://open.spotify.com/embed/playlist/' + playlistId" height="380" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe>
+    <iframe
+      v-if="playlistId"
+      :src="'https://open.spotify.com/embed/playlist/' + playlistId"
+      height="380"
+      frameBorder="0"
+      allowtransparency="true"
+      allow="encrypted-media"
+    ></iframe>
 
     <RecentPlayedTracks />
-    
   </div>
 </template>
 
@@ -42,7 +54,7 @@ import RecentPlayedTracks from "@/components/RecentPlayedTracks.vue";
 export default {
   components: {
     Playlist,
-    RecentPlayedTracks
+    RecentPlayedTracks,
   },
   data() {
     return {
@@ -52,13 +64,11 @@ export default {
       tracks: {},
       name: "",
       url: "",
-      playlistId: ""
+      playlistId: "",
       // image: this.user.images[0].url
     };
   },
-  created() {
-    
-  },
+  created() {},
   methods: {
     getPlaylistInfo(id) {
       EventService.getPlaylistInfo(id)
@@ -68,7 +78,7 @@ export default {
           this.tracks = response.data.tracks;
           this.name = response.data.name;
           this.url = response.data.external_urls.spotify;
-          this.playlistId = response.data.id
+          this.playlistId = response.data.id;
           // this.userInfo = response.data.userInfo;
           // this.userPlaylists = response.data.userPlaylists;
         })
@@ -77,14 +87,18 @@ export default {
         });
     },
     createPlaylist() {
-      EventService.createPlaylist()
-    }
-   
-  }
+      EventService.createPlaylist();
+    },
+  },
 };
 </script>
 
 <style scoped>
+
+/* .list-info {
+  display: flex;
+} */
+
 .playlist {
   height: 10rem;
 }

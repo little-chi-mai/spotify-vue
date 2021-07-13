@@ -13,7 +13,7 @@ export default {
     EventService.logout().then(() => {
       // this.$store.state.userInfo = {};
       this.$store.commit("setUserInfo", {});
-      this.$store.commit("isLoggedIn", false);
+      this.$store.commit("setIsLoggedIn", false);
       this.$router.push("/");
     });
   },

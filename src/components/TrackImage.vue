@@ -1,0 +1,81 @@
+<template>
+  <img
+    v-if="image || track.album.images"
+    class="image"
+    :src="imageUrl"
+    alt=""
+    :style="styleObj"
+    @click="showTrackAndArtistInfo"
+    @mouseover="setTrackHovered(track, true, imageUrl)"
+    @mouseleave="setTrackHovered({}, false, '')"
+  />
+</template>
+
+<script>
+import EventService from "@/services/EventService";
+
+export default {
+  data() {
+    return {
+      styleObj: {
+        height: this.$attrs.size ? this.$attrs.size + "px" : 70 + "px",
+      },
+    };
+  },
+  props: ["track", "image", "album"],
+  computed: {
+    imageUrl: {
+      get() {
+        return this.track.album ? this.track.album.images[0].url : this.image;
+      },
+      set(val) {
+        this.imageUrl = val;
+      }
+      
+    },
+  },
+  methods: {
+    setTrackHovered(track, isMusicPlayed, imageUrl) {
+      this.$store.commit("setTrackHovered", track);
+      this.$store.commit("setIsMusicPlayed", isMusicPlayed);
+      this.$store.commit("setImageHovered", imageUrl);
+    },
+    showTrackAndArtistInfo() {
+      console.log("CLICKED");
+      this.$store.commit("setTrackClicked", this.track.album ? this.track : {...this.track, album: {...this.album}});
+      const artistIds = [];
+      this.track.artists.forEach((artist) => {
+        artistIds.push(artist.id);
+      });
+      this.$store.commit("setArtistIds", artistIds);
+      EventService.getArtistTracks(this.track.artists[0].id).then((response) => {
+        console.log(response);
+      });
+    },
+  },
+  watch: {
+    track: function (newTrack, oldVal) {
+      // watch it
+      console.log("Prop TRACK changed: ", newTrack, " | was: ", oldVal);
+      // this.imageUrl = newTrack.album ? newTrack.album.images[0].url : this.$store.state.albumClicked.images[0].url;
+    },
+    album: function (newVal, oldVal) {
+      // watch it
+      console.log("Prop ALBUM changed: ", newVal, " | was: ", oldVal);
+    },
+  },
+};
+</script>
+
+<style scoped>
+.image {
+  display: inline-block !important;
+  transition: all 0.1s ease-in-out;
+  border: 3px solid transparent;
+}
+
+.image:hover {
+  border: 3px solid rgb(206, 122, 168);
+  transform: scale(1.07);
+}
+</style>

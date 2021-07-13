@@ -17,7 +17,7 @@
       </video>
     </div>
 
-    <LoggedIn v-if="isLoggedIn" :userPlaylists="userPlaylists" />
+    <LoggedIn v-else="" :userPlaylists="userPlaylists" />
   </div>
 </template>
 
@@ -27,7 +27,6 @@ import LoggedIn from "@/components/LoggedIn";
 import EventService from "@/services/EventService";
 import Introduction from "@/components/Introduction";
 
-
 export default {
   components: {
     LoggedIn,
@@ -36,51 +35,35 @@ export default {
   data() {
     return {
       name: "",
-      // isLoggedIn: false,
       userInfo: {},
       userPlaylists: {},
     };
   },
   mounted() {
-    console.log("this.$store.state.userInfo", this.$store.state.userInfo);
-    console.log("userInfo", this.userInfo);
     this.userInfo = this.$store.state.userInfo;
-    this.isLoggedIn = this.$store.state.isLoggedIn;
     EventService.getUserInfo()
       .then((response) => {
         // this.events = response.data;
         console.log(response.data);
         this.userInfo = response.data.userInfo;
         this.userPlaylists = response.data.userPlaylists;
-        console.log("TRYING TO setuserinfo");
         this.setUserInfo();
-        // this.$store.state.commit("userInfo", response.data.userInfo);
-        console.log("TRYING TO COMMIT");
       })
       .catch((error) => {
-        console.log("There was an error:" + error.response);
+        console.log("There was an error at Home: " + error.response);
       });
   },
   created() {
     console.log(this.$route.params.code);
   },
   computed: {
-    isLoggedIn: function () {
-      return Object.keys(this.userInfo).length !== 0;
-    },
-  },
-  watch: {
-    // userInfo(newInfo) {
-    //   console.log("userInfo has changed");
-    //   this.userInfo = newInfo;
-    //   this.isLoggedIn = true;
-    //   console.log("this.$store.state.userInfo", this.$store.state.userInfo);
-    // },
+     isLoggedIn() {
+          return this.$store.state.isLoggedIn
+   }
   },
   methods: {
     setUserInfo() {
       this.$store.commit("setUserInfo", this.userInfo);
-      console.log("this.$store.state.userInfo", this.$store.state.userInfo);
     },
   },
 };
