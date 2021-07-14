@@ -8,7 +8,7 @@
     <div v-if="Object.keys(this.$store.state.trackHovered).length !== 0">
       <TrackPreview />
     </div>
-    
+
     <div v-if="Object.keys(this.$store.state.albumHovered).length !== 0">
       <AlbumPreview />
     </div>
@@ -35,8 +35,8 @@ export default {
 
 .track-preview {
   position: fixed;
-  top: 10rem;
-  right: 10rem;
+  top: 10vh;
+  left: 65vw;
   background-color: rgba(66, 66, 66, 0.26);
 }
 

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="Object.keys(album).length !== 0" class="album">
+  <div v-if="Object.keys(album).length !== 0" class="album block">
     <AlbumImage :album="album" :size="270" />
     <h2>{{ album.name }}</h2>
     <p>Released {{ album.release_date }}</p>

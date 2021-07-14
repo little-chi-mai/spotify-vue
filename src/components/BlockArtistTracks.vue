@@ -1,5 +1,5 @@
 <template>
-  <div class="artist-tracks" v-if="artistId">
+  <div class="artist-tracks block" v-if="artistId">
     <img class="artist-image" :src="artistImage" alt="" />
     <h2>{{ artistName }}</h2>
     <p>{{ genres }}</p>

@@ -17,13 +17,13 @@
       </video>
     </div>
 
-    <LoggedIn v-else="" :userPlaylists="userPlaylists" />
+    <LoggedIn v-else="" />
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import LoggedIn from "@/components/LoggedIn";
+import LoggedIn from "@/views/LoggedIn";
 import EventService from "@/services/EventService";
 import Introduction from "@/components/Introduction";
 
@@ -36,17 +36,14 @@ export default {
     return {
       name: "",
       userInfo: {},
-      userPlaylists: {},
     };
   },
   mounted() {
     this.userInfo = this.$store.state.userInfo;
     EventService.getUserInfo()
       .then((response) => {
-        // this.events = response.data;
         console.log(response.data);
         this.userInfo = response.data.userInfo;
-        this.userPlaylists = response.data.userPlaylists;
         this.setUserInfo();
       })
       .catch((error) => {

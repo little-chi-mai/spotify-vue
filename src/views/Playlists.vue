@@ -1,18 +1,13 @@
 <template>
-  <div>
-    <h1>Welcome to Vue Spotify</h1>
-    <div class="user-info">
-      <img v-if="userInfo.images" :src="userInfo.images[0].url" alt="" />
-      <div class="user-info__account">
-        <p>Account name: {{ userInfo.display_name }}</p>
-        <p>Email: {{ userInfo.email }}</p>
-      </div>
-    </div>
-
-    <h2>Your playlists</h2>
+  <div v-if="userId" class="about">
+    <h1>Your playlists</h1>
     <button @click="createPlaylist">Create playlist</button>
 
-    <div class="list-info" v-for="playlist in userPlaylists.items" :key="playlist.id">
+    <div
+      class="list-info"
+      v-for="playlist in userPlaylists.items"
+      :key="playlist.id"
+    >
       <h3>{{ playlist.name }}</h3>
 
       <img
@@ -41,34 +36,47 @@
       allowtransparency="true"
       allow="encrypted-media"
     ></iframe>
-
-    <RecentPlayedTracks />
   </div>
 </template>
 
 <script>
-import EventService from "@/services/EventService.js";
+// import UserInfo from "@/components/UserInfo.vue";
+import EventService from "@/services/EventService";
 import Playlist from "@/components/Playlist.vue";
-import RecentPlayedTracks from "@/components/RecentPlayedTracks.vue";
 
 export default {
   components: {
+    // UserInfo,
     Playlist,
-    RecentPlayedTracks,
   },
   data() {
     return {
-      userInfo: this.$store.state.userInfo,
-      userPlaylists: this.$attrs.userPlaylists,
+      userPlaylists: {},
       playlistChosen: "",
       tracks: {},
       name: "",
       url: "",
       playlistId: "",
-      // image: this.user.images[0].url
     };
   },
-  created() {},
+  computed: {
+    userId() {
+      return this.$store.state.userInfo.id;
+    } 
+  },
+  mounted() {
+    // this.userInfo = this.$store.state.userInfo;
+    EventService.getUserPlaylists(this.userId)
+      .then((response) => {
+        // this.events = response.data;
+        console.log(response.data);
+        // this.userInfo = response.data.userInfo;
+        this.userPlaylists = response.data;
+      })
+      .catch((error) => {
+        console.log("There was an error at Home: " + error.response);
+      });
+  },
   methods: {
     getPlaylistInfo(id) {
       EventService.getPlaylistInfo(id)
@@ -94,22 +102,7 @@ export default {
 </script>
 
 <style scoped>
-
-/* .list-info {
-  display: flex;
-} */
-
 .playlist {
   height: 10rem;
-}
-
-.user-info {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.user-info > * {
-  margin: 3rem;
 }
 </style>

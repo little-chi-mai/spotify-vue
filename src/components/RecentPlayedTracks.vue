@@ -1,8 +1,7 @@
 <template>
-  <div>
-    <h1>Recent played tracks</h1>
-    <button @click="getTracks">Get recent tracks</button>
-    <div class="recent-tracks">
+  <div class="recent-played">
+    <button @click="getTracks">Your recent tracks</button>
+    <div class="recent-tracks block">
       <span v-for="track in tracks" :key="track.played_at">
         <TrackImage :track="track.track" />
       </span>
@@ -19,11 +18,6 @@
 
     <BlockAlbumInfo />
 
-    <!-- <div v-for="arrays in artistTracks" :key="artistTracks.indexOf(arrays)">
-      <span v-for="track in arrays" :key="track.disc_number * Math.random()">
-        <TrackImage :track="track" />
-      </span>
-    </div> -->
   </div>
 </template>
 
@@ -89,8 +83,24 @@ export default {
 </script>
 
 <style scoped>
+.recent-played {
+  padding: 2rem 0;
+}
 .recent-tracks {
   background-color: white;
   margin-bottom: 1rem;
+  width: 60vw;
+}
+
+button {
+  color: rgb(46, 46, 46);
+  border-radius: 10px;
+  margin: 2rem 0;
+}
+
+button:hover {
+  color: whitesmoke;
+  background-color: rgb(173, 88, 124);
+  
 }
 </style>

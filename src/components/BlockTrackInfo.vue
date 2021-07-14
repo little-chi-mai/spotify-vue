@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper" v-if="Object.keys(track).length !== 0">
+  <div class="block wrapper" v-if="Object.keys(track).length !== 0">
     <TrackImage :track="track" :size="200" />
     <div class="info">
       <h2>{{ name }}</h2>

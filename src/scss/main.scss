@@ -4,11 +4,18 @@ body {
 
 * {
   box-sizing: border-box;
-  // margin: 0;
-  // padding: 0;
+  margin: 0;
+  padding: 0;
   color: whitesmoke;
 }
 
 a img {
   cursor: pointer;
+}
+
+.block {
+  background-color: white;
+  margin-bottom: 1rem;
+  width: 60vw;
+  margin-left: 2rem;
 }

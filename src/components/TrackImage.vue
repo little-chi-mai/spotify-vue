@@ -30,8 +30,7 @@ export default {
       },
       set(val) {
         this.imageUrl = val;
-      }
-      
+      },
     },
   },
   methods: {
@@ -42,24 +41,53 @@ export default {
     },
     showTrackAndArtistInfo() {
       console.log("CLICKED");
-      this.$store.commit("setTrackClicked", this.track.album ? this.track : {...this.track, album: {...this.album}});
+
+      let trackClicked = this.track.album
+        ? this.track
+        : { ...this.track, album: { ...this.album } };
+      let savedTracks = JSON.parse(localStorage.getItem("savedTracks"))
+        ? JSON.parse(localStorage.getItem("savedTracks"))
+        : [];
+      this.pushUnique(savedTracks, trackClicked);
+
+      localStorage.savedTracks = JSON.stringify(savedTracks);
+
+      // update saved track counter
+      this.$store.commit("setSavedTracks");
+
+      this.$store.commit("setTrackClicked", trackClicked);
       const artistIds = [];
       this.track.artists.forEach((artist) => {
         artistIds.push(artist.id);
       });
       this.$store.commit("setArtistIds", artistIds);
-      EventService.getArtistTracks(this.track.artists[0].id).then((response) => {
-        console.log(response);
+      EventService.getArtistTracks(this.track.artists[0].id).then(
+        (response) => {
+          console.log(response);
+        }
+      );
+    },
+    pushUnique(savedTracks, trackClicked) {
+      let isUnique = true;
+      let newTrackArray = savedTracks;
+      savedTracks.map((track) => {
+        if (track.id === trackClicked.id) {
+          isUnique = false;
+        }
       });
+      if (isUnique) {
+        newTrackArray.push(trackClicked)
+      }
+      return newTrackArray
     },
   },
   watch: {
-    track: function (newTrack, oldVal) {
+    track(newTrack, oldVal) {
       // watch it
       console.log("Prop TRACK changed: ", newTrack, " | was: ", oldVal);
       // this.imageUrl = newTrack.album ? newTrack.album.images[0].url : this.$store.state.albumClicked.images[0].url;
     },
-    album: function (newVal, oldVal) {
+    album(newVal, oldVal) {
       // watch it
       console.log("Prop ALBUM changed: ", newVal, " | was: ", oldVal);
     },

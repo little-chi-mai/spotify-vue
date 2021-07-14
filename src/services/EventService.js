@@ -25,8 +25,8 @@ export default {
   logout() {
     return apiClient.post("/api/logout");
   },
-  getUserPlaylists() {
-    return apiClient.get("/api/user/playlists");
+  getUserPlaylists(id) {
+    return apiClient.get(`/api/user/${id}/playlists`);
   },
   getPlaylistInfo(id) {
     return apiClient.get(`/api/playlist/${id}`);

@@ -16,6 +16,8 @@ export default new Vuex.Store({
     trackClicked: {},
     albumClicked: {},
     artistIds: [],
+    // savedTrackCounter: JSON.parse(localStorage.getItem("savedTracks")).length,
+    savedTracks: JSON.parse(localStorage.getItem("savedTracks"))
   },
   mutations: {
     setUserInfo(state, payload) {
@@ -53,6 +55,12 @@ export default new Vuex.Store({
     },
     setAlbumHovered(state, payload) {
       state.albumHovered = payload
+    },
+    // setSavedTrackCounter(state) {
+    //   state.savedTrackCounter = JSON.parse(localStorage.getItem("savedTracks")).length;
+    // },
+    setSavedTracks(state) {
+      state.savedTracks = JSON.parse(localStorage.getItem("savedTracks"));
     }
   },
   actions: {
@@ -65,22 +73,14 @@ export default new Vuex.Store({
       context.commit("setAlbumHovered", payload.album);
       context.commit("setIsMusicPlayed", payload.isMusicPlayed);
       context.commit("setImageHovered", payload.imageUrl);
-    },
+    }
   },
-  modules: {},
-  // getters: {
-  //   getImageChosen() {
-  //     return this.$store.state.trackHovered.album.images[1].url;
-  //   }
-  // },
   computed: {
     isLoggedIn() {
-      // get: function () {
-          return this.$store.state.isLoggedIn
-      //  },
-      // set: function (val) {
-      //     this.$store.commit("setIsLoggedIn", val)
-      // }
+      return this.$store.state.isLoggedIn
+    },
+    savedTrackCounter() {
+      return JSON.parse(localStorage.getItem("savedTracks")).length;
     }
   }
 });
