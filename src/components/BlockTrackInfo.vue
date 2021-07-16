@@ -22,10 +22,7 @@ export default {
         return this.$store.state.trackClicked;
       },
       set() {
-        console.log("SET SOMETHING", this.track);
-
         this.$store.commit("setTrackClicked", this.track);
-        console.log("SET SUCCESSFUL");
       },
     },
     name() {

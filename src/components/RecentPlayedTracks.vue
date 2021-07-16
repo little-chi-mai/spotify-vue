@@ -1,11 +1,11 @@
 <template>
   <div class="recent-played">
-    <button @click="getTracks">Your recent tracks</button>
+    <button @click="getTracks" class="btn">Your recent tracks</button>
     <div class="recent-tracks block">
       <span v-for="track in tracks" :key="track.played_at">
         <TrackImage :track="track.track" />
       </span>
-      <!-- @click="getArtistTracks(track.track.artists[0].id)" -->
+      <!-- @click="getArtistTopTracks(track.track.artists[0].id)" -->
     </div>
 
     <BlockPreview />
@@ -48,7 +48,6 @@ export default {
     getTracks() {
       EventService.getRecentPlayedTracks()
         .then((response) => {
-          console.log(response.data);
           this.tracks = response.data;
           this.getImages();
         })
@@ -63,8 +62,8 @@ export default {
         this.images.push(imageUrl);
       });
     },
-    getArtistTracks(id) {
-      EventService.getArtistTracks(id)
+    getArtistTopTracks(id) {
+      EventService.getArtistTopTracks(id)
         .then((response) => {
           console.log(response.data);
           this.artistTracks = [...this.artistTracks, ...[response.data]];

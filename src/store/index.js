@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-// import EventService from "@/services/EventService.js";
+import EventService from "@/services/EventService.js";
 
 Vue.use(Vuex);
 Vue.config.devtools = true;
@@ -11,13 +11,17 @@ export default new Vuex.Store({
     isLoggedIn: false,
     trackHovered: {},
     albumHovered: {},
+    artistHovered: {},
+    artistHoveredTopTrack: {},
     isMusicPlayed: false,
-    imageHovered: '',
+    musicUrl: '',
+    imageHovered: "",
     trackClicked: {},
     albumClicked: {},
     artistIds: [],
+    userPlaylists: {},
     // savedTrackCounter: JSON.parse(localStorage.getItem("savedTracks")).length,
-    savedTracks: JSON.parse(localStorage.getItem("savedTracks"))
+    savedTracks: JSON.parse(localStorage.getItem("savedTracks")),
   },
   mutations: {
     setUserInfo(state, payload) {
@@ -41,27 +45,43 @@ export default new Vuex.Store({
     setIsMusicPlayed(state, payload) {
       state.isMusicPlayed = payload;
     },
+    setMusicUrl(state, payload) {
+      state.musicUrl = payload;
+    },
     isLoggedIn(state, payload) {
-      state.isLoggedIn = payload
+      state.isLoggedIn = payload;
     },
     setTrackClicked(state, payload) {
-      state.trackClicked = payload
-    }, 
+      state.trackClicked = payload;
+    },
     setArtistIds(state, payload) {
-      state.artistIds = payload
+      state.artistIds = payload;
     },
     setAlbumClicked(state, payload) {
-      state.albumClicked = payload
+      state.albumClicked = payload;
     },
     setAlbumHovered(state, payload) {
-      state.albumHovered = payload
+      state.albumHovered = payload;
     },
-    // setSavedTrackCounter(state) {
-    //   state.savedTrackCounter = JSON.parse(localStorage.getItem("savedTracks")).length;
-    // },
+    setArtistHovered(state, payload) {
+      state.artistHovered = payload;
+    },
+    setArtistHoveredTopTrack(state, payload) {
+      state.artistHoveredTopTrack = payload;
+    },
     setSavedTracks(state) {
       state.savedTracks = JSON.parse(localStorage.getItem("savedTracks"));
-    }
+    },
+    setUserPlaylists(state, payload) {
+      state.userPlaylists = payload;
+    },
+    updateUserPlaylists(state) {
+      EventService
+        .getUserPlaylists(state.userInfo.id)
+        .then(response => {
+          state.userPlaylists = response.data
+      });
+    },
   },
   actions: {
     setTrackHovered(context, payload) {
@@ -73,14 +93,14 @@ export default new Vuex.Store({
       context.commit("setAlbumHovered", payload.album);
       context.commit("setIsMusicPlayed", payload.isMusicPlayed);
       context.commit("setImageHovered", payload.imageUrl);
-    }
+    },
   },
   computed: {
     isLoggedIn() {
-      return this.$store.state.isLoggedIn
+      return this.$store.state.isLoggedIn;
     },
     savedTrackCounter() {
       return JSON.parse(localStorage.getItem("savedTracks")).length;
-    }
-  }
+    },
+  },
 });

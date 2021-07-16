@@ -4,41 +4,83 @@
       {{ savedTrackCounter }}
     </h3>
 
-    <div v-if="isListShown">
+    <div v-if="isListShown" class="list">
+      <label for="playlists">Choose from your playlists: </label>
+      <select
+        name="playlists"
+        id="playlists"
+        v-model="list"
+        @change="onChange"
+      >
+        <option
+          v-for="playlist in userPlaylists.items"
+          :key="playlist.id"
+          :value="playlist.id"
+        >
+          {{ playlist.name }}
+        </option>
+      </select>
+
+      <button 
+        class="btn"
+        @click="addToList"
+      >
+        Add tracks to this list
+      </button>
+
+      <div v-if="isNotiShown" class="noti">
+        <p>Successful added to playlist!</p>
+      </div>
+
       <div class="track" v-for="track in savedTracks" :key="track.id">
         <img :src="track.album.images[0].url" alt="" />
         <div class="track-info">
-            <h4>{{ track.name }}</h4>
-            <p class="artist-name">
-              {{ trackArtists(track.artists) }}
-            </p>
+          <h4>{{ track.name }}</h4>
+          <p class="artist-name">
+            {{ trackArtists(track.artists) }}
+          </p>
         </div>
-        <button @click="removeTrack(track.id)">X</button>
+        <button class="delete-btn" @click="removeTrack(track.id)">X</button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import EventService from "@/services/EventService";
 export default {
   data() {
     return {
       isListShown: false,
+      list: "",
+      isNotiShown: false
     };
   },
   computed: {
     savedTrackCounter() {
-      return this.$store.state.savedTracks 
-              ? this.$store.state.savedTracks.length 
-              : 0;
+      return this.$store.state.savedTracks
+        ? this.$store.state.savedTracks.length
+        : 0;
     },
     savedTracks() {
       return this.$store.state.savedTracks;
     },
+    userPlaylists() {
+      return this.$store.state.userPlaylists;
+    },
+    trackIdArray() {
+      return this.savedTracks.map(track => track.id);
+    }
   },
   methods: {
     showList() {
       this.isListShown = !this.isListShown;
+      this.$store.commit("updateUserPlaylists");
+       EventService
+        .getUserPlaylists(this.$store.state.userInfo.id)
+        .then(response => {
+          this.list = response.data.items[0].id
+      });
     },
     trackArtists(array) {
       return array.map((artist) => artist.name).join(" & ");
@@ -46,20 +88,42 @@ export default {
     removeTrack(trackId) {
       console.log("trying to remove");
       let newTracks = [];
-      this.savedTracks.map(track => {
+      this.savedTracks.map((track) => {
         if (track.id !== trackId) {
           newTracks.push(track);
         }
-      })
-      console.log('newTracks', newTracks);
+      });
+      console.log("newTracks", newTracks);
       localStorage.savedTracks = JSON.stringify(newTracks);
       this.$store.commit("setSavedTracks");
+    },
+    onChange(e) {
+      console.log(e.target.value);
+      this.list = e.target.value;
+    },
+    addToList() {
+      let stringList = JSON.stringify(this.trackIdArray)
+      console.log("STRING LIST", stringList);
+      EventService
+        .addTracksToPlaylist(this.list, stringList)
+        .then(response => {
+          console.log('add to list', response);
+          this.isNotiShown = true;
+          setTimeout(() => {
+            this.isNotiShown = false
+          }, 2000)
+        })
+      
     }
   },
 };
 </script>
 
 <style scoped>
+.list {
+  position: relative;
+}
+
 .saved-track {
   display: flex;
   flex-direction: column;
@@ -98,7 +162,13 @@ img {
   text-align: left;
 }
 
-button {
+/* .add-tracks-btn {
+  background-color: pink;
+  color: rgb(39, 39, 39);
+  padding: 0.5rem;
+} */
+
+.delete-btn {
   height: 1.5rem;
   width: 1.5rem;
   background-color: rgba(82, 82, 82, 0.562);
@@ -111,7 +181,18 @@ button {
   cursor: pointer;
 }
 
-button:hover {
+.delete-btn:hover {
   background-color: rgba(255, 203, 168, 0.562);
+}
+
+select {
+  background-color: rgb(133, 84, 92);
+}
+
+.noti {
+  position: absolute;
+  top: 5rem;
+  left: 5rem;
+  background-color: rgba(192, 103, 155, 0.664);
 }
 </style>

@@ -8,6 +8,7 @@
         <p>{{ userInfo.email }}</p>
       </div>
     </div>
+    <!-- <iframe class="player" src="https://open.spotify.com/embed/track/2BzDh1kitD9Zliv03YtKtL" width="100%" height="380" frameBorder="0" allowtransparency="true" allow="encrypted-media"></iframe> -->
     <SavedTracks />
     <RecentPlayedTracks />
   </div>
@@ -32,10 +33,17 @@ export default {
     //   return JSON.parse(localStorage.getItem("savedTracks")).length;
     // },
   },
+  // mounted() {
+  //   this.$store.commit('updateUserPlaylists');
+  // }
 };
 </script>
 
 <style scoped>
+/* .player {
+  display: none;
+} */
+
 .user-info {
   display: flex;
   flex-wrap: wrap;

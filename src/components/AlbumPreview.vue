@@ -8,6 +8,7 @@
     <h3>{{ albumHovered.name }}</h3>
     <p>{{ artistsAlbum.join(' & ')}}</p>
     <h5>First track in the album: </h5>
+    <p>{{trackName}}</p>
     <p>{{artistsTrack.join(' & ')}}</p>
   </div>
 </template>
@@ -40,6 +41,9 @@ export default {
         return artist.name
       });
       return artists;
+    },
+    trackName() {
+      return this.albumHovered.tracks.items[0].name
     }
   },
 };

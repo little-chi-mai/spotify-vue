@@ -15,3 +15,9 @@ a img {
   margin-bottom: 1rem;
   width: 60vw;
   margin-left: 2rem; }
+
+.btn {
+  background-color: #ff869c;
+  width: 10rem;
+  height: 3rem;
+  border-radius: 3rem; }

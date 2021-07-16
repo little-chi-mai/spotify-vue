@@ -35,11 +35,11 @@ export default {
     },
     setAlbumHovered(album, isPlayed, imageUrl) {
       // console.log(arguments);
-      console.log("DISPATCHING", {
-        album: album,
-        isPlayed: isPlayed,
-        imageUrl: imageUrl,
-      });
+      // console.log("DISPATCHING", {
+      //   album: album,
+      //   isPlayed: isPlayed,
+      //   imageUrl: imageUrl,
+      // });
       this.$store.dispatch("setAlbumHovered", {
         album: album,
         isMusicPlayed: isPlayed,
@@ -47,7 +47,6 @@ export default {
       });
     },
   },
-  watch: {},
 };
 </script>
 

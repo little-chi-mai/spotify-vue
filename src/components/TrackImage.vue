@@ -61,7 +61,7 @@ export default {
         artistIds.push(artist.id);
       });
       this.$store.commit("setArtistIds", artistIds);
-      EventService.getArtistTracks(this.track.artists[0].id).then(
+      EventService.getArtistTopTracks(this.track.artists[0].id).then(
         (response) => {
           console.log(response);
         }

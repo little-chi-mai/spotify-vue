@@ -40,18 +40,15 @@
 </template>
 
 <script>
-// import UserInfo from "@/components/UserInfo.vue";
 import EventService from "@/services/EventService";
 import Playlist from "@/components/Playlist.vue";
 
 export default {
   components: {
-    // UserInfo,
     Playlist,
   },
   data() {
     return {
-      userPlaylists: {},
       playlistChosen: "",
       tracks: {},
       name: "",
@@ -62,16 +59,15 @@ export default {
   computed: {
     userId() {
       return this.$store.state.userInfo.id;
-    } 
+    },
+    userPlaylists() {
+      return this.$store.state.userPlaylists
+    }
   },
   mounted() {
-    // this.userInfo = this.$store.state.userInfo;
     EventService.getUserPlaylists(this.userId)
       .then((response) => {
-        // this.events = response.data;
-        console.log(response.data);
-        // this.userInfo = response.data.userInfo;
-        this.userPlaylists = response.data;
+        this.$store.commit('setUserPlaylists', response.data)
       })
       .catch((error) => {
         console.log("There was an error at Home: " + error.response);
@@ -81,14 +77,11 @@ export default {
     getPlaylistInfo(id) {
       EventService.getPlaylistInfo(id)
         .then((response) => {
-          // this.events = response.data;
           console.log(response.data);
           this.tracks = response.data.tracks;
           this.name = response.data.name;
           this.url = response.data.external_urls.spotify;
           this.playlistId = response.data.id;
-          // this.userInfo = response.data.userInfo;
-          // this.userPlaylists = response.data.userPlaylists;
         })
         .catch((error) => {
           console.log("There was an error:" + error.response);

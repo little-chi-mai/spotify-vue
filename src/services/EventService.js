@@ -37,7 +37,7 @@ export default {
   uploadImage() {
     return apiClient.get("/api/user/uploadimage");
   },
-  getArtistTracks(id) {
+  getArtistTopTracks(id) {
     return apiClient.get(`/api/artist/${id}/tracks`);
   },
   getArtistInfo(id) {
@@ -55,5 +55,10 @@ export default {
   getTopTracks() {
     return apiClient.get(`/api/toptracks`);
   },
-
+  addTracksToPlaylist(playlistId, tracksIdArray) {
+    return apiClient.post(`/api/add-tracks-to-playlist/${playlistId}/${tracksIdArray}`);
+  },
+  getSimilarArtirsts(id) {
+    return apiClient.get(`/api/artist/${id}/similar-artists`);
+  }
 };

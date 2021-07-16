@@ -24,7 +24,6 @@ const spotifyApi = new SpotifyWebApi({
   redirectUri: redirectUri + "/api/callback",
 });
 
-
 const generateRandomString = function (length) {
   let text = "";
   const possible =
@@ -61,7 +60,7 @@ server.get("/api/toptracks", getMyTopTracks);
 
 // server.get("/api/user/uploadimage", uploadImage);
 
-server.get("/api/artist/:id/tracks", getArtistTracks);
+server.get("/api/artist/:id/tracks", getArtistTopTracks);
 
 server.get("/api/artist/:id/info", getArtistInfo);
 
@@ -69,16 +68,18 @@ server.get("/api/artist/:id/albums", getArtistAlbums);
 
 server.post("/api/playlist/create", createPlaylist);
 
-// server.get("/api/artist/toptracks", getArtistTopTracks);
+server.get("/api/artist/:id/similar-artists", getSimilarArtists);
 
-// server.get("/api/user/playlists", getUserPlaylists);
+server.post(
+  "/api/add-tracks-to-playlist/:playlistId/:tracksArray",
+  addTracksToPlaylist
+);
 
 server.get("/api/album/:id", getAlbum);
 
 server.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
 });
-
 
 function logIn(req, res) {
   const state = generateRandomString(16);
@@ -207,7 +208,7 @@ function getMyTopTracks(req, res) {
   );
 }
 
-function getArtistTracks(req, res) {
+function getArtistTopTracks(req, res) {
   // spotifyApi.scope = "user-read-recently-played";
   const id = req.params.id;
   // console.log("spotifyApi", spotifyApi);
@@ -288,4 +289,34 @@ function getAlbum(req, res) {
   //     console.log("Something went wrong!", err);
   //   }
   // );
+}
+
+function addTracksToPlaylist(req, res) {
+  let playlistId = req.params.playlistId;
+  let tracksArray = JSON.parse(req.params.tracksArray);
+  let convertedTracksArray = tracksArray.map((id) => "spotify:track:" + id);
+  console.log("PLAYLISTID", playlistId);
+  console.log("tracksArray", convertedTracksArray);
+  spotifyApi.addTracksToPlaylist(playlistId, convertedTracksArray).then(
+    function (data) {
+      console.log("Added tracks to playlist!", data);
+      res.status(200).json("Successfully added tracks to playlist!");
+    },
+    function (err) {
+      console.log("Something went wrong!", err);
+    }
+  );
+}
+
+function getSimilarArtists(req, res) {
+  const id = req.params.id;
+  spotifyApi.getArtistRelatedArtists(id).then(
+    function (data) {
+      // console.log(data.body);
+      res.status(200).json(data.body);
+    },
+    function (err) {
+      console.log("Something went wrong!", err);
+    }
+  );
 }
