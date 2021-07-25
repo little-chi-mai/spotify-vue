@@ -29,17 +29,10 @@ export default {
   methods: {
     getAlbum() {
       EventService.getAlbum(this.album.id).then((response) => {
-        // console.log("GET ALBUM", response);
         this.$store.commit("setAlbumClicked", response.data);
       });
     },
     setAlbumHovered(album, isPlayed, imageUrl) {
-      // console.log(arguments);
-      // console.log("DISPATCHING", {
-      //   album: album,
-      //   isPlayed: isPlayed,
-      //   imageUrl: imageUrl,
-      // });
       this.$store.dispatch("setAlbumHovered", {
         album: album,
         isMusicPlayed: isPlayed,
@@ -51,7 +44,7 @@ export default {
 </script>
 
 <style scoped>
-/* img {
-  height: 64px;
-} */
+img:hover {
+  cursor: pointer;
+}
 </style>

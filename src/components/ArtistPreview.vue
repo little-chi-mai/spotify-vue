@@ -29,7 +29,7 @@ export default {
       return this.$store.state.artistHoveredTopTrack;
     },
     trackArtists() {
-      return this.topTrack.artists.map(artist => artist.name).join(' & ');
+      return this.topTrack.artists && this.topTrack.artists.map(artist => artist.name).join(' & ');
     },
     musicUrl() {
       return this.topTrack.preview_url;

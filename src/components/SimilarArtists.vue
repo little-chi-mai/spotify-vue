@@ -27,9 +27,8 @@ export default {
     },
   },
   methods: {
-    getSimilarArtirsts(artistId) {
-      EventService.getSimilarArtirsts(artistId).then((response) => {
-        // console.log("getSimilarArtirsts", response.data);
+    getSimilarArtirsts() {
+      EventService.getSimilarArtirsts(this.artistId).then((response) => {
         this.similarArtists = response.data.artists;
       });
     },
@@ -41,11 +40,11 @@ export default {
     },
   },
   mounted() {
-    this.getSimilarArtirsts(this.mainArtistId);
+    this.getSimilarArtirsts();
   },
   watch: {
-    artistId(newId) {
-      this.getSimilarArtirsts(newId);
+    artistId() {
+      this.getSimilarArtirsts();
     },
   },
 };

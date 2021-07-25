@@ -34,7 +34,6 @@ import SimilarArtists from "@/components/SimilarArtists";
 import ArtistImage from "@/components/ArtistImage";
 
 export default {
-  props: ["artistId"],
   components: {
     TrackImage,
     AlbumImage,
@@ -49,43 +48,7 @@ export default {
       suggestedArtists: [],
     };
   },
-  methods: {
-    getArtistInfo(artistId) {
-      EventService.getArtistInfo(artistId).then((response) => {
-        this.artistInfo = response.data;
-      });
-    },
-    getArtistTopTracks(artistId) {
-      EventService.getArtistTopTracks(artistId).then((response) => {
-        this.topTracks = response.data;
-      });
-    },
-    getArtistAlbums(artistId) {
-      EventService.getArtistAlbums(artistId).then((response) => {
-        let albumsArray = [];
-        response.data.items.forEach((album) => {
-          if (album.album_type === "album") {
-            EventService.getAlbum(album.id).then((response) => {
-              albumsArray.push(response.data);
-            });
-          }
-        });
-        this.albums = albumsArray;
-      });
-    },
-  },
-  mounted() {
-    this.getArtistInfo(this.artistId);
-    this.getArtistTopTracks(this.artistId);
-    this.getArtistAlbums(this.artistId);
-    // this.getSimilarArtirsts(this.artistId)
-  },
-  watch: {
-    artistId(val, oldval) {
-      console.log("CHANGEEE", oldval);
-      this.getArtistInfo(val);
-    },
-  },
+  props: ["artistId"],
   computed: {
     artistImage() {
       return Object.keys(this.artistInfo).length !== 0
@@ -106,6 +69,51 @@ export default {
         : "";
     },
   },
+  methods: {
+    getArtistInfo() {
+      EventService.getArtistInfo(this.artistId).then((response) => {
+        this.artistInfo = response.data;
+        console.log('getArtistInfo', this.artistInfo);
+      });
+    },
+    getArtistTopTracks() {
+      EventService.getArtistTopTracks(this.artistId).then((response) => {
+        this.topTracks = response.data;
+        console.log('getArtistTopTracks', this.topTracks);
+      });
+    },
+    getArtistAlbums() {
+      EventService.getArtistAlbums(this.artistId).then((response) => {
+        let albumsArray = [];
+        response.data.items.forEach((album) => {
+          if (album.album_type === "album") {
+            EventService.getAlbum(album.id).then((response) => {
+              albumsArray.push(response.data);
+            });
+          }
+        });
+        this.albums = albumsArray;
+        console.log('getArtistAlbums', this.albums);
+      });
+    },
+  },
+  mounted() {
+    if (this.artistId) {
+      console.log("MOUNTED AND HAVE ARTIST ID", this.artistId);
+      this.getArtistInfo();
+      this.getArtistTopTracks();
+      this.getArtistAlbums();
+    }
+  },
+  // watch: {
+  //   artistId(val, oldval) {
+  //     console.log("CHANGEEE", oldval);
+  //     this.getArtistInfo();
+  //     this.getArtistTopTracks();
+  //     this.getArtistAlbums();
+  //   },
+  // },
+  
 };
 </script>
 

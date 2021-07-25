@@ -5,7 +5,6 @@
       <span v-for="track in tracks" :key="track.played_at">
         <TrackImage :track="track.track" />
       </span>
-      <!-- @click="getArtistTopTracks(track.track.artists[0].id)" -->
     </div>
 
     <BlockPreview />
@@ -41,7 +40,6 @@ export default {
     return {
       tracks: [],
       images: [],
-      artistTracks: [],
     };
   },
   methods: {
@@ -61,16 +59,6 @@ export default {
 
         this.images.push(imageUrl);
       });
-    },
-    getArtistTopTracks(id) {
-      EventService.getArtistTopTracks(id)
-        .then((response) => {
-          console.log(response.data);
-          this.artistTracks = [...this.artistTracks, ...[response.data]];
-        })
-        .catch((error) => {
-          console.log("There was an error:" + error.response);
-        });
     },
   },
   computed: {

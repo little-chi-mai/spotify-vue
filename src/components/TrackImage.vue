@@ -6,13 +6,13 @@
     alt=""
     :style="styleObj"
     @click="showTrackAndArtistInfo"
-    @mouseover="setTrackHovered(track, true, imageUrl)"
-    @mouseleave="setTrackHovered({}, false, '')"
+    @mouseover="setTrackHovered"
+    @mouseleave="unsetTrackHovered"
   />
 </template>
 
 <script>
-import EventService from "@/services/EventService";
+// import EventService from "@/services/EventService";
 
 export default {
   data() {
@@ -34,10 +34,16 @@ export default {
     },
   },
   methods: {
-    setTrackHovered(track, isMusicPlayed, imageUrl) {
-      this.$store.commit("setTrackHovered", track);
-      this.$store.commit("setIsMusicPlayed", isMusicPlayed);
-      this.$store.commit("setImageHovered", imageUrl);
+    setTrackHovered() {
+      this.unsetTrackHovered();
+      this.$store.commit("setTrackHovered", this.track);
+      this.$store.commit("setIsMusicPlayed", true);
+      this.$store.commit("setImageHovered", this.imageUrl);
+    },
+    unsetTrackHovered() {
+      this.$store.commit("setTrackHovered", {});
+      this.$store.commit("setIsMusicPlayed", false);
+      this.$store.commit("setImageHovered", "");
     },
     showTrackAndArtistInfo() {
       console.log("CLICKED");
@@ -61,11 +67,11 @@ export default {
         artistIds.push(artist.id);
       });
       this.$store.commit("setArtistIds", artistIds);
-      EventService.getArtistTopTracks(this.track.artists[0].id).then(
-        (response) => {
-          console.log(response);
-        }
-      );
+      // EventService.getArtistTopTracks(this.track.artists[0].id).then(
+      //   (response) => {
+      //     console.log(response);
+      //   }
+      // );
     },
     pushUnique(savedTracks, trackClicked) {
       let isUnique = true;
@@ -76,9 +82,9 @@ export default {
         }
       });
       if (isUnique) {
-        newTrackArray.push(trackClicked)
+        newTrackArray.push(trackClicked);
       }
-      return newTrackArray
+      return newTrackArray;
     },
   },
   watch: {

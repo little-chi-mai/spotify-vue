@@ -13,7 +13,6 @@
 </template>
 
 <script>
-import EventService from "@/services/EventService";
 export default {
   data() {
     return {
@@ -36,11 +35,6 @@ export default {
     },
   },
   methods: {
-    getArtistTopTracks() {
-      EventService.getArtistTopTracks(this.artistId).then((response) => {
-        this.track = response.data[0];
-      });
-    },
     setArtistHovered() {
       this.$store.commit("setArtistHovered", this.artist);
       this.$store.commit("setImageHovered", this.artist.images[0].url);
@@ -59,15 +53,15 @@ export default {
     }
   },
   mounted() {
-    this.getArtistTopTracks();
+    // this.getArtistTopTracks();
   },
   watch: {
-    topTracks() {
-      this.track = this.topTracks;
-    },
-    artist() {
-      this.getArtistTopTracks();
-    }
+    // topTracks() {
+    //   this.track = this.topTracks;
+    // },
+    // artist() {
+    //   this.getArtistTopTracks();
+    // }
   },
 };
 </script>
@@ -76,5 +70,9 @@ export default {
 .artist-image {
   height: 12rem;
   border-radius: 10rem;
+}
+
+.artist-image:hover {
+  cursor: pointer;
 }
 </style>
