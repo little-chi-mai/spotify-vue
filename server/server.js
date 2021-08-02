@@ -118,7 +118,7 @@ function callback(req, res) {
 
       spotifyApi.setAccessToken(data.body["access_token"]);
       spotifyApi.setRefreshToken(data.body["refresh_token"]);
-      res.redirect(process.env.ROOT_CLIENT);
+      res.redirect("https://pensive-torvalds-729fbd.netlify.app");
     })
     .catch(function (err) {
       console.log("Something went wrong:", err);
