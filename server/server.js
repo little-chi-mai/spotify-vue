@@ -116,7 +116,7 @@ function callback(req, res) {
       console.log("The access token is " + data.body["access_token"]);
       console.log("The refresh token is " + data.body["refresh_token"]);
 
-      const origin = process.env.NODE_ENV === 'production' ? req.headers.origin : process.env.VUE_APP_ROOT_CLIENT;
+      const origin = process.env.VUE_APP_ROOT_CLIENT;
       console.log("ORIGIN", origin)
       spotifyApi.setAccessToken(data.body["access_token"]);
       spotifyApi.setRefreshToken(data.body["refresh_token"]);
