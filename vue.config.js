@@ -1,8 +1,10 @@
-/*
- * @type {import('@vue/cli-service').ProjectOptions}
- */
-//  module.exports = {
-//   publicPath: process.env.NODE_ENV === 'production'
-//     ? '/production-sub-path/'
-//     : '/'
-// }
+module.exports = {
+  devServer: {
+    proxy: {
+      '^/api': {
+        target: 'http://localhost:3030',
+        changeOrigin: true
+      },
+    }
+  }
+}

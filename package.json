@@ -20,6 +20,7 @@
     "aws-sdk": "^2.912.0",
     "axios": "^0.21.1",
     "cloudinary-vue": "^1.2.1",
+    "concurrently": "^6.2.0",
     "cookie-parser": "^1.4.5",
     "core-js": "^3.6.5",
     "cors": "^2.8.5",
