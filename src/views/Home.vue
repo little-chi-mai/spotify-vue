@@ -41,13 +41,11 @@ export default {
   },
   mounted() {
     this.userInfo = this.$store.state.userInfo;
-    console.log('process.env.VUE_APP_ROOT_SERVER', process.env.VUE_APP_ROOT_SERVER);
     EventService.getUserInfo()
       .then((response) => {
         console.log(response.data);
         this.userInfo = response.data.userInfo;
         this.setUserInfo();
-        
       })
       .catch((error) => {
         console.log("There was an error at Home: " + error.response);

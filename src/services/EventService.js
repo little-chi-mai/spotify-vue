@@ -47,7 +47,7 @@ export default {
     return apiClient.get(`/api/artist/${id}/albums`);
   },
   createPlaylist() {
-    return apiClient.post('/api/playlist/create');
+    return apiClient.post("/api/playlist/create");
   },
   getAlbum(id) {
     return apiClient.get(`/api/album/${id}`);
@@ -56,9 +56,11 @@ export default {
     return apiClient.get(`/api/toptracks`);
   },
   addTracksToPlaylist(playlistId, tracksIdArray) {
-    return apiClient.post(`/api/add-tracks-to-playlist/${playlistId}/${tracksIdArray}`);
+    return apiClient.post(
+      `/api/add-tracks-to-playlist/${playlistId}/${tracksIdArray}`
+    );
   },
   getSimilarArtirsts(id) {
     return apiClient.get(`/api/artist/${id}/similar-artists`);
-  }
+  },
 };
