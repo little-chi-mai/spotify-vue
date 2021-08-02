@@ -6,9 +6,9 @@ const cors = require("cors");
 const querystring = require("querystring");
 const cookieParser = require("cookie-parser");
 const SpotifyWebApi = require("spotify-web-api-node");
+const session = require("express-session");
 
 dotenv.config();
-// const hostname = "localhost";
 const port = process.env.PORT || 3030;
 
 const clientId = process.env.SPOTIFY_CLIENT_ID;
@@ -17,12 +17,25 @@ const redirectUri = process.env.VUE_APP_ROOT_SERVER;
 console.log(redirectUri);
 const stateKey = "spotify_auth_state";
 
+server
+  .use(express.static(path.join(__dirname, "../dist")))
+  .use(cors())
+  .use(cookieParser());
+
 // Set necessary parts of the credentials on the constructor
-const spotifyApi = new SpotifyWebApi({
-  clientId: clientId,
-  clientSecret: clientSecret,
-  redirectUri: redirectUri + "/api/callback",
-});
+// const makeSpotifyApi = function () {
+//   const spotifyApi = new SpotifyWebApi({
+//     clientId: clientId,
+//     clientSecret: clientSecret,
+//     redirectUri: redirectUri + "/api/callback",
+//   });
+//   return spotifyApi;
+// };
+
+// const setApiTokens = function (spotifyApi, access_token, refresh_token) {
+//   spotifyApi.setAccessToken(access_token);
+//   spotifyApi.setRefreshToken(refresh_token);
+// };
 
 const generateRandomString = function (length) {
   let text = "";
@@ -35,11 +48,35 @@ const generateRandomString = function (length) {
   return text;
 };
 
-server
-  .use(express.static(path.join(__dirname, "../dist")))
-  .use(cors())
-  .use(cookieParser());
+server.use(
+  session({
+    secret: "lala",
+    resave: true,
+    saveUninitialized: true,
+    cookie: {
+      // sameSite: "none",
+      secure: true,
+    },
+  })
+);
 
+server.get("/api/setcookie", (req, res) => {
+  res.cookie(`Cookie token name`, `encrypted cookie string Value`, {
+    maxAge: 5000,
+    // expires works the same as the maxAge
+    expires: new Date("01 12 2021"),
+    secure: true,
+    httpOnly: true,
+    sameSite: "lax",
+  });
+  res.send("Cookie have been saved successfully");
+});
+
+server.get("/api/getcookie", (req, res) => {
+  //show the saved cookies
+  console.log(req.cookies);
+  res.send(req.cookies);
+});
 // SERVER-SIDE ROUTES ///////////////////////////////
 
 server.get("/api/login", logIn);
@@ -81,9 +118,15 @@ server.listen(port, () => {
   console.log(`Server running at port ${port}`);
 });
 
+// let sess;
+
 function logIn(req, res) {
+  let sess = req.session;
+  console.log("SESS", sess);
   const state = generateRandomString(16);
+  console.log("STATE", state);
   res.cookie(stateKey, state, { path: "/" });
+
   // this app requests authorization
   const scope =
     "user-read-private user-read-email user-read-recently-played user-top-read playlist-modify-public playlist-modify-private";
@@ -100,7 +143,11 @@ function logIn(req, res) {
 }
 
 function logout(req, res) {
-  res.clearCookie(stateKey, { path: "/" });
+  res.clearCookie("spotify_access_token");
+  res.clearCookie("spotify_refresh_token");
+  const spotifyApi = new SpotifyWebApi({
+    accessToken: req.cookies["spotify_access_token"],
+  });
   spotifyApi.setAccessToken("");
 
   res.status(200).json("logged out!");
@@ -109,6 +156,11 @@ function logout(req, res) {
 function callback(req, res) {
   let code = req.query.code;
   // Retrieve an access token.
+  const spotifyApi = new SpotifyWebApi({
+    clientId: clientId,
+    clientSecret: clientSecret,
+    redirectUri: redirectUri + "/api/callback",
+  });
   spotifyApi
     .authorizationCodeGrant(code)
     .then(function (data) {
@@ -116,10 +168,11 @@ function callback(req, res) {
       console.log("The access token is " + data.body["access_token"]);
       console.log("The refresh token is " + data.body["refresh_token"]);
 
+      res.cookie(`spotify_access_token`, data.body["access_token"]);
+      res.cookie(`spotify_refresh_token`, data.body["refresh_token"]);
       const origin = process.env.VUE_APP_ROOT_CLIENT;
-      console.log("ORIGIN", origin)
-      spotifyApi.setAccessToken(data.body["access_token"]);
-      spotifyApi.setRefreshToken(data.body["refresh_token"]);
+      console.log("ORIGIN", origin);
+
       res.redirect(origin);
     })
     .catch(function (err) {
@@ -129,10 +182,24 @@ function callback(req, res) {
 
 function getUserInfo(req, res) {
   let result = {};
+
+  const spotifyApi = new SpotifyWebApi({
+    accessToken: req.cookies["spotify_access_token"],
+  });
+
   spotifyApi
     .getMe()
     .then(function (data) {
       result.userInfo = data.body;
+      res.cookie("spotify_userId", result.userInfo.id, {
+        maxAge: 5000,
+        // expires works the same as the maxAge
+        expires: new Date("01 12 2021"),
+        secure: true,
+        httpOnly: true,
+        sameSite: "lax",
+      });
+
       res.status(200).json(result);
     })
     .catch(function (err) {
@@ -142,6 +209,9 @@ function getUserInfo(req, res) {
 
 function getUserPlaylists(req, res) {
   const id = req.params.id;
+  const spotifyApi = new SpotifyWebApi({
+    accessToken: req.cookies["spotify_access_token"],
+  });
   spotifyApi
     .getUserPlaylists(id)
     .then(function (data) {
@@ -154,6 +224,9 @@ function getUserPlaylists(req, res) {
 
 function getPlaylistInfo(req, res) {
   const id = req.params.id;
+  const spotifyApi = new SpotifyWebApi({
+    accessToken: req.cookies["spotify_access_token"],
+  });
   // console.log("PLAYLIST ID", id);
   // console.log("spotifyApi", spotifyApi);
   spotifyApi.getPlaylist(id).then(
@@ -171,6 +244,9 @@ function getRecentPlayedTracks(req, res) {
   // spotifyApi.scope = "user-read-recently-played";
   // spotifyApi.scope = "user-top-read";
   // console.log("spotifyApi", spotifyApi);
+  const spotifyApi = new SpotifyWebApi({
+    accessToken: req.cookies["spotify_access_token"],
+  });
 
   spotifyApi
     .getMyRecentlyPlayedTracks({
@@ -199,6 +275,9 @@ function getRecentPlayedTracks(req, res) {
 }
 
 function getMyTopTracks(req, res) {
+  const spotifyApi = new SpotifyWebApi({
+    accessToken: req.cookies["spotify_access_token"],
+  });
   spotifyApi.getMyTopTracks().then(
     function (data) {
       let topTracks = data.body.items;
@@ -214,6 +293,9 @@ function getArtistTopTracks(req, res) {
   // spotifyApi.scope = "user-read-recently-played";
   const id = req.params.id;
   // console.log("spotifyApi", spotifyApi);
+  const spotifyApi = new SpotifyWebApi({
+    accessToken: req.cookies["spotify_access_token"],
+  });
 
   spotifyApi.getArtistTopTracks(id, "AU").then(
     function (data) {
@@ -227,6 +309,9 @@ function getArtistTopTracks(req, res) {
 }
 
 function createPlaylist(req, res) {
+  const spotifyApi = new SpotifyWebApi({
+    accessToken: req.cookies["spotify_access_token"],
+  });
   spotifyApi
     .createPlaylist("My playlist1", {
       description: "My description",
@@ -246,6 +331,9 @@ function createPlaylist(req, res) {
 
 function getArtistInfo(req, res) {
   const id = req.params.id;
+  const spotifyApi = new SpotifyWebApi({
+    accessToken: req.cookies["spotify_access_token"],
+  });
   spotifyApi.getArtist(id).then(
     function (data) {
       // console.log("Artist information", data.body);
@@ -259,6 +347,9 @@ function getArtistInfo(req, res) {
 
 function getArtistAlbums(req, res) {
   const id = req.params.id;
+  const spotifyApi = new SpotifyWebApi({
+    accessToken: req.cookies["spotify_access_token"],
+  });
   spotifyApi.getArtistAlbums(id).then(
     function (data) {
       // console.log('Artist albums', data.body);
@@ -272,6 +363,9 @@ function getArtistAlbums(req, res) {
 
 function getAlbum(req, res) {
   const id = req.params.id;
+  const spotifyApi = new SpotifyWebApi({
+    accessToken: req.cookies["spotify_access_token"],
+  });
   spotifyApi.getAlbum(id).then(
     function (data) {
       // console.log('Album information', data.body);
@@ -294,6 +388,9 @@ function getAlbum(req, res) {
 }
 
 function addTracksToPlaylist(req, res) {
+  const spotifyApi = new SpotifyWebApi({
+    accessToken: req.cookies["spotify_access_token"],
+  });
   let playlistId = req.params.playlistId;
   let tracksArray = JSON.parse(req.params.tracksArray);
   let convertedTracksArray = tracksArray.map((id) => "spotify:track:" + id);
@@ -312,6 +409,9 @@ function addTracksToPlaylist(req, res) {
 
 function getSimilarArtists(req, res) {
   const id = req.params.id;
+  const spotifyApi = new SpotifyWebApi({
+    accessToken: req.cookies["spotify_access_token"],
+  });
   spotifyApi.getArtistRelatedArtists(id).then(
     function (data) {
       // console.log(data.body);

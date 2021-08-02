@@ -19,6 +19,9 @@ const apiClient = axios.create({
 // });
 
 export default {
+  login() {
+    return apiClient.get("/api/login");
+  },
   getUserInfo() {
     return apiClient.get("/api/user/info");
   },
