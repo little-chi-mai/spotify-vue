@@ -36,7 +36,7 @@ export default {
     return {
       name: "",
       userInfo: {},
-      loginUrl: process.env.VUE_APP_ROOT_SERVER + "/api/login",
+      loginUrl: process.env.VUE_APP_ROOT_SERVER + "api/login",
     };
   },
   mounted() {
