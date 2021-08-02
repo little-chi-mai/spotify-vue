@@ -9,7 +9,7 @@ const SpotifyWebApi = require("spotify-web-api-node");
 
 dotenv.config();
 const hostname = "localhost";
-const port = 3030;
+const port = process.env.PORT || 3030;
 
 const clientId = process.env.SPOTIFY_CLIENT_ID;
 const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
@@ -118,7 +118,7 @@ function callback(req, res) {
 
       spotifyApi.setAccessToken(data.body["access_token"]);
       spotifyApi.setRefreshToken(data.body["refresh_token"]);
-      res.redirect("http://localhost:8080");
+      res.redirect(process.env.ROOT_CLIENT);
     })
     .catch(function (err) {
       console.log("Something went wrong:", err);
