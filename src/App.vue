@@ -1,10 +1,13 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/playlists">Your Playlists</router-link> |
-      <router-link to="/uploadimage">Upload your image</router-link> 
-      <router-link v-if="$store.state.isLoggedIn" to="/logout">| Logout</router-link>
+      <router-link to="/">Home</router-link>
+      <span v-if="$store.state.isLoggedIn"> | </span>
+      <router-link v-if="$store.state.isLoggedIn" to="/playlists">Your Playlists</router-link>
+      <span v-if="$store.state.isLoggedIn"> | </span>
+      <!-- <router-link to="/uploadimage">Upload your image</router-link>  -->
+      <!-- <span v-if="$store.state.isLoggedIn"> | </span> -->
+      <router-link v-if="$store.state.isLoggedIn" to="/logout">Logout</router-link>
     </div>
     <router-view />
   </div>

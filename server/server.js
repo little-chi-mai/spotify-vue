@@ -164,13 +164,13 @@ function callback(req, res) {
       console.log("The refresh token is " + data.body["refresh_token"]);
 
       res.cookie("spotify_access_token", data.body["access_token"], {
-        maxAge: data.body["expires_in"],
+        // maxAge: data.body["expires_in"],
         secure: true,
         httpOnly: true,
         sameSite: "lax",
       });
       res.cookie("spotify_refresh_token", data.body["refresh_token"], {
-        maxAge: data.body["expires_in"],
+        // maxAge: data.body["expires_in"],
         secure: true,
         httpOnly: true,
         sameSite: "lax",
