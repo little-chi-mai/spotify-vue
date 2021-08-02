@@ -5,7 +5,7 @@
       <p>Your interface for music discovery, powered by Spotify.</p>
       <Introduction />
       <div class="btn-wrapper">
-        <a href="http://localhost:3030/api/login">
+        <a :href="loginUrl">
           <button class="login-btn">Log in with Spotify</button>
         </a>
       </div>
@@ -36,15 +36,18 @@ export default {
     return {
       name: "",
       userInfo: {},
+      loginUrl: process.env.VUE_APP_ROOT_SERVER + "/api/login",
     };
   },
   mounted() {
     this.userInfo = this.$store.state.userInfo;
+    console.log('process.env.VUE_APP_ROOT_SERVER', process.env.VUE_APP_ROOT_SERVER);
     EventService.getUserInfo()
       .then((response) => {
         console.log(response.data);
         this.userInfo = response.data.userInfo;
         this.setUserInfo();
+        
       })
       .catch((error) => {
         console.log("There was an error at Home: " + error.response);
@@ -54,9 +57,9 @@ export default {
     console.log(this.$route.params.code);
   },
   computed: {
-     isLoggedIn() {
-          return this.$store.state.isLoggedIn
-   }
+    isLoggedIn() {
+      return this.$store.state.isLoggedIn;
+    },
   },
   methods: {
     setUserInfo() {

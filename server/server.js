@@ -13,7 +13,7 @@ const port = process.env.PORT || 3030;
 
 const clientId = process.env.SPOTIFY_CLIENT_ID;
 const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
-const redirectUri = process.env.ROOT_SERVER;
+const redirectUri = process.env.VUE_APP_ROOT_SERVER;
 console.log(redirectUri);
 const stateKey = "spotify_auth_state";
 
@@ -118,7 +118,7 @@ function callback(req, res) {
 
       spotifyApi.setAccessToken(data.body["access_token"]);
       spotifyApi.setRefreshToken(data.body["refresh_token"]);
-      res.redirect("https://pensive-torvalds-729fbd.netlify.app");
+      res.redirect(process.env.VUE_APP_ROOT_CLIENT);
     })
     .catch(function (err) {
       console.log("Something went wrong:", err);
