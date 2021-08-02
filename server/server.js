@@ -13,7 +13,7 @@ const port = process.env.PORT || 3030;
 
 const clientId = process.env.SPOTIFY_CLIENT_ID;
 const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
-const redirectUri = `http://localhost:${port}`;
+const redirectUri = process.env.VUE_APP_ROOT_SERVER;
 console.log(redirectUri);
 const stateKey = "spotify_auth_state";
 
