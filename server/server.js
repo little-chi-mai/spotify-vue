@@ -145,11 +145,6 @@ function logIn(req, res) {
 function logout(req, res) {
   res.clearCookie("spotify_access_token");
   res.clearCookie("spotify_refresh_token");
-  const spotifyApi = new SpotifyWebApi({
-    accessToken: req.cookies["spotify_access_token"],
-  });
-  spotifyApi.setAccessToken("");
-
   res.status(200).json("logged out!");
 }
 
@@ -168,8 +163,18 @@ function callback(req, res) {
       console.log("The access token is " + data.body["access_token"]);
       console.log("The refresh token is " + data.body["refresh_token"]);
 
-      res.cookie(`spotify_access_token`, data.body["access_token"]);
-      res.cookie(`spotify_refresh_token`, data.body["refresh_token"]);
+      res.cookie("spotify_access_token", data.body["access_token"], {
+        maxAge: data.body["expires_in"],
+        secure: true,
+        httpOnly: true,
+        sameSite: "lax",
+      });
+      res.cookie("spotify_refresh_token", data.body["refresh_token"], {
+        maxAge: data.body["expires_in"],
+        secure: true,
+        httpOnly: true,
+        sameSite: "lax",
+      });
       const origin = process.env.VUE_APP_ROOT_CLIENT;
       console.log("ORIGIN", origin);
 
