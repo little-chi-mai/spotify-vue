@@ -3,6 +3,6 @@
   to = "/index.html"
   status = 200
 
-[context.production]
-  environment = { VUE_APP_ROOT_SERVER="https://pensive-torvalds-729fbd.netlify.app",
-  VUE_APP_ROOT_CLIENT="https://pensive-torvalds-729fbd.netlify.app" }
+[context.production.environment]
+  VUE_APP_ROOT_SERVER="https://pensive-torvalds-729fbd.netlify.app"
+  VUE_APP_ROOT_CLIENT="https://pensive-torvalds-729fbd.netlify.app" 
