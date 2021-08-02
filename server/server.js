@@ -8,7 +8,7 @@ const cookieParser = require("cookie-parser");
 const SpotifyWebApi = require("spotify-web-api-node");
 
 dotenv.config();
-const hostname = "localhost";
+// const hostname = "localhost";
 const port = process.env.PORT || 3030;
 
 const clientId = process.env.SPOTIFY_CLIENT_ID;
@@ -77,8 +77,8 @@ server.post(
 
 server.get("/api/album/:id", getAlbum);
 
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
+server.listen(port, () => {
+  console.log(`Server running at port ${port}`);
 });
 
 function logIn(req, res) {

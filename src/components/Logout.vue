@@ -11,7 +11,6 @@ export default {
   mounted() {
     EventService.logout().then(() => {
       this.$store.commit("setUserInfo", {});
-      this.$store.commit("setIsLoggedIn", false);
       this.$router.push("/");
     });
   },

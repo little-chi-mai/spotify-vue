@@ -51,9 +51,9 @@ export default {
         console.log("There was an error at Home: " + error.response);
       });
   },
-  created() {
-    console.log(this.$route.params.code);
-  },
+  // created() {
+  //   console.log(this.$route.params.code);
+  // },
   computed: {
     isLoggedIn() {
       return this.$store.state.isLoggedIn;
