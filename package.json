@@ -2,7 +2,7 @@
   "name": "spotify-vue",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:303000",
+  "proxy": "http://localhost:3030",
   "scripts": {
     "start": "node server/server.js",
     "dev:server": "nodemon server/server.js",
