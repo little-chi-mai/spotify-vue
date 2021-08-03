@@ -1,9 +1,8 @@
 <template>
   <div v-if="userId" class="about">
     <h1>Your playlists</h1>
-    
-
-    <div
+    <div class="list">
+      <div
       class="list-info"
       v-for="playlist in userPlaylists.items"
       :key="playlist.id"
@@ -26,6 +25,8 @@
         @click="getPlaylistInfo(playlist.id)"
       />
     </div>
+    </div>
+    
 
     <Playlist :tracks="tracks" :name="name" :url="url" />
     <iframe
@@ -93,7 +94,29 @@ export default {
 </script>
 
 <style scoped>
+.list {
+  display: grid;
+  width: 60%;
+  grid-template-columns: repeat(3, 3fr);
+  /* grid-row: auto; */
+  grid-gap: 2rem;
+}
+
+.list-info {
+  border: solid rgba(255, 199, 193, 0.507) 2px;
+  border-radius: 10px;
+}
+
 .playlist {
   height: 10rem;
+}
+
+img {
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+img:hover {
+  border: solid salmon 5px;
 }
 </style>
