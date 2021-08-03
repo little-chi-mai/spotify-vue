@@ -43,7 +43,6 @@ export default {
     this.userInfo = this.$store.state.userInfo;
     EventService.getUserInfo()
       .then((response) => {
-        console.log(response.data);
         this.userInfo = response.data.userInfo;
         this.setUserInfo();
       })

@@ -1,5 +1,5 @@
 body {
-  background-color: #080808; }
+  background-color: #161616; }
 
 * {
   box-sizing: border-box;
@@ -8,6 +8,9 @@ body {
   color: whitesmoke; }
 
 a img {
+  cursor: pointer; }
+
+button {
   cursor: pointer; }
 
 .block {

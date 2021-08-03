@@ -46,16 +46,13 @@ export default {
       this.$store.commit("setImageHovered", "");
     },
     showTrackAndArtistInfo() {
-      console.log("CLICKED");
 
       let trackClicked = this.track.album
         ? this.track
         : { ...this.track, album: { ...this.album } };
-      console.log(trackClicked);
 
       // update saved track counter
       this.$store.commit("setSavedTracks", trackClicked);
-      console.log("ABOUT TO SET TRACK CLICKED");
       this.$store.commit("setTrackClicked", trackClicked);
       const artistIds = [];
       this.track.artists.forEach((artist) => {
@@ -65,11 +62,11 @@ export default {
     },
   },
   watch: {
-    track(newTrack, oldVal) {
-      // watch it
-      console.log("Prop TRACK changed: ", newTrack, " | was: ", oldVal);
-      // this.imageUrl = newTrack.album ? newTrack.album.images[0].url : this.$store.state.albumClicked.images[0].url;
-    },
+    // track(newTrack, oldVal) {
+    //   // watch it
+    //   console.log("Prop TRACK changed: ", newTrack, " | was: ", oldVal);
+    //   // this.imageUrl = newTrack.album ? newTrack.album.images[0].url : this.$store.state.albumClicked.images[0].url;
+    // },
     album(newVal, oldVal) {
       // watch it
       console.log("Prop ALBUM changed: ", newVal, " | was: ", oldVal);

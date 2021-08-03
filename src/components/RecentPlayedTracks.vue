@@ -2,7 +2,7 @@
   <div class="recent-played">
     <button @click="getRecentTracks" class="btn">Your recent tracks</button>
     <button @click="getTopTracks" class="btn">Your top tracks</button>
-    <button @click="getUserSavedTracks" class="btn">Your liked tracks</button>
+    <button @click="getUserLikedTracks" class="btn">Your liked tracks</button>
     <div v-if="recentTracks.length" class="recent-tracks block">
       <h3>Your Recent Tracks</h3>
       <span v-for="track in recentTracks" :key="track.played_at">
@@ -26,7 +26,7 @@
 
     <BlockPreview />
 
-    <BlockTrackInfo :getUserSavedTracks="getUserSavedTracks"/>
+    <BlockTrackInfo :getUserLikedTracks="getUserLikedTracks"/>
 
     <div v-for="artistId in artistIds" :key="artistId">
       <BlockArtistTracks :artistId="artistId" />
@@ -56,7 +56,6 @@ export default {
     getRecentTracks() {
       EventService.getRecentPlayedTracks()
         .then((response) => {
-          console.log("GET CALLED");
           this.$store.commit("setUserRecentTracks", response.data);
         })
         .catch((error) => {
@@ -66,17 +65,14 @@ export default {
     getTopTracks() {
       EventService.getUserTopTracks()
         .then((response) => {
-          console.log("GET CALLED getTopTracks");
           this.$store.commit("setUserTopTracks", response.data);
-          console.log("getUserTopTracks", response.data);
         })
         .catch((error) => {
           console.log("There was an error:" + error.response);
         });
     },
-    getUserSavedTracks() {
+    getUserLikedTracks() {
       EventService.getUserLikedTracks().then((response) => {
-        console.log("GET Like tracks", response.data);
         this.$store.commit("setUserLikedTracks", response.data.items);
       });
     },

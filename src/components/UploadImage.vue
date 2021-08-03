@@ -17,7 +17,6 @@ export default {
           { cloud_name: "mai-boo", upload_preset: "tgq6vyat" },
           (error, result) => {
             if (!error && result && result.event === "success") {
-              console.log("Done uploading..: ", result.info);
               
               // let signedURL = cloudinary
               //   .image(result.info.secure_url, {

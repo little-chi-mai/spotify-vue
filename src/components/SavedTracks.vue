@@ -79,7 +79,6 @@ export default {
     getUserPlaylists() {
       EventService.getUserPlaylists(this.$store.state.userInfo.id).then(
         (response) => {
-          console.log("response", response);
           // set the default list
           this.list = response.data.items.length && response.data.items[0].id;
           console.log(this.list);
@@ -90,23 +89,19 @@ export default {
     showList() {
       this.isListShown = !this.isListShown;
       // this.$store.commit("updateUserPlaylists");
-      console.log("UserID", this.$store.state.userInfo.id);
       this.getUserPlaylists();
     },
     trackArtists(array) {
       return array.map((artist) => artist.name).join(" & ");
     },
     removeTrack(trackId) {
-      console.log("trying to remove");
       this.$store.commit("removeSavedTrack", trackId);
     },
     onChange(e) {
-      console.log(e.target.value);
       this.list = e.target.value;
     },
     addToList() {
       let stringList = JSON.stringify(this.trackIdArray);
-      console.log("STRING LIST", stringList);
       EventService.addTracksToPlaylist(this.list, stringList).then(
         (response) => {
           console.log("add to list", response);
@@ -127,7 +122,6 @@ export default {
     },
     onInputChange(e) {
       this.input = e.target.value;
-      console.log(this.input);
     },
   },
 };

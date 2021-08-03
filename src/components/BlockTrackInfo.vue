@@ -27,7 +27,7 @@ export default {
   components: {
     TrackImage,
   },
-  props: ["getUserSavedTracks"],
+  props: ["getUserLikedTracks"],
   computed: {
     track: {
       get() {
@@ -68,16 +68,13 @@ export default {
   // },
   methods: {
     addToLikedTracks() {
-      console.log("CLICKED");
       EventService.addToLikedTracks(this.track.id).then((response) => {
-        
-        console.log("addToLikedTracks", response);
         this.notiMessage = response.data;
         this.isNotiShown = true;
         setTimeout(() => {
           this.isNotiShown = false;
         }, 2500)
-        this.getUserSavedTracks();
+        this.$store.state.userLikedTracks.length && this.getUserLikedTracks();
       })
       .catch(err => {
         console.log(err);

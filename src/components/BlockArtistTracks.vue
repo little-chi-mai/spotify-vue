@@ -52,7 +52,6 @@ export default {
   computed: {
     artistImage() {
       if (Object.keys(this.artistInfo).length && this.artistInfo.images.length) {  
-        console.log(this.artistInfo);
         return this.artistInfo.images[0].url;
       } else {
         return "";
@@ -76,13 +75,11 @@ export default {
     getArtistInfo() {
       EventService.getArtistInfo(this.artistId).then((response) => {
         this.artistInfo = response.data;
-        console.log('getArtistInfo', this.artistInfo);
       });
     },
     getArtistTopTracks() {
       EventService.getArtistTopTracks(this.artistId).then((response) => {
         this.topTracks = response.data;
-        console.log('getArtistTopTracks', this.topTracks);
       });
     },
     getArtistAlbums() {
@@ -96,13 +93,11 @@ export default {
           }
         });
         this.albums = albumsArray;
-        console.log('getArtistAlbums', this.albums);
       });
     },
   },
   mounted() {
     if (this.artistId) {
-      console.log("MOUNTED AND HAVE ARTIST ID", this.artistId);
       this.getArtistInfo();
       this.getArtistTopTracks();
       this.getArtistAlbums();

@@ -9,7 +9,6 @@ function pushUnique(savedTracks, trackClicked) {
   let isUnique = true;
   let newTrackArray = savedTracks;
   savedTracks.map((track) => {
-    console.log("TRACK", track);
     if (track.id === trackClicked.id) {
       isUnique = false;
     }
@@ -46,7 +45,6 @@ export default new Vuex.Store({
       state.userInfo = payload;
       if (Object.keys(state.userInfo).length !== 0) {
         state.isLoggedIn = true;
-        console.log("setIsLoggedIn", state.isLoggedIn);
       } else {
         state.isLoggedIn = false;
       }
@@ -101,12 +99,10 @@ export default new Vuex.Store({
         ? JSON.parse(localStorage.getItem("savedTracks"))
         : [];
       pushUnique(savedTracks, trackClicked);
-      console.log("savedTracks", savedTracks);
       // save in local storage
       localStorage.savedTracks = JSON.stringify(savedTracks);
       // save on state
       state.savedTracks = savedTracks;
-      console.log("state.savedTracks", state.savedTracks);
     },
     removeSavedTrack(state, trackId) {
       let oldTracks = JSON.parse(localStorage.getItem("savedTracks"));
@@ -116,7 +112,6 @@ export default new Vuex.Store({
           newTracks.push(track);
         }
       });
-      console.log("newTracks", newTracks);
       localStorage.savedTracks = JSON.stringify(newTracks);
       // save on state
       state.savedTracks = newTracks;
