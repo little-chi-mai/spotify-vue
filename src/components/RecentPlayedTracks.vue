@@ -2,28 +2,31 @@
   <div class="recent-played">
     <button @click="getRecentTracks" class="btn">Your recent tracks</button>
     <button @click="getTopTracks" class="btn">Your top tracks</button>
-    <button @click="getUserSavedTracks" class="btn">Your library</button>
-    <div v-if="recentTracks" class="recent-tracks block">
+    <button @click="getUserSavedTracks" class="btn">Your liked tracks</button>
+    <div v-if="recentTracks.length" class="recent-tracks block">
+      <h3>Your Recent Tracks</h3>
       <span v-for="track in recentTracks" :key="track.played_at">
         <TrackImage :track="track.track" />
       </span>
     </div>
 
-    <div v-if="topTracks" class="recent-tracks block">
+    <div v-if="topTracks.length" class="recent-tracks block">
+      <h3>Your Top Tracks</h3>
       <span v-for="track in topTracks" :key="track.id">
         <TrackImage :track="track" />
       </span>
     </div>
 
-    <div v-if="savedTracks" class="recent-tracks block">
-      <span v-for="track in savedTracks" :key="track.track.id">
+    <div v-if="likedTracks.length" class="recent-tracks block">
+      <h3>Your Liked Tracks</h3>
+      <span v-for="track in likedTracks" :key="track.track.id">
         <TrackImage :track="track.track" />
       </span>
     </div>
 
     <BlockPreview />
 
-    <BlockTrackInfo />
+    <BlockTrackInfo :getUserSavedTracks="getUserSavedTracks"/>
 
     <div v-for="artistId in artistIds" :key="artistId">
       <BlockArtistTracks :artistId="artistId" />
@@ -49,21 +52,12 @@ export default {
     BlockArtistTracks,
     BlockAlbumInfo,
   },
-  data() {
-    return {
-      recentTracks: [],
-      topTracks: [],
-      savedTracks: [],
-      images: [],
-      // chosenButton:
-    };
-  },
   methods: {
     getRecentTracks() {
       EventService.getRecentPlayedTracks()
         .then((response) => {
-          this.recentTracks = response.data;
-          this.getImages();
+          console.log("GET CALLED");
+          this.$store.commit("setUserRecentTracks", response.data);
         })
         .catch((error) => {
           console.log("There was an error:" + error.response);
@@ -72,31 +66,33 @@ export default {
     getTopTracks() {
       EventService.getUserTopTracks()
         .then((response) => {
-          this.topTracks = response.data;
+          console.log("GET CALLED getTopTracks");
+          this.$store.commit("setUserTopTracks", response.data);
           console.log("getUserTopTracks", response.data);
-          this.getImages();
         })
         .catch((error) => {
           console.log("There was an error:" + error.response);
         });
     },
     getUserSavedTracks() {
-      EventService.getUserSavedTracks().then((response) => {
-        console.log("GET Saved tracks", response.data);
-        this.savedTracks = response.data.items;
-      });
-    },
-    getImages() {
-      this.recentTracks.map((trackInfo) => {
-        let imageUrl = trackInfo.track.album.images[2].url;
-
-        this.images.push(imageUrl);
+      EventService.getUserLikedTracks().then((response) => {
+        console.log("GET Like tracks", response.data);
+        this.$store.commit("setUserLikedTracks", response.data.items);
       });
     },
   },
   computed: {
     artistIds() {
       return this.$store.state.artistIds;
+    },
+    recentTracks() {
+      return this.$store.state.userRecentTracks;
+    },
+    topTracks() {
+      return this.$store.state.userTopTracks;
+    },
+    likedTracks() {
+      return this.$store.state.userLikedTracks;
     },
   },
 };
@@ -121,5 +117,8 @@ button {
 button:hover {
   color: whitesmoke;
   background-color: rgb(173, 88, 124);
+}
+h3 {
+  color: rgb(150, 78, 78);
 }
 </style>

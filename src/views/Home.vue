@@ -17,7 +17,7 @@
       </video>
     </div>
 
-    <LoggedIn v-else="" />
+    <LoggedIn v-else />
   </div>
 </template>
 

@@ -62,24 +62,6 @@ export default {
         artistIds.push(artist.id);
       });
       this.$store.commit("setArtistIds", artistIds);
-      // EventService.getArtistTopTracks(this.track.artists[0].id).then(
-      //   (response) => {
-      //     console.log(response);
-      //   }
-      // );
-    },
-    pushUnique(savedTracks, trackClicked) {
-      let isUnique = true;
-      let newTrackArray = savedTracks;
-      savedTracks.map((track) => {
-        if (track.id === trackClicked.id) {
-          isUnique = false;
-        }
-      });
-      if (isUnique) {
-        newTrackArray.push(trackClicked);
-      }
-      return newTrackArray;
     },
   },
   watch: {

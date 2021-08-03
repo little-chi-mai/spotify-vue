@@ -48,8 +48,8 @@ export default {
   getArtistAlbums(id) {
     return apiClient.get(`/api/artist/${id}/albums`);
   },
-  createPlaylist() {
-    return apiClient.post("/api/playlist/create");
+  createPlaylist(name) {
+    return apiClient.post(`/api/playlist/create/${name}`);
   },
   getAlbum(id) {
     return apiClient.get(`/api/album/${id}`);
@@ -57,11 +57,11 @@ export default {
   getUserTopTracks() {
     return apiClient.get(`/api/my-top-tracks`);
   },
-  getUserSavedTracks() {
-    return apiClient.get(`/api/get-my-saved-tracks`);
+  getUserLikedTracks() {
+    return apiClient.get(`/api/get-my-liked-tracks`);
   },
-  addToSavedTracks(songId) {
-    return apiClient.get(`/api/add-to-saved-tracks/${songId}`);
+  addToLikedTracks(songId) {
+    return apiClient.get(`/api/add-to-liked-tracks/${songId}`);
   },
   addTracksToPlaylist(playlistId, tracksIdArray) {
     return apiClient.post(

@@ -95,9 +95,9 @@ server.get("/api/recent-tracks", getRecentPlayedTracks);
 
 server.get("/api/my-top-tracks", getMyTopTracks);
 
-server.get("/api/get-my-saved-tracks", getMySavedTracks);
+server.get("/api/get-my-liked-tracks", getMyLikedTracks);
 
-server.get("/api/add-to-saved-tracks/:id", addToSavedTrack);
+server.get("/api/add-to-liked-tracks/:id", addToLikedTrack);
 
 // server.get("/api/user/uploadimage", uploadImage);
 
@@ -107,7 +107,7 @@ server.get("/api/artist/:id/info", getArtistInfo);
 
 server.get("/api/artist/:id/albums", getArtistAlbums);
 
-server.post("/api/playlist/create", createPlaylist);
+server.post("/api/playlist/create/:name", createPlaylist);
 
 server.get("/api/artist/:id/similar-artists", getSimilarArtists);
 
@@ -298,7 +298,7 @@ function getMyTopTracks(req, res) {
   );
 }
 
-function getMySavedTracks(req, res) {
+function getMyLikedTracks(req, res) {
   const spotifyApi = new SpotifyWebApi({
     accessToken: req.cookies["spotify_access_token"],
   });
@@ -337,12 +337,13 @@ function getArtistTopTracks(req, res) {
 }
 
 function createPlaylist(req, res) {
+  const name = req.params.name;
   const spotifyApi = new SpotifyWebApi({
     accessToken: req.cookies["spotify_access_token"],
   });
   spotifyApi
-    .createPlaylist("My playlist1", {
-      description: "My description",
+    .createPlaylist(name, {
+      description: `Playlist ${name} was created with Vue Spotify`,
       public: true,
     })
     .then(
@@ -451,7 +452,7 @@ function getSimilarArtists(req, res) {
   );
 }
 
-function addToSavedTrack(req, res) {
+function addToLikedTrack(req, res) {
   const songId = req.params.id;
   const spotifyApi = new SpotifyWebApi({
     accessToken: req.cookies["spotify_access_token"],

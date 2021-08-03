@@ -6,7 +6,10 @@
       <p>From album {{ album }}</p>
       <p>By {{ artists.join(" & ") }}</p>
     </div>
-    <button @click="addToSavedTracks">+ Add to your liked songs</button>
+    <button @click="addToLikedTracks">+ Add to your Liked Songs</button>
+    <div v-if="isNotiShown" class="noti">
+      <p>{{notiMessage}}</p>
+    </div>
   </div>
 </template>
 
@@ -15,9 +18,16 @@ import TrackImage from "@/components/TrackImage";
 import EventService from "@/services/EventService";
 
 export default {
+  data() {
+    return {
+      isNotiShown: false,
+      notiMessage: ''
+    }
+  },
   components: {
     TrackImage,
   },
+  props: ["getUserSavedTracks"],
   computed: {
     track: {
       get() {
@@ -57,11 +67,21 @@ export default {
   //   },
   // },
   methods: {
-    addToSavedTracks() {
+    addToLikedTracks() {
       console.log("CLICKED");
-      EventService.addToSavedTracks(this.track.id).then((response) => {
-        console.log(response);
-      });
+      EventService.addToLikedTracks(this.track.id).then((response) => {
+        
+        console.log("addToLikedTracks", response);
+        this.notiMessage = response.data;
+        this.isNotiShown = true;
+        setTimeout(() => {
+          this.isNotiShown = false;
+        }, 2500)
+        this.getUserSavedTracks();
+      })
+      .catch(err => {
+        console.log(err);
+      })
     },
   },
 };
@@ -72,6 +92,9 @@ export default {
   background-color: rgb(255, 255, 255);
   display: flex;
   padding: 1rem;
+  position: relative;
+  justify-content: space-between;
+  align-items: flex-start;
 }
 
 .info {
@@ -88,7 +111,23 @@ img {
 }
 
 button {
-  height: 2rem;
-  color: brown;
+  min-height: 2rem;
+  color: rgb(230, 230, 230);
+  border-radius: 10px;
+  padding: 0.5rem;
+  background-color: rgb(129, 64, 86);
+  border: none;
+}
+
+button:hover {
+  background-color: rgb(165, 40, 82);
+  cursor: pointer;
+}
+
+.noti {
+  position: absolute;
+  top: 5rem;
+  left: 5rem;
+  background-color: rgba(192, 103, 155, 0.664);
 }
 </style>

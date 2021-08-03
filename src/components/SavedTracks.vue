@@ -6,12 +6,7 @@
 
     <div v-if="isListShown" class="list">
       <label for="playlists">Choose from your playlists: </label>
-      <select
-        name="playlists"
-        id="playlists"
-        v-model="list"
-        @change="onChange"
-      >
+      <select name="playlists" id="playlists" v-model="list" @change="onChange">
         <option
           v-for="playlist in userPlaylists.items"
           :key="playlist.id"
@@ -20,13 +15,19 @@
           {{ playlist.name }}
         </option>
       </select>
+      <button class="btn" @click="addToList">Add tracks to this list</button>
 
-      <button 
-        class="btn"
-        @click="addToList"
-      >
-        Add tracks to this list
-      </button>
+      <p>Or create a new playlist</p>
+      <form @submit.prevent>
+        <input
+          @input="onInputChange"
+          type="text"
+          :value="input"
+          placeholder="Give your playlist a name"
+        />
+        <button class="btn" @click="createPlaylist">Create playlist</button>
+      </form>
+      
 
       <div v-if="isNotiShown" class="noti">
         <p>Successful added to playlist!</p>
@@ -48,12 +49,14 @@
 
 <script>
 import EventService from "@/services/EventService";
+
 export default {
   data() {
     return {
       isListShown: false,
       list: "",
-      isNotiShown: false
+      isNotiShown: false,
+      input: "",
     };
   },
   computed: {
@@ -69,46 +72,63 @@ export default {
       return this.$store.state.userPlaylists;
     },
     trackIdArray() {
-      return this.savedTracks.map(track => track.id);
-    }
+      return this.savedTracks.map((track) => track.id);
+    },
   },
   methods: {
+    getUserPlaylists() {
+      EventService.getUserPlaylists(this.$store.state.userInfo.id).then(
+        (response) => {
+          console.log("response", response);
+          // set the default list
+          this.list = response.data.items.length && response.data.items[0].id;
+          console.log(this.list);
+          this.$store.commit("setUserPlaylists", response.data)
+        }
+      );
+    },
     showList() {
       this.isListShown = !this.isListShown;
-      this.$store.commit("updateUserPlaylists");
+      // this.$store.commit("updateUserPlaylists");
       console.log("UserID", this.$store.state.userInfo.id);
-       EventService
-        .getUserPlaylists(this.$store.state.userInfo.id)
-        .then(response => {
-          console.log("response", response);
-          // this.list = response.data.items[0].id
-      });
+      this.getUserPlaylists();
     },
     trackArtists(array) {
       return array.map((artist) => artist.name).join(" & ");
     },
     removeTrack(trackId) {
       console.log("trying to remove");
-      this.$store.commit("removeSavedTrack", trackId)
+      this.$store.commit("removeSavedTrack", trackId);
     },
     onChange(e) {
       console.log(e.target.value);
       this.list = e.target.value;
     },
     addToList() {
-      let stringList = JSON.stringify(this.trackIdArray)
+      let stringList = JSON.stringify(this.trackIdArray);
       console.log("STRING LIST", stringList);
-      EventService
-        .addTracksToPlaylist(this.list, stringList)
-        .then(response => {
-          console.log('add to list', response);
+      EventService.addTracksToPlaylist(this.list, stringList).then(
+        (response) => {
+          console.log("add to list", response);
           this.isNotiShown = true;
           setTimeout(() => {
-            this.isNotiShown = false
-          }, 2000)
-        })
-      
-    }
+            this.isNotiShown = false;
+          }, 2000);
+          this.$store.commit("clearSavedTracks");
+        }
+      );
+    },
+    createPlaylist() {
+      EventService.createPlaylist(this.input).then((response) => {
+        console.log(response);
+        this.getUserPlaylists();
+        this.input = "";
+      });
+    },
+    onInputChange(e) {
+      this.input = e.target.value;
+      console.log(this.input);
+    },
   },
 };
 </script>
@@ -188,5 +208,14 @@ select {
   top: 5rem;
   left: 5rem;
   background-color: rgba(192, 103, 155, 0.664);
+}
+
+input {
+  background-color: rgb(133, 84, 92);
+  height: 1.5rem;
+}
+
+input::placeholder {
+  color: rgb(184, 184, 184);
 }
 </style>

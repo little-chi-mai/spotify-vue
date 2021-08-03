@@ -1,7 +1,7 @@
 <template>
   <div v-if="userId" class="about">
     <h1>Your playlists</h1>
-    <button @click="createPlaylist">Create playlist</button>
+    
 
     <div
       class="list-info"
@@ -87,9 +87,7 @@ export default {
           console.log("There was an error:" + error.response);
         });
     },
-    createPlaylist() {
-      EventService.createPlaylist();
-    },
+    
   },
 };
 </script>

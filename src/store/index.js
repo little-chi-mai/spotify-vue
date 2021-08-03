@@ -23,6 +23,9 @@ function pushUnique(savedTracks, trackClicked) {
 export default new Vuex.Store({
   state: {
     userInfo: {},
+    userRecentTracks: [],
+    userTopTracks: [],
+    userLikedTracks: [],
     isLoggedIn: false,
     trackHovered: {},
     albumHovered: {},
@@ -53,6 +56,15 @@ export default new Vuex.Store({
     // },
     setTrackHovered(state, payload) {
       state.trackHovered = payload;
+    },
+    setUserRecentTracks(state, payload) {
+      state.userRecentTracks = payload;
+    },
+    setUserTopTracks(state, payload) {
+      state.userTopTracks = payload;
+    },
+    setUserLikedTracks(state, payload) {
+      state.userLikedTracks = payload;
     },
     setImageHovered(state, payload) {
       state.imageHovered = payload;
@@ -108,6 +120,10 @@ export default new Vuex.Store({
       localStorage.savedTracks = JSON.stringify(newTracks);
       // save on state
       state.savedTracks = newTracks;
+    },
+    clearSavedTracks(state) {
+      localStorage.savedTracks = JSON.stringify([]);
+      state.savedTracks = [];
     },
     setUserPlaylists(state, payload) {
       state.userPlaylists = payload;
