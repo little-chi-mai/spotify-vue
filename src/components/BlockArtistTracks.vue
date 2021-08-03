@@ -7,14 +7,14 @@
       <p>{{ genres }}</p>
       <p>With {{ followers }} followers on Spotify</p>
 
-      <h3>TOP TRACKS</h3>
+      <h3 v-if="topTracks.length">TOP TRACKS</h3>
       <div>
         <span v-for="track in topTracks" :key="track.played_at">
           <TrackImage :track="track" />
         </span>
       </div>
 
-      <h3>ALBUMS</h3>
+      <h3 v-if="albums.length">ALBUMS</h3>
       <div>
         <span v-for="album in albums" :key="album.id">
           <AlbumImage :album="album" />
@@ -51,9 +51,12 @@ export default {
   props: ["artistId"],
   computed: {
     artistImage() {
-      return Object.keys(this.artistInfo).length !== 0
-        ? this.artistInfo.images[0].url
-        : "";
+      if (Object.keys(this.artistInfo).length && this.artistInfo.images.length) {  
+        console.log(this.artistInfo);
+        return this.artistInfo.images[0].url;
+      } else {
+        return "";
+      }
     },
     artistName() {
       return this.artistInfo.name;
@@ -124,6 +127,7 @@ export default {
   padding: 1rem;
   display: flex;
   align-items: flex-start;
+  justify-content: space-between;
 }
 
 * {

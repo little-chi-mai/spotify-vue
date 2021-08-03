@@ -6,11 +6,13 @@
       <p>From album {{ album }}</p>
       <p>By {{ artists.join(" & ") }}</p>
     </div>
+    <button @click="addToSavedTracks">+ Add to your liked songs</button>
   </div>
 </template>
 
 <script>
 import TrackImage from "@/components/TrackImage";
+import EventService from "@/services/EventService";
 
 export default {
   components: {
@@ -54,6 +56,14 @@ export default {
   //     this.track = this.$store.state.trackClicked;
   //   },
   // },
+  methods: {
+    addToSavedTracks() {
+      console.log("CLICKED");
+      EventService.addToSavedTracks(this.track.id).then((response) => {
+        console.log(response);
+      });
+    },
+  },
 };
 </script>
 
@@ -75,5 +85,10 @@ export default {
 
 img {
   height: 15rem;
+}
+
+button {
+  height: 2rem;
+  color: brown;
 }
 </style>

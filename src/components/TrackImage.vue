@@ -51,16 +51,11 @@ export default {
       let trackClicked = this.track.album
         ? this.track
         : { ...this.track, album: { ...this.album } };
-      let savedTracks = JSON.parse(localStorage.getItem("savedTracks"))
-        ? JSON.parse(localStorage.getItem("savedTracks"))
-        : [];
-      this.pushUnique(savedTracks, trackClicked);
-
-      localStorage.savedTracks = JSON.stringify(savedTracks);
+      console.log(trackClicked);
 
       // update saved track counter
-      this.$store.commit("setSavedTracks");
-
+      this.$store.commit("setSavedTracks", trackClicked);
+      console.log("ABOUT TO SET TRACK CLICKED");
       this.$store.commit("setTrackClicked", trackClicked);
       const artistIds = [];
       this.track.artists.forEach((artist) => {

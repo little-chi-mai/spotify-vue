@@ -1,8 +1,22 @@
 <template>
   <div class="recent-played">
-    <button @click="getTracks" class="btn">Your recent tracks</button>
-    <div class="recent-tracks block">
-      <span v-for="track in tracks" :key="track.played_at">
+    <button @click="getRecentTracks" class="btn">Your recent tracks</button>
+    <button @click="getTopTracks" class="btn">Your top tracks</button>
+    <button @click="getUserSavedTracks" class="btn">Your library</button>
+    <div v-if="recentTracks" class="recent-tracks block">
+      <span v-for="track in recentTracks" :key="track.played_at">
+        <TrackImage :track="track.track" />
+      </span>
+    </div>
+
+    <div v-if="topTracks" class="recent-tracks block">
+      <span v-for="track in topTracks" :key="track.id">
+        <TrackImage :track="track" />
+      </span>
+    </div>
+
+    <div v-if="savedTracks" class="recent-tracks block">
+      <span v-for="track in savedTracks" :key="track.track.id">
         <TrackImage :track="track.track" />
       </span>
     </div>
@@ -16,7 +30,6 @@
     </div>
 
     <BlockAlbumInfo />
-
   </div>
 </template>
 
@@ -38,23 +51,43 @@ export default {
   },
   data() {
     return {
-      tracks: [],
+      recentTracks: [],
+      topTracks: [],
+      savedTracks: [],
       images: [],
+      // chosenButton:
     };
   },
   methods: {
-    getTracks() {
+    getRecentTracks() {
       EventService.getRecentPlayedTracks()
         .then((response) => {
-          this.tracks = response.data;
+          this.recentTracks = response.data;
           this.getImages();
         })
         .catch((error) => {
           console.log("There was an error:" + error.response);
         });
     },
+    getTopTracks() {
+      EventService.getUserTopTracks()
+        .then((response) => {
+          this.topTracks = response.data;
+          console.log("getUserTopTracks", response.data);
+          this.getImages();
+        })
+        .catch((error) => {
+          console.log("There was an error:" + error.response);
+        });
+    },
+    getUserSavedTracks() {
+      EventService.getUserSavedTracks().then((response) => {
+        console.log("GET Saved tracks", response.data);
+        this.savedTracks = response.data.items;
+      });
+    },
     getImages() {
-      this.tracks.map((trackInfo) => {
+      this.recentTracks.map((trackInfo) => {
         let imageUrl = trackInfo.track.album.images[2].url;
 
         this.images.push(imageUrl);
@@ -88,6 +121,5 @@ button {
 button:hover {
   color: whitesmoke;
   background-color: rgb(173, 88, 124);
-  
 }
 </style>

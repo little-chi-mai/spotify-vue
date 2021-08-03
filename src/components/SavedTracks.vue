@@ -76,10 +76,12 @@ export default {
     showList() {
       this.isListShown = !this.isListShown;
       this.$store.commit("updateUserPlaylists");
+      console.log("UserID", this.$store.state.userInfo.id);
        EventService
         .getUserPlaylists(this.$store.state.userInfo.id)
         .then(response => {
-          this.list = response.data.items[0].id
+          console.log("response", response);
+          // this.list = response.data.items[0].id
       });
     },
     trackArtists(array) {
@@ -87,15 +89,7 @@ export default {
     },
     removeTrack(trackId) {
       console.log("trying to remove");
-      let newTracks = [];
-      this.savedTracks.map((track) => {
-        if (track.id !== trackId) {
-          newTracks.push(track);
-        }
-      });
-      console.log("newTracks", newTracks);
-      localStorage.savedTracks = JSON.stringify(newTracks);
-      this.$store.commit("setSavedTracks");
+      this.$store.commit("removeSavedTrack", trackId)
     },
     onChange(e) {
       console.log(e.target.value);

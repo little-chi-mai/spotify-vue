@@ -4,10 +4,10 @@
       <source :src="musicUrl" type="audio/mpeg" />
       Your browser does not support the audio tag.
     </audio>
-    <p v-if="isMusicPlayed && !musicUrl">No music preview</p>
+    <!-- <p v-if="isMusicPlayed && !musicUrl">No music preview</p> -->
     <p>{{topTrack.name}}</p>
     <h5>{{trackArtists}}</h5>
-    <p>Top track on Spotify for</p>
+    <p>Click to discover more songs from</p>
     <h3>{{ artistHovered.name }}</h3>
     <!-- <p>{{ artistsAlbum.join(' & ')}}</p>
     <h5>First track in the album: </h5>

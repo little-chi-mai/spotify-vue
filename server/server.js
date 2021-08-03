@@ -91,9 +91,13 @@ server.get("/api/user/:id/playlists", getUserPlaylists);
 
 server.get("/api/playlist/:id", getPlaylistInfo);
 
-server.get("/api/recenttracks", getRecentPlayedTracks);
+server.get("/api/recent-tracks", getRecentPlayedTracks);
 
-server.get("/api/toptracks", getMyTopTracks);
+server.get("/api/my-top-tracks", getMyTopTracks);
+
+server.get("/api/get-my-saved-tracks", getMySavedTracks);
+
+server.get("/api/add-to-saved-tracks/:id", addToSavedTrack);
 
 // server.get("/api/user/uploadimage", uploadImage);
 
@@ -129,7 +133,7 @@ function logIn(req, res) {
 
   // this app requests authorization
   const scope =
-    "user-read-private user-read-email user-read-recently-played user-top-read playlist-modify-public playlist-modify-private";
+    "user-read-private user-read-email user-read-recently-played user-top-read playlist-modify-public playlist-modify-private user-library-modify user-library-read";
   res.redirect(
     "https://accounts.spotify.com/authorize?" +
       querystring.stringify({
@@ -164,13 +168,13 @@ function callback(req, res) {
       console.log("The refresh token is " + data.body["refresh_token"]);
 
       res.cookie("spotify_access_token", data.body["access_token"], {
-        // maxAge: data.body["expires_in"],
+        maxAge: 3600000,
         secure: true,
         httpOnly: true,
         sameSite: "lax",
       });
       res.cookie("spotify_refresh_token", data.body["refresh_token"], {
-        // maxAge: data.body["expires_in"],
+        maxAge: 3600000,
         secure: true,
         httpOnly: true,
         sameSite: "lax",
@@ -292,6 +296,25 @@ function getMyTopTracks(req, res) {
       console.log("Something went wrong!", err);
     }
   );
+}
+
+function getMySavedTracks(req, res) {
+  const spotifyApi = new SpotifyWebApi({
+    accessToken: req.cookies["spotify_access_token"],
+  });
+  spotifyApi
+    .getMySavedTracks({
+      limit: 50,
+      offset: 0,
+    })
+    .then(
+      function (data) {
+        res.status(200).json(data.body);
+      },
+      function (err) {
+        console.log("Something went wrong!", err);
+      }
+    );
 }
 
 function getArtistTopTracks(req, res) {
@@ -421,6 +444,37 @@ function getSimilarArtists(req, res) {
     function (data) {
       // console.log(data.body);
       res.status(200).json(data.body);
+    },
+    function (err) {
+      console.log("Something went wrong!", err);
+    }
+  );
+}
+
+function addToSavedTrack(req, res) {
+  const songId = req.params.id;
+  const spotifyApi = new SpotifyWebApi({
+    accessToken: req.cookies["spotify_access_token"],
+  });
+  spotifyApi.containsMySavedTracks([songId]).then(
+    function (data) {
+      // An array is returned, where the first element corresponds to the first track ID in the query
+      var trackIsInYourMusic = data.body[0];
+
+      if (trackIsInYourMusic) {
+        console.log("Track was found your music library!");
+        res.status(200).json("Track was found your music library!");
+      } else {
+        spotifyApi.addToMySavedTracks([songId]).then(
+          function (data) {
+            console.log(data.body);
+            res.status(200).json("Track added!");
+          },
+          function (err) {
+            console.log("Something went wrong!", err);
+          }
+        );
+      }
     },
     function (err) {
       console.log("Something went wrong!", err);

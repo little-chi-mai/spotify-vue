@@ -5,6 +5,21 @@ import EventService from "@/services/EventService.js";
 Vue.use(Vuex);
 Vue.config.devtools = true;
 
+function pushUnique(savedTracks, trackClicked) {
+  let isUnique = true;
+  let newTrackArray = savedTracks;
+  savedTracks.map((track) => {
+    console.log("TRACK", track);
+    if (track.id === trackClicked.id) {
+      isUnique = false;
+    }
+  });
+  if (isUnique) {
+    newTrackArray.push(trackClicked);
+  }
+  return newTrackArray;
+}
+
 export default new Vuex.Store({
   state: {
     userInfo: {},
@@ -14,7 +29,7 @@ export default new Vuex.Store({
     artistHovered: {},
     artistHoveredTopTrack: {},
     isMusicPlayed: false,
-    musicUrl: '',
+    musicUrl: "",
     imageHovered: "",
     trackClicked: {},
     albumClicked: {},
@@ -69,21 +84,42 @@ export default new Vuex.Store({
     setArtistHoveredTopTrack(state, payload) {
       state.artistHoveredTopTrack = payload;
     },
-    setSavedTracks(state) {
-      state.savedTracks = JSON.parse(localStorage.getItem("savedTracks"));
+    setSavedTracks(state, trackClicked) {
+      let savedTracks = JSON.parse(localStorage.getItem("savedTracks"))
+        ? JSON.parse(localStorage.getItem("savedTracks"))
+        : [];
+      pushUnique(savedTracks, trackClicked);
+      console.log("savedTracks", savedTracks);
+      // save in local storage
+      localStorage.savedTracks = JSON.stringify(savedTracks);
+      // save on state
+      state.savedTracks = savedTracks;
+      console.log("state.savedTracks", state.savedTracks);
+    },
+    removeSavedTrack(state, trackId) {
+      let oldTracks = JSON.parse(localStorage.getItem("savedTracks"));
+      let newTracks = [];
+      oldTracks.map((track) => {
+        if (track.id !== trackId) {
+          newTracks.push(track);
+        }
+      });
+      console.log("newTracks", newTracks);
+      localStorage.savedTracks = JSON.stringify(newTracks);
+      // save on state
+      state.savedTracks = newTracks;
     },
     setUserPlaylists(state, payload) {
       state.userPlaylists = payload;
     },
     updateUserPlaylists(state) {
-      EventService
-        .getUserPlaylists(state.userInfo.id)
-        .then(response => {
-          state.userPlaylists = response.data
+      EventService.getUserPlaylists(state.userInfo.id).then((response) => {
+        state.userPlaylists = response.data;
       });
     },
   },
   actions: {
+    // have to use dispatch
     setTrackHovered(context, payload) {
       context.commit("setTrackHovered", payload.track);
       context.commit("setIsMusicPlayed", payload.isMusicPlayed);

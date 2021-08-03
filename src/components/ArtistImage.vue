@@ -2,7 +2,18 @@
   <div>
     <img
       class="artist-image"
+      v-if="url"
       :src="url"
+      alt=""
+      :style="styleObj"
+      @mouseover="setArtistHovered"
+      @mouseleave="unsetArtistHovered"
+      @click="showTrackAndArtistInfo"
+    />
+    <img
+      class="artist-image"
+      v-else
+      src="../assets/artist.jpg"
       alt=""
       :style="styleObj"
       @mouseover="setArtistHovered"
@@ -37,7 +48,7 @@ export default {
   methods: {
     setArtistHovered() {
       this.$store.commit("setArtistHovered", this.artist);
-      this.$store.commit("setImageHovered", this.artist.images[0].url);
+      this.artist.images.length && this.$store.commit("setImageHovered", this.artist.images[0].url);
       this.$store.commit("setArtistHoveredTopTrack", this.track);
       this.$store.commit("setIsMusicPlayed", true);
     },

@@ -1,7 +1,10 @@
 <template>
   <div class="similar-artists">
     <h3>Related Artists</h3>
-    <div v-for="artist in similarArtists" :key="artist.id">
+    <div v-if="similarArtists.length === 0">
+      <p>No Related Artists on Spotify</p>
+    </div>
+    <div v-else v-for="artist in similarArtists" :key="artist.id">
       <ArtistImage :artist="artist" :url="artist.images[0].url" />
     </div>
   </div>
@@ -31,6 +34,7 @@ export default {
       EventService.getSimilarArtirsts(this.artistId).then((response) => {
         this.similarArtists = response.data.artists;
       });
+      
     },
     getArtistTracks(artistId) {
       EventService.getArtistTracks(artistId).then((response) => {
@@ -56,11 +60,16 @@ export default {
   flex-wrap: wrap;
   max-width: 7rem;
   margin: 0 1rem;
+  
 }
 .similar-artists > h3 {
   color: rgb(94, 94, 94);
 }
 .similar-artists > div {
   margin: 0;
+}
+
+p {
+  color: rgb(75, 75, 75);
 }
 </style>

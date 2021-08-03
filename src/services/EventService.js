@@ -3,7 +3,6 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const apiClient = axios.create({
-  // baseURL: `http://localhost:${process.env.PORT || 8080}`,
   withCredentials: false,
   headers: {
     Accept: "application/json",
@@ -35,7 +34,7 @@ export default {
     return apiClient.get(`/api/playlist/${id}`);
   },
   getRecentPlayedTracks() {
-    return apiClient.get("/api/recenttracks");
+    return apiClient.get("/api/recent-tracks");
   },
   uploadImage() {
     return apiClient.get("/api/user/uploadimage");
@@ -55,8 +54,14 @@ export default {
   getAlbum(id) {
     return apiClient.get(`/api/album/${id}`);
   },
-  getTopTracks() {
-    return apiClient.get(`/api/toptracks`);
+  getUserTopTracks() {
+    return apiClient.get(`/api/my-top-tracks`);
+  },
+  getUserSavedTracks() {
+    return apiClient.get(`/api/get-my-saved-tracks`);
+  },
+  addToSavedTracks(songId) {
+    return apiClient.get(`/api/add-to-saved-tracks/${songId}`);
   },
   addTracksToPlaylist(playlistId, tracksIdArray) {
     return apiClient.post(
