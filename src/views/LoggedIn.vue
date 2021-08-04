@@ -23,19 +23,17 @@ export default {
     RecentPlayedTracks,
     SavedTracks,
   },
-  data() {
-    return {
-      userInfo: this.$store.state.userInfo,
-    };
-  },
   computed: {
     // numberOfSavedTracks() {
     //   return JSON.parse(localStorage.getItem("savedTracks")).length;
     // },
+    userInfo() {
+      return this.$store.state.userInfo
+    }
   },
-  // mounted() {
-  //   this.$store.commit('updateUserPlaylists');
-  // }
+  mounted() {
+    this.$store.commit("setUserInfo");
+  }
 };
 </script>
 

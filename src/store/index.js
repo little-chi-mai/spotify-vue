@@ -157,16 +157,11 @@ export default new Vuex.Store({
       context.commit("setIsMusicPlayed", payload.isMusicPlayed);
       context.commit("setImageHovered", payload.imageUrl);
     },
-    // scrollToEnd(el) {
-    //   el.$nextTick(() => {
-    //     const container = el.$refs.container;
-    //     // container.scrollTop = container.scrollHeight;
-    //     let top = container.offsetTop;
-    //     window.scrollTo(0, top);
-    //     console.log("SCROLLING");
-    //   })
-    // }
-    setUserInfo() {},
+    resetScreen(context) {
+      context.commit("setAlbumClicked", {});
+      context.commit("setTrackClicked", {});
+      context.commit("setArtistIds", []);
+    }
   },
   computed: {
     isLoggedIn() {

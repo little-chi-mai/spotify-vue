@@ -1,35 +1,36 @@
 <template>
   <div class="container">
-    <div class="home" v-if="!isLoggedIn">
+    <div class="home">
       <h1>Discover your Spotify</h1>
       <p>Your interface for music discovery, powered by Spotify.</p>
       <Introduction />
-      <div class="btn-wrapper">
+      <div v-show="!isLoggedIn" class="btn-wrapper">
         <a :href="loginUrl">
           <button class="login-btn">Log in with Spotify</button>
         </a>
       </div>
 
-      <video autoplay loop controls width="90%">
+      <video autoplay loop controls width="90%" ref="videoRef" muted="muted">
         <source
-          src="https://discoverquickly.com/static/media/dq-promo.8d999945.m4v"
+          src="https://res.cloudinary.com/mai-boo/video/upload/v1628063243/Screen_Recording_2021-08-04_at_5.41.16_pm_yap88a.mov#t=3"
+          
         />
       </video>
     </div>
 
-    <LoggedIn v-else />
+    <!-- <LoggedIn v-else /> -->
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import LoggedIn from "@/views/LoggedIn";
+// import LoggedIn from "@/views/LoggedIn";
 // import EventService from "@/services/EventService";
 import Introduction from "@/components/Introduction";
 
 export default {
   components: {
-    LoggedIn,
+    // LoggedIn,
     Introduction,
   },
   data() {
@@ -48,6 +49,7 @@ export default {
     //     console.log("There was an error at Home: " + error.response);
     //   });
     this.$store.commit("setUserInfo");
+    this.$refs.videoRef.play();
   },
   // created() {
   //   console.log(this.$route.params.code);
@@ -62,13 +64,23 @@ export default {
   },
   methods: {
     setUserInfo() {
-      this.$store.commit("setUserInfo", this.userInfo);
+      this.$store.commit("setUserInfo");
     },
   },
 };
 </script>
 
 <style scoped>
+/* .container {
+  background-color: rgb(233, 233, 233);
+} */
+
+video {
+  border: solid rgb(255, 201, 195) 5px;
+  width: 60vw;
+
+}
+
 .login-btn {
   background-color: rgb(255, 134, 156);
   width: 10rem;

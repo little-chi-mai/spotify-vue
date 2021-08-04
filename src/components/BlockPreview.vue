@@ -58,7 +58,7 @@ export default {
 <style scoped>
 .track-preview {
   position: fixed;
-  top: 10vh;
+  top: 30vh;
   left: 65vw;
   background-color: rgba(66, 66, 66, 0.26);
 }

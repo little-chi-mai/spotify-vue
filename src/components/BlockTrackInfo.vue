@@ -123,8 +123,10 @@ button:hover {
 
 .noti {
   position: absolute;
-  top: 5rem;
-  left: 5rem;
-  background-color: rgba(192, 103, 155, 0.664);
+  top: 7rem;
+  left: 30rem;
+  background-color: rgba(192, 103, 155, 0.863);
+  padding: 1rem;
+  width: 20rem;
 }
 </style>

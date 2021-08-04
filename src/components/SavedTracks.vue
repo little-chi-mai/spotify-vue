@@ -16,7 +16,7 @@
           {{ playlist.name }}
         </option>
       </select>
-      <button class="btn" @click="addToList">Add tracks to this list</button>
+      <button :disabled='!savedTrackCounter' class="btn" @click="addToList">Add tracks to this list</button>
 
       
       <form @submit.prevent>
@@ -27,7 +27,7 @@
           :value="input"
           placeholder="Give your playlist a name"
         />
-        <button class="btn" @click="createPlaylist">Create playlist</button>
+        <button :disabled='!input' class="btn" @click="createPlaylist">Create playlist</button>
       </form>
 
       <div v-if="isNotiShown" class="noti">
@@ -244,9 +244,11 @@ select {
 
 .noti {
   position: absolute;
-  top: 5rem;
-  left: 5rem;
-  background-color: rgba(192, 103, 155, 0.664);
+  top: 2rem;
+  left: 2rem;
+  background-color: rgba(192, 103, 155, 0.884);
+  padding: 1rem;
+  width: 20rem;
 }
 
 input {

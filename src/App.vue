@@ -3,6 +3,8 @@
     <div id="nav">
       <router-link to="/">Home</router-link>
       <span v-if="$store.state.isLoggedIn"> | </span>
+      <router-link v-if="$store.state.isLoggedIn" to="/discovery">Discovery</router-link>
+      <span v-if="$store.state.isLoggedIn"> | </span>
       <router-link v-if="$store.state.isLoggedIn" to="/playlists">Your Playlists</router-link>
       <span v-if="$store.state.isLoggedIn"> | </span>
       <!-- <router-link to="/uploadimage">Upload your image</router-link>  -->

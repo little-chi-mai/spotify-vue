@@ -1,14 +1,19 @@
 <template>
-  <img
-    v-if="image || track.album.images"
-    class="image"
-    :src="imageUrl"
-    alt=""
-    :style="styleObj"
-    @click="showTrackAndArtistInfo"
-    @mouseover="setTrackHovered"
-    @mouseleave="unsetTrackHovered"
-  />
+  <div class="image-track">
+    <img
+      v-if="image || track.album.images"
+      class="image"
+      :src="imageUrl"
+      alt=""
+      :style="styleObj"
+      @click="showTrackAndArtistInfo"
+      @mouseover="setTrackHovered"
+      @mouseleave="unsetTrackHovered"
+    />
+    <div v-if="isNotiShown" class="noti">
+      <p>Added to Saved Tracks!</p>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -19,6 +24,7 @@ export default {
       styleObj: {
         height: this.size ? this.size + "px" : 70 + "px",
       },
+      isNotiShown: false
     };
   },
   props: ["track", "image", "album", "size", "scrollToEnd"],
@@ -53,6 +59,11 @@ export default {
       // update saved track counter
       this.$store.commit("setSavedTracks", trackClicked);
       this.$store.commit("setTrackClicked", trackClicked);
+
+      this.isNotiShown = true;
+      setTimeout(() => {
+        this.isNotiShown = false
+      }, 2500)
       const artistIds = [];
       this.track.artists.forEach((artist) => {
         artistIds.push(artist.id);
@@ -61,11 +72,6 @@ export default {
     },
   },
   watch: {
-    // track(newTrack, oldVal) {
-    //   // watch it
-    //   console.log("Prop TRACK changed: ", newTrack, " | was: ", oldVal);
-    //   // this.imageUrl = newTrack.album ? newTrack.album.images[0].url : this.$store.state.albumClicked.images[0].url;
-    // },
     album(newVal, oldVal) {
       // watch it
       console.log("Prop ALBUM changed: ", newVal, " | was: ", oldVal);
@@ -85,5 +91,20 @@ export default {
   border: 3px solid rgb(206, 122, 168);
   transform: scale(1.07);
   cursor: pointer;
+}
+
+.image-track {
+  display: inline-block;
+  position: relative;
+}
+
+.noti {
+  position: absolute;
+  top: 0;
+  left: 7rem;
+  background-color: rgba(155, 64, 117, 0.829);
+  padding: 1rem;
+  z-index: 10;
+  width: 20rem;
 }
 </style>

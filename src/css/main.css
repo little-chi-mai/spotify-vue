@@ -13,14 +13,39 @@ a img {
 button {
   cursor: pointer; }
 
+h1,
+h2 {
+  margin-top: 1rem;
+  margin-bottom: 1rem; }
+
+h3,
+h4 {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem; }
+
+p {
+  margin-top: 0.3rem;
+  margin-bottom: 0.3rem; }
+
 .block {
   background-color: white;
   margin-bottom: 1rem;
-  width: 60vw;
-  margin-left: 2rem; }
+  width: 50vw;
+  margin-left: 10vw; }
 
 .btn {
   background-color: #ff869c;
   width: 10rem;
   height: 3rem;
-  border-radius: 3rem; }
+  border-radius: 3rem;
+  margin: 0.5rem;
+  transition: all 0.1s ease-in-out; }
+
+.btn:hover {
+  background-color: #ff6c87; }
+
+.btn:disabled,
+.btn[disabled] {
+  border: 1px solid #999999;
+  background-color: #9b9b9b;
+  color: #ffffff; }

@@ -13,8 +13,7 @@ const port = process.env.PORT || 3030;
 
 const clientId = process.env.SPOTIFY_CLIENT_ID;
 const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
-const redirectUri = process.env.VUE_APP_ROOT_SERVER;
-console.log(redirectUri);
+const redirectUri = process.env.VUE_APP_ROOT_SERVER
 const stateKey = "spotify_auth_state";
 
 server
@@ -22,20 +21,6 @@ server
   .use(cors())
   .use(cookieParser());
 
-// Set necessary parts of the credentials on the constructor
-// const makeSpotifyApi = function () {
-//   const spotifyApi = new SpotifyWebApi({
-//     clientId: clientId,
-//     clientSecret: clientSecret,
-//     redirectUri: redirectUri + "/api/callback",
-//   });
-//   return spotifyApi;
-// };
-
-// const setApiTokens = function (spotifyApi, access_token, refresh_token) {
-//   spotifyApi.setAccessToken(access_token);
-//   spotifyApi.setRefreshToken(refresh_token);
-// };
 
 const generateRandomString = function (length) {
   let text = "";
@@ -60,23 +45,6 @@ server.use(
   })
 );
 
-server.get("/api/setcookie", (req, res) => {
-  res.cookie(`Cookie token name`, `encrypted cookie string Value`, {
-    maxAge: 5000,
-    // expires works the same as the maxAge
-    expires: new Date("01 12 2021"),
-    secure: true,
-    httpOnly: true,
-    sameSite: "lax",
-  });
-  res.send("Cookie have been saved successfully");
-});
-
-server.get("/api/getcookie", (req, res) => {
-  //show the saved cookies
-  console.log(req.cookies);
-  res.send(req.cookies);
-});
 // SERVER-SIDE ROUTES ///////////////////////////////
 
 server.get("/api/login", logIn);
@@ -122,7 +90,6 @@ server.listen(port, () => {
   console.log(`Server running at port ${port}`);
 });
 
-// let sess;
 
 function logIn(req, res) {
   let sess = req.session;
@@ -182,7 +149,7 @@ function callback(req, res) {
       const origin = process.env.VUE_APP_ROOT_CLIENT;
       console.log("ORIGIN", origin);
 
-      res.redirect(origin);
+      res.redirect(origin + "/discovery");
     })
     .catch(function (err) {
       console.log("Something went wrong:", err);

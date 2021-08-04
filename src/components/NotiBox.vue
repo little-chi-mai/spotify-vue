@@ -17,7 +17,8 @@
 .noti {
   position: absolute;
   top: 5rem;
-  left: 5rem;
+  left: 15rem;
   background-color: rgba(192, 103, 155, 0.664);
+  padding: 1rem;
 }
 </style>

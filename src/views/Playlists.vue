@@ -69,6 +69,7 @@ export default {
   },
   mounted() {
     this.$store.commit("setUserInfo");
+    this.userId && this.getUserPlaylists(this.userId);
   },
   methods: {
     getPlaylistInfo(id) {
@@ -101,6 +102,7 @@ export default {
   },
   watch: {
       userId() {
+        // getUserPlaylists again when refresh the page
         this.getUserPlaylists(this.userId);
       },
   },

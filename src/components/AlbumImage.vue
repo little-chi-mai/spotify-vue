@@ -45,7 +45,14 @@ export default {
 </script>
 
 <style scoped>
+img {
+ transition: all 0.2s ease-in-out;
+ border: 3px solid rgba(206, 122, 168, 0);
+}
+
 img:hover {
+  border: 3px solid rgb(206, 122, 168);
+  transform: scale(1.07);
   cursor: pointer;
 }
 </style>

@@ -88,12 +88,16 @@ export default {
     BlockAlbumInfo,
   },
   methods: {
-    getRecentTracks() {
-      if (this.selectedTab === "recentTracks") {
+    resetSelectedTab(tabName) {
+      if (this.selectedTab === tabName) {
         this.$store.commit("setSelectedTab", "");
+        this.$store.dispatch("resetScreen");
         return;
       }
-      this.$store.commit("setSelectedTab", "recentTracks");
+      this.$store.commit("setSelectedTab", tabName);
+    },
+    getRecentTracks() {
+      this.resetSelectedTab("recentTracks")
       EventService.getRecentPlayedTracks()
         .then((response) => {
           this.$store.commit("setUserRecentTracks", response.data);
@@ -103,11 +107,7 @@ export default {
         });
     },
     getTopTracks() {
-      if (this.selectedTab === "topTracks") {
-        this.$store.commit("setSelectedTab", "");
-        return;
-      }
-      this.$store.commit("setSelectedTab", "topTracks");
+      this.resetSelectedTab("topTracks")
       EventService.getUserTopTracks()
         .then((response) => {
           this.$store.commit("setUserTopTracks", response.data);
@@ -117,14 +117,14 @@ export default {
         });
     },
     getUserLikedTracks() {
-      if (this.selectedTab === "likedTracks") {
-        this.$store.commit("setSelectedTab", "");
-        return;
-      }
-      this.$store.commit("setSelectedTab", "likedTracks");
-      EventService.getUserLikedTracks().then((response) => {
-        this.$store.commit("setUserLikedTracks", response.data.items);
-      });
+      this.resetSelectedTab("likedTracks")
+      EventService.getUserLikedTracks()
+        .then((response) => {
+          this.$store.commit("setUserLikedTracks", response.data.items);
+        })
+        .catch((error) => {
+          console.log("There was an error:" + error.response);
+        });
     },
     scrollToEnd() {
       setTimeout(() => {
@@ -162,12 +162,9 @@ export default {
 </script>
 
 <style scoped>
-/* .recent-played {
-  padding: 2rem 0;
-} */
+
 .recent-tracks {
-  margin-bottom: 1rem;
-  width: 60vw;
+  margin-bottom: 1rem;  
 }
 
 button {

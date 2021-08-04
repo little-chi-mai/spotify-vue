@@ -18,6 +18,11 @@ const routes = [
     component: LoggedIn,
   },
   {
+    path: "/discovery",
+    name: "Discovery",
+    component: LoggedIn,
+  },
+  {
     path: "/playlists",
     name: "Playlists",
     component: Playlists,
@@ -37,6 +42,7 @@ const routes = [
     name: "Home",
     component: Home,
   },
+
 ];
 
 const router = new VueRouter({
