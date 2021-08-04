@@ -5,14 +5,20 @@
       Your browser does not support the audio tag.
     </audio>
     <!-- <p v-if="isMusicPlayed && !musicUrl">No music preview</p> -->
-    <p>{{topTrack.name}}</p>
-    <h5>{{trackArtists}}</h5>
-    <p>Click to discover more songs from</p>
-    <h3>{{ artistHovered.name }}</h3>
-    <!-- <p>{{ artistsAlbum.join(' & ')}}</p>
-    <h5>First track in the album: </h5>
-    <p>{{trackName}}</p>
-    <p>{{artistsTrack.join(' & ')}}</p> -->
+    <div v-if="isMusicPlayed">
+      <p>{{ topTrack && topTrack.name }}</p>
+      <h5>{{ trackArtists }}</h5>
+      <!-- <p>{{ artistsAlbum.join(' & ')}}</p> -->
+      <h5>First track in the album:</h5>
+      <p>{{ album && album.name}}</p>
+      <!-- <p>{{artistsTrack.join(' & ')}}</p> -->
+    </div>
+
+    <div v-if="!isMusicPlayed">
+      <p>Click to discover more songs from</p>
+    </div>
+
+    <h3>{{ artistHovered && artistHovered.name }}</h3>
   </div>
 </template>
 
@@ -29,10 +35,16 @@ export default {
       return this.$store.state.artistHoveredTopTrack;
     },
     trackArtists() {
-      return this.topTrack.artists && this.topTrack.artists.map(artist => artist.name).join(' & ');
+      return (
+        this.topTrack.artists &&
+        this.topTrack.artists.map((artist) => artist.name).join(" & ")
+      );
     },
     musicUrl() {
-      return this.topTrack.preview_url;
+      return this.topTrack && this.topTrack.preview_url;
+    },
+    album() {
+      return this.topTrack && this.topTrack.album;
     },
   },
 };

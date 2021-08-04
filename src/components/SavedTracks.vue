@@ -5,7 +5,8 @@
     </h3>
 
     <div v-if="isListShown" class="list">
-      <label for="playlists">Choose from your playlists: </label>
+      <button class="close-btn" @click="closeList">X</button>
+      <label for="playlists">Choose from your playlists</label>
       <select name="playlists" id="playlists" v-model="list" @change="onChange">
         <option
           v-for="playlist in userPlaylists.items"
@@ -17,8 +18,9 @@
       </select>
       <button class="btn" @click="addToList">Add tracks to this list</button>
 
-      <p>Or create a new playlist</p>
+      
       <form @submit.prevent>
+        <span>Or create a new playlist</span>
         <input
           @input="onInputChange"
           type="text"
@@ -27,21 +29,21 @@
         />
         <button class="btn" @click="createPlaylist">Create playlist</button>
       </form>
-      
 
       <div v-if="isNotiShown" class="noti">
         <p>Successful added to playlist!</p>
       </div>
 
       <div class="track" v-for="track in savedTracks" :key="track.id">
-        <img :src="track.album.images[0].url" alt="" />
+        <!-- <img @hover="showReview" :src="track.album.images[0].url" alt="" /> -->
+        <TrackImage :track="track" :size="50" />
         <div class="track-info">
           <h4>{{ track.name }}</h4>
           <p class="artist-name">
             {{ trackArtists(track.artists) }}
           </p>
         </div>
-        <button class="delete-btn" @click="removeTrack(track.id)">X</button>
+        <button class="delete-btn" @click="removeTrack(track.id)">—</button>
       </div>
     </div>
   </div>
@@ -49,6 +51,7 @@
 
 <script>
 import EventService from "@/services/EventService";
+import TrackImage from "@/components/TrackImage";
 
 export default {
   data() {
@@ -58,6 +61,9 @@ export default {
       isNotiShown: false,
       input: "",
     };
+  },
+  components: {
+    TrackImage,
   },
   computed: {
     savedTrackCounter() {
@@ -82,7 +88,7 @@ export default {
           // set the default list
           this.list = response.data.items.length && response.data.items[0].id;
           console.log(this.list);
-          this.$store.commit("setUserPlaylists", response.data)
+          this.$store.commit("setUserPlaylists", response.data);
         }
       );
     },
@@ -123,13 +129,48 @@ export default {
     onInputChange(e) {
       this.input = e.target.value;
     },
+    closeList() {
+      this.isListShown = false;
+    }
   },
 };
 </script>
 
 <style scoped>
+h3 {
+  margin: 1rem;
+}
+
 .list {
   position: relative;
+  background-color: rgba(151, 151, 151, 0.219);
+  width: 50vw;
+  margin: 0 auto;
+  padding: 1rem 3rem;
+}
+.close-btn {
+  height: 1.5rem;
+  width: 1.5rem;
+  background-color: rgba(82, 82, 82, 0);
+  /* border-radius: 1rem; */
+  border: none;
+
+  position: absolute;
+  right: 1rem;
+  top: 0.7rem;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.close-btn:hover {
+  border-radius: 1rem;
+  background-color: rgba(95, 95, 95, 0.61);
+}
+
+#playlists {
+  /* height: 2rem; */
+  padding: 5px;
+  font-size: 14px;
 }
 
 .saved-track {
@@ -137,6 +178,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
 }
 
 .saved-track-number {
@@ -162,7 +204,7 @@ img {
 }
 
 .track:hover {
-  background-color: rgb(54, 54, 54);
+  background-color: rgba(119, 119, 119, 0.295);
 }
 
 .track-info > h4,
@@ -177,11 +219,13 @@ img {
 } */
 
 .delete-btn {
-  height: 1.5rem;
-  width: 1.5rem;
+  height: 1.7rem;
+  width: 1.7rem;
   background-color: rgba(82, 82, 82, 0.562);
   border-radius: 1rem;
   border: none;
+  color: rgb(197, 197, 197);
+  /* font-weight: bold; */
 
   position: absolute;
   right: 0;
@@ -190,11 +234,12 @@ img {
 }
 
 .delete-btn:hover {
-  background-color: rgba(255, 203, 168, 0.562);
+  background-color: rgba(255, 220, 197, 0.356);
 }
 
 select {
   background-color: rgb(133, 84, 92);
+  margin: 0.5rem;
 }
 
 .noti {
@@ -206,10 +251,18 @@ select {
 
 input {
   background-color: rgb(133, 84, 92);
-  height: 1.5rem;
+  padding: 5px;
+  font-size: 14px;
+  min-width: 10rem;
+  margin: 0.5rem;
 }
 
 input::placeholder {
   color: rgb(184, 184, 184);
+  font-size: 12px;
+}
+
+button {
+  margin: 0.5rem;
 }
 </style>

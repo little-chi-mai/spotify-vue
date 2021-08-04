@@ -39,15 +39,28 @@ export default new Vuex.Store({
     userPlaylists: {},
     // savedTrackCounter: JSON.parse(localStorage.getItem("savedTracks")).length,
     savedTracks: JSON.parse(localStorage.getItem("savedTracks")),
+    selectedTab: "",
   },
   mutations: {
-    setUserInfo(state, payload) {
-      state.userInfo = payload;
+    setUserInfo(state) {
       if (Object.keys(state.userInfo).length !== 0) {
         state.isLoggedIn = true;
       } else {
         state.isLoggedIn = false;
       }
+      EventService.getUserInfo()
+        .then((response) => {
+          state.userInfo = response.data.userInfo;
+          state.isLoggedIn = true;
+          console.log(state.userInfo);
+        })
+        .catch((error) => {
+          console.log("There was an error at Home: " + error.response);
+        });
+    },
+    logout(state) {
+      state.userInfo = {};
+      state.isLoggedIn = false;
     },
     // setIsLoggedIn(state, payload) {
     //   state.isLoggedIn = payload;
@@ -128,6 +141,9 @@ export default new Vuex.Store({
         state.userPlaylists = response.data;
       });
     },
+    setSelectedTab(state, payload) {
+      state.selectedTab = payload;
+    },
   },
   actions: {
     // have to use dispatch
@@ -141,6 +157,16 @@ export default new Vuex.Store({
       context.commit("setIsMusicPlayed", payload.isMusicPlayed);
       context.commit("setImageHovered", payload.imageUrl);
     },
+    // scrollToEnd(el) {
+    //   el.$nextTick(() => {
+    //     const container = el.$refs.container;
+    //     // container.scrollTop = container.scrollHeight;
+    //     let top = container.offsetTop;
+    //     window.scrollTo(0, top);
+    //     console.log("SCROLLING");
+    //   })
+    // }
+    setUserInfo() {},
   },
   computed: {
     isLoggedIn() {

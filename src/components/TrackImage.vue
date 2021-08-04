@@ -12,17 +12,16 @@
 </template>
 
 <script>
-// import EventService from "@/services/EventService";
 
 export default {
   data() {
     return {
       styleObj: {
-        height: this.$attrs.size ? this.$attrs.size + "px" : 70 + "px",
+        height: this.size ? this.size + "px" : 70 + "px",
       },
     };
   },
-  props: ["track", "image", "album"],
+  props: ["track", "image", "album", "size", "scrollToEnd"],
   computed: {
     imageUrl: {
       get() {
@@ -46,7 +45,7 @@ export default {
       this.$store.commit("setImageHovered", "");
     },
     showTrackAndArtistInfo() {
-
+      this.scrollToEnd && this.scrollToEnd();
       let trackClicked = this.track.album
         ? this.track
         : { ...this.track, album: { ...this.album } };
@@ -85,5 +84,6 @@ export default {
 .image:hover {
   border: 3px solid rgb(206, 122, 168);
   transform: scale(1.07);
+  cursor: pointer;
 }
 </style>

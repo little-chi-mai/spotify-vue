@@ -24,7 +24,7 @@
 <script>
 // @ is an alias to /src
 import LoggedIn from "@/views/LoggedIn";
-import EventService from "@/services/EventService";
+// import EventService from "@/services/EventService";
 import Introduction from "@/components/Introduction";
 
 export default {
@@ -35,20 +35,19 @@ export default {
   data() {
     return {
       name: "",
-      userInfo: {},
+      // userInfo: {},
       loginUrl: "/api/login",
     };
   },
   mounted() {
-    this.userInfo = this.$store.state.userInfo;
-    EventService.getUserInfo()
-      .then((response) => {
-        this.userInfo = response.data.userInfo;
-        this.setUserInfo();
-      })
-      .catch((error) => {
-        console.log("There was an error at Home: " + error.response);
-      });
+    // EventService.getUserInfo()
+    //   .then((response) => {
+    //     this.$store.commit("setUserInfo", response.data.userInfo);
+    //   })
+    //   .catch((error) => {
+    //     console.log("There was an error at Home: " + error.response);
+    //   });
+    this.$store.commit("setUserInfo");
   },
   // created() {
   //   console.log(this.$route.params.code);
@@ -56,6 +55,9 @@ export default {
   computed: {
     isLoggedIn() {
       return this.$store.state.isLoggedIn;
+    },
+    userInfo() {
+      return this.$store.state.userInfo;
     },
   },
   methods: {

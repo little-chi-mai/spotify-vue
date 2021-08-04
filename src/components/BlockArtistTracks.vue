@@ -1,7 +1,7 @@
 <template>
   <div class="artist-tracks block" v-if="artistId">
     <div>
-      <ArtistImage :size="250" :topTracks="topTracks" :url="artistImage" :artist="artistInfo" />
+      <ArtistImage :size="250" :topTracks="topTracks" :url="artistImage" :artist="artistInfo" :main="true" />
 
       <h2>{{ artistName }}</h2>
       <p>{{ genres }}</p>
@@ -10,14 +10,14 @@
       <h3 v-if="topTracks.length">TOP TRACKS</h3>
       <div>
         <span v-for="track in topTracks" :key="track.played_at">
-          <TrackImage :track="track" />
+          <TrackImage :scrollToEnd="scrollToEnd" :track="track" />
         </span>
       </div>
 
       <h3 v-if="albums.length">ALBUMS</h3>
       <div>
         <span v-for="album in albums" :key="album.id">
-          <AlbumImage :album="album" />
+          <AlbumImage :scrollToEnd="scrollToEnd" :album="album" />
         </span>
       </div>
     </div>
@@ -48,7 +48,7 @@ export default {
       suggestedArtists: [],
     };
   },
-  props: ["artistId"],
+  props: ["artistId", "scrollToEnd"],
   computed: {
     artistImage() {
       if (Object.keys(this.artistInfo).length && this.artistInfo.images.length) {  
@@ -117,12 +117,11 @@ export default {
 
 <style scoped>
 .artist-tracks {
-  background-color: white;
   margin-top: 1rem;
   padding: 1rem;
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
+  justify-content: space-evenly;
 }
 
 * {

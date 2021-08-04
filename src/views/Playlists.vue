@@ -5,7 +5,6 @@
       <div class="list">
         <div
           class="list-info"
-          
           v-for="playlist in userPlaylists.items"
           :key="playlist.id"
           @click="getPlaylistInfo(playlist.id)"
@@ -69,18 +68,7 @@ export default {
     },
   },
   mounted() {
-    EventService.getUserPlaylists(this.userId)
-      .then((response) => {
-        this.$store.commit("setUserPlaylists", response.data);
-        let arrayIds = [];
-        response.data.items &&
-          response.data.items.map((playlist) => {
-            arrayIds.push(playlist.id);
-          });
-      })
-      .catch((error) => {
-        console.log("There was an error at Home: " + error.response);
-      });
+    this.$store.commit("setUserInfo");
   },
   methods: {
     getPlaylistInfo(id) {
@@ -96,6 +84,25 @@ export default {
           console.log("There was an error:" + error.response);
         });
     },
+    getUserPlaylists(userId) {
+      EventService.getUserPlaylists(userId)
+        .then((response) => {
+          this.$store.commit("setUserPlaylists", response.data);
+          let arrayIds = [];
+          response.data.items &&
+            response.data.items.map((playlist) => {
+              arrayIds.push(playlist.id);
+            });
+        })
+        .catch((error) => {
+          console.log("There was an error at Home: " + error.response);
+        });
+    },
+  },
+  watch: {
+      userId() {
+        this.getUserPlaylists(this.userId);
+      },
   },
 };
 </script>

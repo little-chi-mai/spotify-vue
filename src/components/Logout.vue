@@ -10,7 +10,7 @@ import EventService from "@/services/EventService.js";
 export default {
   mounted() {
     EventService.logout().then(() => {
-      this.$store.commit("setUserInfo", {});
+      this.$store.commit("logout");
       this.$router.push("/");
     });
   },

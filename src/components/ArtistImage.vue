@@ -30,10 +30,9 @@ export default {
       styleObj: {
         height: this.$attrs.size ? this.$attrs.size + "px" : 50 + "px",
       },
-      track: {},
     };
   },
-  props: ["topTracks"],
+  props: ["topTracks", "main"],
   computed: {
     url() {
       return this.$attrs.url;
@@ -44,18 +43,23 @@ export default {
     artistId() {
       return this.artist.id;
     },
+    track() {
+      return this.topTracks ? this.topTracks[0] : {}
+    },
   },
   methods: {
     setArtistHovered() {
       this.$store.commit("setArtistHovered", this.artist);
       this.artist.images.length && this.$store.commit("setImageHovered", this.artist.images[0].url);
-      this.$store.commit("setArtistHoveredTopTrack", this.track);
-      this.$store.commit("setIsMusicPlayed", true);
+      if (this.main) {
+        this.$store.commit("setArtistHoveredTopTrack", this.track);
+        this.$store.commit("setIsMusicPlayed", true);
+      }
     },
     unsetArtistHovered() {
       this.$store.commit("setArtistHovered", {});
-
       this.$store.commit("setIsMusicPlayed", false);
+      this.$store.commit("setArtistHoveredTopTrack", {});
     },
     showTrackAndArtistInfo() {
       this.$store.commit("setTrackClicked", this.track);

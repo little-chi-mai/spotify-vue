@@ -1,38 +1,68 @@
 <template>
-  <div class="recent-played">
-    <button @click="getRecentTracks" class="btn">Your recent tracks</button>
-    <button @click="getTopTracks" class="btn">Your top tracks</button>
-    <button @click="getUserLikedTracks" class="btn">Your liked tracks</button>
-    <div v-if="recentTracks.length" class="recent-tracks block">
+  <div class="recent-played" id="container" ref="container">
+    <button
+      @click="getRecentTracks"
+      class="btn"
+      :class="{ activeTab: selectedTab === 'recentTracks' }"
+    >
+      Your recent tracks
+    </button>
+
+    <button
+      @click="getTopTracks"
+      class="btn"
+      :class="{ activeTab: selectedTab === 'topTracks' }"
+    >
+      Your top tracks
+    </button>
+
+    <button
+      @click="getUserLikedTracks"
+      class="btn"
+      :class="{ activeTab: selectedTab === 'likedTracks' }"
+    >
+      Your liked tracks
+    </button>
+
+    <div
+      v-if="recentTracks.length && selectedTab === 'recentTracks'"
+      class="recent-tracks block"
+    >
       <h3>Your Recent Tracks</h3>
       <span v-for="track in recentTracks" :key="track.played_at">
-        <TrackImage :track="track.track" />
+        <TrackImage :scrollToEnd="scrollToEnd"  :track="track.track" />
       </span>
     </div>
 
-    <div v-if="topTracks.length" class="recent-tracks block">
+    <div
+      v-if="topTracks.length && selectedTab === 'topTracks'"
+      class="recent-tracks block"
+    >
       <h3>Your Top Tracks</h3>
       <span v-for="track in topTracks" :key="track.id">
-        <TrackImage :track="track" />
+        <TrackImage :scrollToEnd="scrollToEnd" :track="track" />
       </span>
     </div>
 
-    <div v-if="likedTracks.length" class="recent-tracks block">
+    <div
+      v-if="likedTracks.length && selectedTab === 'likedTracks'"
+      class="recent-tracks block"
+    >
       <h3>Your Liked Tracks</h3>
       <span v-for="track in likedTracks" :key="track.track.id">
-        <TrackImage :track="track.track" />
+        <TrackImage :scrollToEnd="scrollToEnd" :track="track.track" />
       </span>
     </div>
 
-    <BlockPreview />
+    <BlockPreview :scrollToEnd="scrollToEnd" />
 
-    <BlockTrackInfo :getUserLikedTracks="getUserLikedTracks"/>
+    <BlockTrackInfo :scrollToEnd="scrollToEnd"  :getUserLikedTracks="getUserLikedTracks" />
 
     <div v-for="artistId in artistIds" :key="artistId">
-      <BlockArtistTracks :artistId="artistId" />
+      <BlockArtistTracks :scrollToEnd="scrollToEnd" :artistId="artistId" />
     </div>
 
-    <BlockAlbumInfo />
+    <BlockAlbumInfo :scrollToEnd="scrollToEnd" />
   </div>
 </template>
 
@@ -45,6 +75,11 @@ import BlockArtistTracks from "@/components/BlockArtistTracks";
 import BlockAlbumInfo from "@/components/BlockAlbumInfo";
 
 export default {
+  // data() {
+  //   return {
+  //     selectedTab: "",
+  //   };
+  // },
   components: {
     BlockPreview,
     TrackImage,
@@ -54,6 +89,11 @@ export default {
   },
   methods: {
     getRecentTracks() {
+      if (this.selectedTab === "recentTracks") {
+        this.$store.commit("setSelectedTab", "");
+        return;
+      }
+      this.$store.commit("setSelectedTab", "recentTracks");
       EventService.getRecentPlayedTracks()
         .then((response) => {
           this.$store.commit("setUserRecentTracks", response.data);
@@ -63,6 +103,11 @@ export default {
         });
     },
     getTopTracks() {
+      if (this.selectedTab === "topTracks") {
+        this.$store.commit("setSelectedTab", "");
+        return;
+      }
+      this.$store.commit("setSelectedTab", "topTracks");
       EventService.getUserTopTracks()
         .then((response) => {
           this.$store.commit("setUserTopTracks", response.data);
@@ -72,9 +117,28 @@ export default {
         });
     },
     getUserLikedTracks() {
+      if (this.selectedTab === "likedTracks") {
+        this.$store.commit("setSelectedTab", "");
+        return;
+      }
+      this.$store.commit("setSelectedTab", "likedTracks");
       EventService.getUserLikedTracks().then((response) => {
         this.$store.commit("setUserLikedTracks", response.data.items);
       });
+    },
+    scrollToEnd() {
+      setTimeout(() => {
+         const container = this.$refs.container;
+        // container.scrollTop = container.scrollHeight;
+        let bottom = container.scrollHeight;
+        console.log("bottom", bottom);
+        window.scrollTo({
+          top: bottom,
+          left: 0,
+          behavior: "smooth",
+        });
+        console.log("SCROLLING");
+      }, 500)
     },
   },
   computed: {
@@ -90,16 +154,18 @@ export default {
     likedTracks() {
       return this.$store.state.userLikedTracks;
     },
+    selectedTab() {
+      return this.$store.state.selectedTab;
+    },
   },
 };
 </script>
 
 <style scoped>
-.recent-played {
+/* .recent-played {
   padding: 2rem 0;
-}
+} */
 .recent-tracks {
-  background-color: white;
   margin-bottom: 1rem;
   width: 60vw;
 }
@@ -114,7 +180,16 @@ button:hover {
   color: whitesmoke;
   background-color: rgb(173, 88, 124);
 }
+
+.activeTab {
+  background-color: rgb(173, 88, 124);
+  color: rgb(255, 255, 255);
+}
+
 h3 {
-  color: rgb(150, 78, 78);
+  color: rgb(36, 36, 36);
+  text-transform: uppercase;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div v-if="Object.keys(album).length !== 0" class="album block">
-    <AlbumImage :album="album" :size="270" />
+    <AlbumImage :scrollToEnd="scrollToEnd" :album="album" :size="270" />
     <h2>{{ album.name }}</h2>
     <p>Released {{ album.release_date }}</p>
     <p>{{ album.type }} by {{ artistNames.join(" & ") }}</p>
@@ -12,6 +12,7 @@
           :track="track"
           :image="album.images[0].url"
           :album="album"
+          :scrollToEnd="scrollToEnd"
         />
         <!-- <TrackInAlbumImage /> -->
       </span>
@@ -30,6 +31,7 @@ export default {
     TrackImage,
     // TrackInAlbumImage,
   },
+  props: ["scrollToEnd"],
   computed: {
     album() {
       return this.$store.state.albumClicked;
@@ -46,6 +48,12 @@ export default {
     //   return this.$store.state.artistIds;
     // }
   },
+  mounted() {
+    
+    // setTimeout(this.scrollToEnd, 2000);
+    // console.log("this get called");
+  },
+  
   // watch: {
   //   artistIds: function (newTrack, oldVal) {
   //     // watch it
@@ -58,7 +66,6 @@ export default {
 
 <style scoped>
 .album {
-  background-color: white;
   margin-bottom: 1rem;
   margin-top: 1rem;
 }

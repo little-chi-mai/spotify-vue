@@ -20,7 +20,7 @@ export default {
       },
     };
   },
-  props: ["album", "image"],
+  props: ["album", "image", "scrollToEnd"],
   computed: {
     featuredTrack() {
       return this.album.tracks.items[0].preview_url;
@@ -28,6 +28,7 @@ export default {
   },
   methods: {
     getAlbum() {
+      this.scrollToEnd && this.scrollToEnd();
       EventService.getAlbum(this.album.id).then((response) => {
         this.$store.commit("setAlbumClicked", response.data);
       });

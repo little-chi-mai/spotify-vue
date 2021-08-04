@@ -1,6 +1,6 @@
 <template>
   <div class="block wrapper" v-if="Object.keys(track).length !== 0">
-    <TrackImage :track="track" :size="200" />
+    <TrackImage :track="track" :size="200" :scrollToEnd="scrollToEnd" />
     <div class="info">
       <h2>{{ name }}</h2>
       <p>From album {{ album }}</p>
@@ -8,7 +8,7 @@
     </div>
     <button @click="addToLikedTracks">+ Add to your Liked Songs</button>
     <div v-if="isNotiShown" class="noti">
-      <p>{{notiMessage}}</p>
+      <p>{{ notiMessage }}</p>
     </div>
   </div>
 </template>
@@ -21,13 +21,13 @@ export default {
   data() {
     return {
       isNotiShown: false,
-      notiMessage: ''
-    }
+      notiMessage: "",
+    };
   },
   components: {
     TrackImage,
   },
-  props: ["getUserLikedTracks"],
+  props: ["getUserLikedTracks", "scrollToEnd"],
   computed: {
     track: {
       get() {
@@ -68,17 +68,18 @@ export default {
   // },
   methods: {
     addToLikedTracks() {
-      EventService.addToLikedTracks(this.track.id).then((response) => {
-        this.notiMessage = response.data;
-        this.isNotiShown = true;
-        setTimeout(() => {
-          this.isNotiShown = false;
-        }, 2500)
-        this.$store.state.userLikedTracks.length && this.getUserLikedTracks();
-      })
-      .catch(err => {
-        console.log(err);
-      })
+      EventService.addToLikedTracks(this.track.id)
+        .then((response) => {
+          this.notiMessage = response.data;
+          this.isNotiShown = true;
+          setTimeout(() => {
+            this.isNotiShown = false;
+          }, 2500);
+          this.$store.state.userLikedTracks.length && this.getUserLikedTracks();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 };
@@ -86,7 +87,6 @@ export default {
 
 <style scoped>
 .wrapper {
-  background-color: rgb(255, 255, 255);
   display: flex;
   padding: 1rem;
   position: relative;
