@@ -15,11 +15,6 @@
           <button class="login-btn">Log in with Spotify</button>
         </a>
       </div>
-      <div v-else >
-        
-       
-      </div>
-     
 
       <video autoplay loop controls width="90%" ref="videoRef" muted="muted">
         <source
@@ -86,8 +81,10 @@ export default {
 } */
 
 video {
-  border: solid rgb(255, 201, 195) 5px;
+  border: solid rgba(255, 201, 195, 0.267) 5px;
   width: 60vw;
+  border-radius: 1.5rem;
+  margin: 1.5rem;
 }
 
 .home {
