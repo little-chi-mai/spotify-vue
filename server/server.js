@@ -7,7 +7,6 @@ const querystring = require("querystring");
 const cookieParser = require("cookie-parser");
 const SpotifyWebApi = require("spotify-web-api-node");
 const session = require("express-session");
-const history = require("connect-history-api-fallback");
 
 dotenv.config();
 const port = process.env.PORT || 3030;
@@ -21,7 +20,6 @@ server
   .use(express.static(path.join(__dirname, "../dist")))
   .use(cors())
   .use(cookieParser())
-  .use(history());
 
 const generateRandomString = function (length) {
   let text = "";
