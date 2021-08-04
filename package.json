@@ -5,14 +5,14 @@
   "proxy": "http://localhost:3030",
   "scripts": {
     "start": "node server/server.js",
-    "dev:server": "nodemon server/server.js",
-    "dev:client": "cd client && npm start",
-    "dev": "concurrently \"npm run server\" \"npm run serve\"",
+    "client": "npm run serve",
+    "server": "nodemon server/server.js",
+    "dev": "concurrently \"npm run serve\" \"npm run server\"",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "server": "nodemon server/server.js",
-    "compile:sass": "node-sass src/scss/main.scss src/css/main.css -w"
+    "compile:sass": "node-sass src/scss/main.scss src/css/main.css -w",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
   },
   "dependencies": {
     "@adobe/jwt-auth": "^1.0.1",

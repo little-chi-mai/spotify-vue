@@ -1,14 +1,19 @@
 <template>
   <div class="container">
+    
     <div class="home">
       <h1>Discover your Spotify</h1>
       <p>Your interface for music discovery, powered by Spotify.</p>
       <Introduction />
-      <div v-show="!isLoggedIn" class="btn-wrapper">
+      <div v-if="!isLoggedIn" class="btn-wrapper">
         <a :href="loginUrl">
           <button class="login-btn">Log in with Spotify</button>
         </a>
       </div>
+      <div v-else>
+        <router-link class="btn" to="/discovery">Discovery</router-link>
+      </div>
+      
 
       <video autoplay loop controls width="90%" ref="videoRef" muted="muted">
         <source
