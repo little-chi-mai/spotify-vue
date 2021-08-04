@@ -11,7 +11,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "compile:sass": "node-sass src/scss/main.scss src/css/main.css -w"
+    "compile:sass": "node-sass src/scss/main.scss src/css/main.css -w",
+    "heroku-postinstall": "npm install && npm run build"
   },
   "dependencies": {
     "@adobe/jwt-auth": "^1.0.1",
@@ -20,6 +21,7 @@
     "axios": "^0.21.1",
     "cloudinary-vue": "^1.2.1",
     "concurrently": "^6.2.0",
+    "connect-history-api-fallback": "^1.6.0",
     "cookie-parser": "^1.4.5",
     "core-js": "^3.6.5",
     "cors": "^2.8.5",

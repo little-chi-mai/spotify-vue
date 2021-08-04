@@ -7,20 +7,21 @@ const querystring = require("querystring");
 const cookieParser = require("cookie-parser");
 const SpotifyWebApi = require("spotify-web-api-node");
 const session = require("express-session");
+const history = require("connect-history-api-fallback");
 
 dotenv.config();
 const port = process.env.PORT || 3030;
 
 const clientId = process.env.SPOTIFY_CLIENT_ID;
 const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
-const redirectUri = process.env.VUE_APP_ROOT_SERVER
+const redirectUri = process.env.VUE_APP_ROOT_SERVER;
 const stateKey = "spotify_auth_state";
 
 server
   .use(express.static(path.join(__dirname, "../dist")))
   .use(cors())
-  .use(cookieParser());
-
+  .use(cookieParser())
+  .use(history());
 
 const generateRandomString = function (length) {
   let text = "";
@@ -89,7 +90,6 @@ server.get("/api/album/:id", getAlbum);
 server.listen(port, () => {
   console.log(`Server running at port ${port}`);
 });
-
 
 function logIn(req, res) {
   let sess = req.session;
