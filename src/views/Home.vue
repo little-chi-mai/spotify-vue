@@ -1,24 +1,29 @@
 <template>
   <div class="container">
-    
     <div class="home">
       <h1>Discover your Spotify</h1>
       <p>Your interface for music discovery, powered by Spotify.</p>
+      <div v-show="isLoggedIn" class="welcome">
+        <h2>Welcome back, {{userInfo.display_name}}!</h2>
+        <router-link class="btn-wrapper"  to="/discovery">
+          <div class="btn btn-discovery">Let's discover</div>
+        </router-link>
+      </div>
       <Introduction />
       <div v-if="!isLoggedIn" class="btn-wrapper">
         <a :href="loginUrl">
           <button class="login-btn">Log in with Spotify</button>
         </a>
       </div>
-      <div v-else>
-        <router-link class="btn" to="/discovery">Discovery</router-link>
+      <div v-else >
+        
+       
       </div>
-      
+     
 
       <video autoplay loop controls width="90%" ref="videoRef" muted="muted">
         <source
           src="https://res.cloudinary.com/mai-boo/video/upload/v1628063243/Screen_Recording_2021-08-04_at_5.41.16_pm_yap88a.mov#t=3"
-          
         />
       </video>
     </div>
@@ -83,7 +88,12 @@ export default {
 video {
   border: solid rgb(255, 201, 195) 5px;
   width: 60vw;
+}
 
+.home {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .login-btn {
@@ -94,6 +104,25 @@ video {
 }
 
 .btn-wrapper {
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
+  text-decoration: none;
 }
+
+.btn-discovery {
+  padding: 0.8rem;
+  margin-bottom: 1rem;
+  text-decoration: none;
+}
+
+.welcome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.welcome > h2 {
+  color: rgb(255, 233, 109);
+}
+
+
 </style>

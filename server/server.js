@@ -147,7 +147,7 @@ function callback(req, res) {
       const origin = process.env.VUE_APP_ROOT_CLIENT;
       console.log("ORIGIN", origin);
 
-      res.redirect(origin + "/discovery");
+      res.redirect(origin);
     })
     .catch(function (err) {
       console.log("Something went wrong:", err);
