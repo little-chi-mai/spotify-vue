@@ -1,6 +1,6 @@
 <template>
   <div v-if="name">
-    <h1>Playlist name: {{ name }}</h1>
+    <h1>Playlist <span>{{ name }}</span></h1>
     <!-- <a :href="url" target="_blank"
       >Click to listen to this playlist on Spotify</a
     > -->
@@ -37,4 +37,9 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped>
+span {
+  color: rgb(253, 255, 147);
+}
+
+</style>

@@ -429,12 +429,12 @@ function addToLikedTrack(req, res) {
 
       if (trackIsInYourMusic) {
         console.log("Track was found your music library!");
-        res.status(200).json("Track was found your music library!");
+        res.status(200).json({added: false, message: "Track was found your music library!"});
       } else {
         spotifyApi.addToMySavedTracks([songId]).then(
           function (data) {
             console.log(data.body);
-            res.status(200).json("Track added!");
+            res.status(200).json({added: true, message: "Track added!"});
           },
           function (err) {
             console.log("Something went wrong!", err);

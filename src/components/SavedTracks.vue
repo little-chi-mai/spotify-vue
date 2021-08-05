@@ -30,7 +30,11 @@
         <button :disabled='!input' class="btn" @click="createPlaylist">Create playlist</button>
       </form>
 
-      <div v-if="isNotiShown" class="noti">
+      <div v-if="notiCreatePlaylist" class="noti">
+        <p>Created a playlist!</p>
+      </div>
+
+      <div v-if="notiAddToPlaylist" class="noti">
         <p>Successful added to playlist!</p>
       </div>
 
@@ -58,7 +62,8 @@ export default {
     return {
       isListShown: false,
       list: "",
-      isNotiShown: false,
+      notiCreatePlaylist: false,
+      notiAddToPlaylist: false,
       input: "",
     };
   },
@@ -111,9 +116,9 @@ export default {
       EventService.addTracksToPlaylist(this.list, stringList).then(
         (response) => {
           console.log("add to list", response);
-          this.isNotiShown = true;
+          this.notiAddToPlaylist = true;
           setTimeout(() => {
-            this.isNotiShown = false;
+            this.notiAddToPlaylist = false;
           }, 2000);
           this.$store.commit("clearSavedTracks");
         }
@@ -124,6 +129,10 @@ export default {
         console.log(response);
         this.getUserPlaylists();
         this.input = "";
+        this.notiCreatePlaylist = true;
+        setTimeout(() => {
+          this.notiCreatePlaylist = false;
+        }, 2000);
       });
     },
     onInputChange(e) {
@@ -243,11 +252,12 @@ select {
 }
 
 .noti {
-  position: absolute;
-  top: 2rem;
-  left: 2rem;
-  background-color: rgba(192, 103, 155, 0.884);
+  position: fixed;
+  top: 85vh;
+  left: 65vw;
+  background-color: rgba(77, 134, 72, 0.877);
   padding: 1rem;
+  z-index: 10;
   width: 20rem;
 }
 

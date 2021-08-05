@@ -58,10 +58,4 @@ img {
   height: 20rem;
 }
 
-.album-preview {
-  position: fixed;
-  top: 10rem;
-  right: 10rem;
-  background-color: rgba(66, 66, 66, 0.26);
-}
 </style>

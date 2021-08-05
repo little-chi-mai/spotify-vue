@@ -24,7 +24,7 @@ export default {
       styleObj: {
         height: this.size ? this.size + "px" : 70 + "px",
       },
-      isNotiShown: false
+      isNotiShown: false,
     };
   },
   props: ["track", "image", "album", "size", "scrollToEnd"],
@@ -62,8 +62,8 @@ export default {
 
       this.isNotiShown = true;
       setTimeout(() => {
-        this.isNotiShown = false
-      }, 2500)
+        this.isNotiShown = false;
+      }, 2000);
       const artistIds = [];
       this.track.artists.forEach((artist) => {
         artistIds.push(artist.id);
@@ -95,14 +95,14 @@ export default {
 
 .image-track {
   display: inline-block;
-  position: relative;
+  /* position: relative; */
 }
 
 .noti {
-  position: absolute;
-  top: 0;
-  left: 7rem;
-  background-color: rgba(155, 64, 117, 0.829);
+  position: fixed;
+  top: 85vh;
+  left: 65vw;
+  background-color: rgba(77, 134, 72, 0.877);
   padding: 1rem;
   z-index: 10;
   width: 20rem;

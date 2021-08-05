@@ -7,7 +7,7 @@
       <p>By {{ artists.join(" & ") }}</p>
     </div>
     <button @click="addToLikedTracks">+ Add to your Liked Songs</button>
-    <div v-if="isNotiShown" class="noti">
+    <div v-if="isNotiShown" class="noti" :class="{notiFail: notiFail}">
       <p>{{ notiMessage }}</p>
     </div>
   </div>
@@ -22,6 +22,7 @@ export default {
     return {
       isNotiShown: false,
       notiMessage: "",
+      notiFail: false,
     };
   },
   components: {
@@ -70,7 +71,8 @@ export default {
     addToLikedTracks() {
       EventService.addToLikedTracks(this.track.id)
         .then((response) => {
-          this.notiMessage = response.data;
+          this.notiMessage = response.data.message;
+          if (!response.data.added) this.notiFail = true;
           this.isNotiShown = true;
           setTimeout(() => {
             this.isNotiShown = false;
@@ -89,7 +91,6 @@ export default {
 .wrapper {
   display: flex;
   padding: 1rem;
-  position: relative;
   justify-content: space-between;
   align-items: flex-start;
 }
@@ -122,11 +123,16 @@ button:hover {
 }
 
 .noti {
-  position: absolute;
-  top: 7rem;
-  left: 30rem;
-  background-color: rgba(192, 103, 155, 0.863);
+  position: fixed;
+  top: 85vh;
+  left: 65vw;
+  background-color: rgba(77, 134, 72, 0.877);
   padding: 1rem;
+  z-index: 10;
   width: 20rem;
+}
+
+.notiFail {
+  background-color: rgba(238, 186, 90, 0.877) !important;
 }
 </style>
