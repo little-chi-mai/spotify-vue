@@ -8,7 +8,6 @@ const cookieParser = require("cookie-parser");
 const SpotifyWebApi = require("spotify-web-api-node");
 const session = require("express-session");
 
-
 dotenv.config();
 const port = process.env.PORT || 3030;
 
@@ -20,7 +19,7 @@ const stateKey = "spotify_auth_state";
 server
   .use(express.static(path.join(__dirname, "../dist")))
   .use(cors())
-  .use(cookieParser())
+  .use(cookieParser());
 
 const generateRandomString = function (length) {
   let text = "";
@@ -85,6 +84,11 @@ server.post(
 );
 
 server.get("/api/album/:id", getAlbum);
+server.get("/mai", function (req, res) {
+  const origin = process.env.VUE_APP_ROOT_CLIENT;
+  res.send("what???", 404);
+  // res.redirect(origin);
+});
 
 server.listen(port, () => {
   console.log(`Server running at port ${port}`);
@@ -430,12 +434,15 @@ function addToLikedTrack(req, res) {
 
       if (trackIsInYourMusic) {
         console.log("Track was found your music library!");
-        res.status(200).json({added: false, message: "Track was found your music library!"});
+        res.status(200).json({
+          added: false,
+          message: "Track was found your music library!",
+        });
       } else {
         spotifyApi.addToMySavedTracks([songId]).then(
           function (data) {
             console.log(data.body);
-            res.status(200).json({added: true, message: "Track added!"});
+            res.status(200).json({ added: true, message: "Track added!" });
           },
           function (err) {
             console.log("Something went wrong!", err);
