@@ -25,10 +25,12 @@ export default new Vuex.Store({
     userRecentTracks: [],
     userTopTracks: [],
     userLikedTracks: [],
+    newRelease: [],
     isLoggedIn: false,
     trackHovered: {},
     albumHovered: {},
     artistHovered: {},
+    newReleaseHovered:{},
     artistHoveredTopTrack: {},
     isMusicPlayed: false,
     musicUrl: "",
@@ -52,7 +54,7 @@ export default new Vuex.Store({
         .then((response) => {
           state.userInfo = response.data.userInfo;
           state.isLoggedIn = true;
-          console.log(state.userInfo);
+          // console.log(state.userInfo);
         })
         .catch((error) => {
           console.log("There was an error at Home: " + error.response);
@@ -76,6 +78,9 @@ export default new Vuex.Store({
     },
     setUserLikedTracks(state, payload) {
       state.userLikedTracks = payload;
+    },
+    setNewRelease(state, payload) {
+      state.newRelease = payload;
     },
     setImageHovered(state, payload) {
       state.imageHovered = payload;
@@ -103,6 +108,9 @@ export default new Vuex.Store({
     },
     setArtistHovered(state, payload) {
       state.artistHovered = payload;
+    },
+    setNewReleaseHovered(state, payload) {
+      state.newReleaseHovered = payload;
     },
     setArtistHoveredTopTrack(state, payload) {
       state.artistHoveredTopTrack = payload;
@@ -158,8 +166,10 @@ export default new Vuex.Store({
       context.commit("setImageHovered", payload.imageUrl);
     },
     resetScreen(context) {
-      context.commit("setAlbumClicked", {});
+      console.log("TRYING TO RESET");
       context.commit("setTrackClicked", {});
+      context.commit("setAlbumClicked", {});
+      context.commit("setArtistIds", []);
       context.commit("setArtistIds", []);
     }
   },

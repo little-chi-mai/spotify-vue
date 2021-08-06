@@ -5,7 +5,8 @@
       Object.keys(this.$store.state.trackHovered).length !== 0 ||
       Object.keys(this.$store.state.albumHovered).length !== 0
       ||
-      Object.keys(this.$store.state.artistHovered).length !== 0
+      Object.keys(this.$store.state.artistHovered).length !== 0 ||
+      Object.keys(this.$store.state.newReleaseHovered).length !== 0
     "
   >
     <!-- <audio v-if="isMusicPlayed && musicUrl" controls autoplay class="audio">
@@ -27,6 +28,8 @@
     <!-- <div v-if="Object.keys(this.$store.state.artistHovered).length !== 0"> -->
       <ArtistPreview />
     <!-- </div> -->
+
+    <NewReleasePreview />
   </div>
 </template>
 
@@ -34,12 +37,14 @@
 import TrackPreview from "@/components/TrackPreview";
 import AlbumPreview from "@/components/AlbumPreview";
 import ArtistPreview from "@/components/ArtistPreview";
+import NewReleasePreview from "@/components/NewReleasePreview";
 
 export default {
   components: {
     TrackPreview,
     AlbumPreview,
-    ArtistPreview
+    ArtistPreview,
+    NewReleasePreview
   },
   computed: {
     imageUrl() {

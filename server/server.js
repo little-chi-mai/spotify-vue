@@ -52,6 +52,8 @@ server.post("/api/logout", logout);
 
 server.get("/api/callback", callback);
 
+server.get("/api/new-release", getNewRelease);
+
 server.get("/api/user/info", getUserInfo);
 
 server.get("/api/user/:id/playlists", getUserPlaylists);
@@ -371,7 +373,7 @@ function getAlbum(req, res) {
       res.status(200).json(data.body);
     },
     function (err) {
-      console.error(err);
+      console.error("CAN'T GET ALBUM", err);
     }
   );
 
@@ -454,4 +456,18 @@ function addToLikedTrack(req, res) {
       console.log("Something went wrong!", err);
     }
   );
+}
+
+function getNewRelease(req, res) {
+  const spotifyApi = new SpotifyWebApi({
+    accessToken: req.cookies["spotify_access_token"],
+  });
+  spotifyApi.getNewReleases({ limit : 50, offset: 0, country: 'AU' })
+    .then(function(data) {
+      console.log(data.body);
+      res.status(200).json(data.body);
+      }, function(err) {
+        console.log("Something went wrong!", err);
+        res.status(503).json(false);
+      });
 }

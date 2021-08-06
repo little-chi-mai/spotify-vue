@@ -24,6 +24,14 @@
       Your liked tracks
     </button>
 
+    <button
+      @click="getNewRelease"
+      class="btn"
+      :class="{ activeTab: selectedTab === 'newRelease' }"
+    >
+      New Release
+    </button>
+
     <div
       v-if="recentTracks.length && selectedTab === 'recentTracks'"
       class="recent-tracks block"
@@ -54,6 +62,18 @@
       </span>
     </div>
 
+    <div
+      v-if="newRelease.length && selectedTab === 'newRelease'"
+      class="recent-tracks block"
+    >
+      <h3>New release</h3>
+      <span v-for="album in newRelease" :key="album.id">
+        <!-- <TrackImage :scrollToEnd="scrollToEnd" :track="track.track" /> -->
+        
+        <NewRelease :album="album" />
+      </span>
+    </div>
+
     <BlockPreview :scrollToEnd="scrollToEnd" />
 
     <BlockTrackInfo :scrollToEnd="scrollToEnd"  :getUserLikedTracks="getUserLikedTracks" />
@@ -73,6 +93,7 @@ import TrackImage from "@/components/TrackImage";
 import BlockTrackInfo from "@/components/BlockTrackInfo";
 import BlockArtistTracks from "@/components/BlockArtistTracks";
 import BlockAlbumInfo from "@/components/BlockAlbumInfo";
+import NewRelease from "@/components/NewRelease";
 
 export default {
   // data() {
@@ -86,60 +107,7 @@ export default {
     BlockTrackInfo,
     BlockArtistTracks,
     BlockAlbumInfo,
-  },
-  methods: {
-    resetSelectedTab(tabName) {
-      if (this.selectedTab === tabName) {
-        this.$store.commit("setSelectedTab", "");
-        this.$store.dispatch("resetScreen");
-        return;
-      }
-      this.$store.commit("setSelectedTab", tabName);
-    },
-    getRecentTracks() {
-      this.resetSelectedTab("recentTracks")
-      EventService.getRecentPlayedTracks()
-        .then((response) => {
-          this.$store.commit("setUserRecentTracks", response.data);
-        })
-        .catch((error) => {
-          console.log("There was an error:" + error.response);
-        });
-    },
-    getTopTracks() {
-      this.resetSelectedTab("topTracks")
-      EventService.getUserTopTracks()
-        .then((response) => {
-          this.$store.commit("setUserTopTracks", response.data);
-        })
-        .catch((error) => {
-          console.log("There was an error:" + error.response);
-        });
-    },
-    getUserLikedTracks() {
-      this.resetSelectedTab("likedTracks")
-      EventService.getUserLikedTracks()
-        .then((response) => {
-          this.$store.commit("setUserLikedTracks", response.data.items);
-        })
-        .catch((error) => {
-          console.log("There was an error:" + error.response);
-        });
-    },
-    scrollToEnd() {
-      setTimeout(() => {
-         const container = this.$refs.container;
-        // container.scrollTop = container.scrollHeight;
-        let bottom = container.scrollHeight;
-        console.log("bottom", bottom);
-        window.scrollTo({
-          top: bottom,
-          left: 0,
-          behavior: "smooth",
-        });
-        console.log("SCROLLING");
-      }, 500)
-    },
+    NewRelease
   },
   computed: {
     artistIds() {
@@ -157,7 +125,79 @@ export default {
     selectedTab() {
       return this.$store.state.selectedTab;
     },
+    newRelease() {
+      return this.$store.state.newRelease;
+    }
   },
+  methods: {
+    resetSelectedTab(tabName) {
+      if (this.selectedTab === tabName) {
+        this.$store.commit("setSelectedTab", "");
+        this.$store.dispatch("resetScreen");
+        return;
+      }
+      this.$store.commit("setSelectedTab", tabName);
+      
+    },
+    getRecentTracks() {
+      this.resetSelectedTab("recentTracks")
+      EventService.getRecentPlayedTracks()
+        .then((response) => {
+          this.$store.commit("setUserRecentTracks", response.data);
+        })
+        .catch((error) => {
+          this.resetSelectedTab("")
+          console.log("There was an error:" + error.response);
+        });
+      
+    },
+    getTopTracks() {
+      this.resetSelectedTab("topTracks")
+      EventService.getUserTopTracks()
+        .then((response) => {
+          this.$store.commit("setUserTopTracks", response.data);
+        })
+        .catch((error) => {
+          this.resetSelectedTab("")
+          console.log("There was an error:" + error.response);
+        });
+    },
+    getUserLikedTracks() {
+      this.resetSelectedTab("likedTracks")
+      EventService.getUserLikedTracks()
+        .then((response) => {
+          this.$store.commit("setUserLikedTracks", response.data.items);
+        })
+        .catch((error) => {
+          this.resetSelectedTab("")
+          console.log("There was an error:" + error.response);
+        });
+    },
+    getNewRelease() {
+      this.resetSelectedTab("newRelease")
+      EventService.getNewRelease()
+        .then(response => {
+          this.$store.commit("setNewRelease", response.data.albums.items);
+        })
+        .catch((error) => {
+          this.resetSelectedTab("")
+          console.log("There was an error:" + error.response);
+        });
+    },
+    scrollToEnd() {
+      setTimeout(() => {
+         const container = this.$refs.container;
+        // container.scrollTop = container.scrollHeight;
+        let bottom = container.scrollHeight;
+        window.scrollTo({
+          top: bottom,
+          left: 0,
+          behavior: "smooth",
+        });
+      }, 500)
+    },
+  },
+  
 };
 </script>
 
@@ -179,7 +219,7 @@ button:hover {
 }
 
 .activeTab {
-  background-color: rgb(173, 88, 124);
+  background-color: #AD1457;
   color: rgb(255, 255, 255);
 }
 

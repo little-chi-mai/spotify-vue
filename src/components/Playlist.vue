@@ -15,9 +15,6 @@ export default {
   data() {
     return {};
   },
-  methods: {
-    playMusic() {},
-  },
 };
 </script>
 

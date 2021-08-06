@@ -32,20 +32,17 @@ export default {
       },
     };
   },
-  props: ["topTracks", "main"],
+  props: ["topTracks", "main", "artist"],
   computed: {
-    url() {
-      return this.$attrs.url;
-    },
-    artist() {
-      return this.$attrs.artist;
-    },
     artistId() {
       return this.artist.id;
     },
     track() {
       return this.topTracks ? this.topTracks[0] : {}
     },
+    url() {
+      return this.artist.images && this.artist.images.length && this.artist.images[0].url
+    }
   },
   methods: {
     setArtistHovered() {

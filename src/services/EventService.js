@@ -24,6 +24,9 @@ export default {
   getUserInfo() {
     return apiClient.get("/api/user/info");
   },
+  getNewRelease() {
+    return apiClient.get("/api/new-release");
+  },
   logout() {
     return apiClient.post("/api/logout");
   },

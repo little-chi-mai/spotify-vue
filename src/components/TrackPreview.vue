@@ -6,7 +6,7 @@
     </audio>
     <p v-if="isMusicPlayed && !musicUrl">No music preview</p>
     <h3>{{ trackHovered.name }}</h3>
-    <p>{{ trackHovered.artists[0].name }}</p>
+    <p>by {{ trackHovered.artists[0].name }}</p>
   </div>
 </template>
 
@@ -20,7 +20,6 @@
         return this.$store.state.trackHovered;
       },
       musicUrl() {
-        console.log(this.$store.state.trackHovered.preview_url);
         return this.$store.state.trackHovered.preview_url;
       },
     }

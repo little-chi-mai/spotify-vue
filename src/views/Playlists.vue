@@ -28,12 +28,12 @@
         </div>
       </div>
 
-      <div class="music-player">
+      <div v-show="playlistId" class="music-player">
         <Playlist :tracks="tracks" :name="name" :url="url" />
         <iframe
           v-if="playlistId"
           :src="'https://open.spotify.com/embed/playlist/' + playlistId"
-          height="380"
+          height="600"
           frameBorder="0"
           allowtransparency="true"
           allow="encrypted-media"
@@ -74,17 +74,7 @@ export default {
   },
   methods: {
     getPlaylistInfo(id) {
-      EventService.getPlaylistInfo(id)
-        .then((response) => {
-          this.tracks = response.data.tracks;
-          this.name = response.data.name;
-          this.url = response.data.external_urls.spotify;
-          // set selected playlist
-          this.playlistId = response.data.id;
-        })
-        .catch((error) => {
-          console.log("There was an error:" + error.response);
-        });
+      !this.playlistId ? this.playlistId = id : this.playlistId = '';
     },
     getUserPlaylists(userId) {
       EventService.getUserPlaylists(userId)
@@ -148,5 +138,8 @@ h1 {
 }
 
 .music-player {
+  border: ridge #ffbad1af 3px;
+  padding: 1rem;
 }
+
 </style>

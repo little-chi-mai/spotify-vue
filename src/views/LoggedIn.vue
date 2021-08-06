@@ -98,8 +98,6 @@ export default {
   methods: {
     detectBrowser() {
       const browser = detect();
-      console.log(browser);
-      console.log(browser.name);
       if (browser.name === "safari") this.isSafari = true;
       return browser;
     },
