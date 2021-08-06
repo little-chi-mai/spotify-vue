@@ -42,7 +42,7 @@
       </div>
       <p class="safari-note" v-show="reduce">
         Safari is your current browser. Please enable
-        <strong>"Auto-Play: Allow All Auto-Play"</strong> in your browser
+        <strong>"Auto-Play: Allow All Auto-Play"</strong> for this page in your browser
         settings to have listen to music in the app.
       </p>
       <p v-show="reduce">Hover over this box to see how.</p>
@@ -100,7 +100,7 @@ export default {
       const browser = detect();
       console.log(browser);
       console.log(browser.name);
-      if (browser.name === "chrome") this.isSafari = true;
+      if (browser.name === "safari") this.isSafari = true;
       return browser;
     },
     showVideo() {

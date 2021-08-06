@@ -24,15 +24,6 @@
           src="https://res.cloudinary.com/mai-boo/video/upload/v1628063243/Screen_Recording_2021-08-04_at_5.41.16_pm_yap88a.mov#t=3"
         />
       </video>
-
-      <div v-show="isSafari" class="safari">
-        <p>Safari is your current browser. Please enable "Auto-Play: Allow All Auto-Play" in your browser settings to have listen to music in the app.</p>
-        <video autoplay loop controls width="500" ref="videoRef" muted="muted">
-          <source
-            src="https://res.cloudinary.com/mai-boo/video/upload/v1628211157/Screen_Recording_2021-08-06_at_10.48.30_am_cdaxjv.mov"
-          />
-        </video>
-      </div>
     </div>
 
     <!-- <LoggedIn v-else /> -->
@@ -44,7 +35,6 @@
 // import LoggedIn from "@/views/LoggedIn";
 // import EventService from "@/services/EventService";
 import Introduction from "@/components/Introduction";
-import { detect } from "detect-browser";
 
 export default {
   components: {
@@ -56,7 +46,6 @@ export default {
       name: "",
       // userInfo: {},
       loginUrl: "/api/login",
-      isSafari: false
     };
   },
   mounted() {
@@ -69,7 +58,6 @@ export default {
     //   });
     this.$store.commit("setUserInfo");
     this.$refs.videoRef.play();
-    this.detectBrowser();
   },
   // created() {
   //   console.log(this.$route.params.code);
@@ -86,13 +74,6 @@ export default {
     setUserInfo() {
       this.$store.commit("setUserInfo");
     },
-    detectBrowser() {
-      const browser = detect()
-      console.log(browser);
-      console.log(browser.name);
-      if (browser.name === "safari") this.isSafari = true;
-      return browser;
-    }
   },
 };
 </script>
