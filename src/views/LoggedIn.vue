@@ -2,7 +2,7 @@
   <div class="page">
     <h1>🥁 Vue Spotify 🎸</h1>
     <div class="user-info">
-      <img v-if="userInfo.images" :src="userInfo.images[0].url" alt="" />
+      <img v-if="userInfo.images && userInfo.images.length" :src="userInfo.images[0].url" alt="" />
       <div class="user-info__account">
         <h2>{{ userInfo.display_name }}</h2>
         <p>{{ userInfo.email }}</p>

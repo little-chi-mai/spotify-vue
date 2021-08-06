@@ -84,11 +84,11 @@ server.post(
 );
 
 server.get("/api/album/:id", getAlbum);
-server.get("/mai", function (req, res) {
-  const origin = process.env.VUE_APP_ROOT_CLIENT;
-  res.send("what???", 404);
-  // res.redirect(origin);
-});
+// server.get("/api/mai", function (req, res) {
+//   const origin = process.env.VUE_APP_ROOT_CLIENT;
+//   res.send("what???", 404);
+//   // res.redirect(origin);
+// });
 
 server.listen(port, () => {
   console.log(`Server running at port ${port}`);
