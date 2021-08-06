@@ -80,6 +80,9 @@ server.post("/api/playlist/create/:name", createPlaylist);
 
 server.get("/api/artist/:id/similar-artists", getSimilarArtists);
 
+// SEARCH FUNCTIONS
+server.get("/api/search/:searchTerm", searchTracks);
+
 server.post(
   "/api/add-tracks-to-playlist/:playlistId/:tracksArray",
   addTracksToPlaylist
@@ -462,12 +465,34 @@ function getNewRelease(req, res) {
   const spotifyApi = new SpotifyWebApi({
     accessToken: req.cookies["spotify_access_token"],
   });
-  spotifyApi.getNewReleases({ limit : 50, offset: 0, country: 'AU' })
-    .then(function(data) {
+  spotifyApi.getNewReleases({ limit: 50, offset: 0, country: "AU" }).then(
+    function (data) {
       console.log(data.body);
       res.status(200).json(data.body);
-      }, function(err) {
-        console.log("Something went wrong!", err);
-        res.status(503).json(false);
-      });
+    },
+    function (err) {
+      console.log("Something went wrong!", err);
+      res.status(503).json(false);
+    }
+  );
+}
+
+function searchTracks(req, res) {
+  const searchTerm = req.params.searchTerm;
+  // const artist = req.params.artist;
+  const spotifyApi = new SpotifyWebApi({
+    accessToken: req.cookies["spotify_access_token"],
+  });
+  spotifyApi.searchTracks(searchTerm).then(
+    function (data) {
+      console.log(
+        'Search tracks by "Alright" in the track name and "Kendrick Lamar" in the artist name',
+        data.body
+      );
+      res.status(200).json(data.body);
+    },
+    function (err) {
+      console.log("Something went wrong!", err);
+    }
+  );
 }

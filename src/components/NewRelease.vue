@@ -34,6 +34,7 @@
           this.$store.commit("setTrackClicked", {});
         })
 
+        
       }
     }
   }

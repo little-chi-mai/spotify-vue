@@ -74,4 +74,7 @@ export default {
   getSimilarArtirsts(id) {
     return apiClient.get(`/api/artist/${id}/similar-artists`);
   },
+  searchTracks(searchTerm) {
+    return apiClient.get(`api/search/${searchTerm}`);
+  }
 };

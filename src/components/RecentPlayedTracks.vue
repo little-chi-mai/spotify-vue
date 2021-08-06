@@ -32,6 +32,22 @@
       New Release
     </button>
 
+    <form @submit="search" @submit.prevent>
+      <input
+        @input="onInputTrack"
+        type="text"
+        :value="inputTrack"
+        placeholder="Enter a track's name"
+      />
+      <input
+        @input="onInputArtist"
+        type="text"
+        :value="inputArtist"
+        placeholder="Enter an artist's name"
+      />
+      <button :disabled='!inputTrack && !inputArtist' class="btn" >Search</button>
+    </form>
+
     <div
       v-if="recentTracks.length && selectedTab === 'recentTracks'"
       class="recent-tracks block"
@@ -68,9 +84,17 @@
     >
       <h3>New release</h3>
       <span v-for="album in newRelease" :key="album.id">
-        <!-- <TrackImage :scrollToEnd="scrollToEnd" :track="track.track" /> -->
-        
         <NewRelease :album="album" />
+      </span>
+    </div>
+
+    <div
+      v-if="searchResults.length && selectedTab === 'searchResults'"
+      class="recent-tracks block"
+    >
+      <h3>Your search result</h3>
+      <span v-for="track in searchResults" :key="track.id">
+        <TrackImage :scrollToEnd="scrollToEnd" :track="track" />
       </span>
     </div>
 
@@ -96,11 +120,12 @@ import BlockAlbumInfo from "@/components/BlockAlbumInfo";
 import NewRelease from "@/components/NewRelease";
 
 export default {
-  // data() {
-  //   return {
-  //     selectedTab: "",
-  //   };
-  // },
+  data() {
+    return {
+      inputTrack: "",
+      inputArtist: ""
+    };
+  },
   components: {
     BlockPreview,
     TrackImage,
@@ -127,13 +152,17 @@ export default {
     },
     newRelease() {
       return this.$store.state.newRelease;
+    },
+    searchResults() {
+      return this.$store.state.searchResults;
     }
   },
   methods: {
     resetSelectedTab(tabName) {
-      if (this.selectedTab === tabName) {
+      if (this.selectedTab === tabName && tabName !== "searchResults") {
         this.$store.commit("setSelectedTab", "");
-        this.$store.dispatch("resetScreen");
+        
+          this.$store.dispatch("resetScreen");
         return;
       }
       this.$store.commit("setSelectedTab", tabName);
@@ -184,6 +213,27 @@ export default {
           console.log("There was an error:" + error.response);
         });
     },
+    search() {
+      console.log("SEARCH");
+      this.resetSelectedTab("searchResults")
+      let term = '';
+      if (this.inputTrack && this.inputArtist) {
+        term = `track: ${this.inputTrack} artist: ${this.inputArtist}`;
+      } else if (this.inputTrack && !this.inputArtist) {
+        term = this.inputTrack 
+      } else if (!this.inputTrack && this.inputArtist) {
+        term = `artist: ${this.inputArtist}`;
+      }
+      EventService.searchTracks(term)
+        .then(response => {
+          console.log("RESPONSE", response.data);
+          this.$store.commit("setSearchResults", response.data.tracks.items)
+        })
+        .catch((error) => {
+          this.resetSelectedTab("")
+          console.log("There was an error:" + error.response);
+        });
+    },
     scrollToEnd() {
       setTimeout(() => {
          const container = this.$refs.container;
@@ -196,6 +246,13 @@ export default {
         });
       }, 500)
     },
+    onInputTrack(e) {
+      this.inputTrack = e.target.value;
+    },
+    onInputArtist(e) {
+      this.inputArtist = e.target.value;
+    },
+    
   },
   
 };
@@ -228,5 +285,12 @@ h3 {
   text-transform: uppercase;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
+}
+
+input {
+  color: rgb(41, 41, 41);
+  /* height: 2rem; */
+  width: 12rem;
+  padding: 0.3rem;
 }
 </style>

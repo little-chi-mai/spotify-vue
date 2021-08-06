@@ -42,6 +42,7 @@ export default new Vuex.Store({
     // savedTrackCounter: JSON.parse(localStorage.getItem("savedTracks")).length,
     savedTracks: JSON.parse(localStorage.getItem("savedTracks")),
     selectedTab: "",
+    searchResults: []
   },
   mutations: {
     setUserInfo(state) {
@@ -151,6 +152,9 @@ export default new Vuex.Store({
     },
     setSelectedTab(state, payload) {
       state.selectedTab = payload;
+    },
+    setSearchResults(state, payload) {
+      state.searchResults = payload;
     },
   },
   actions: {
