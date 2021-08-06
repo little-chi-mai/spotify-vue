@@ -20,6 +20,7 @@
         return this.$store.state.trackHovered;
       },
       musicUrl() {
+        console.log(this.$store.state.trackHovered.preview_url);
         return this.$store.state.trackHovered.preview_url;
       },
     }
