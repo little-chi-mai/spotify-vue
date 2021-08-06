@@ -186,6 +186,14 @@ video {
   right: -0.75rem;
 }
 
+.reduce-icon-1:hover, .reduce-icon-2:hover {
+  opacity: 0.9;
+}
+
+.reduce-icon-1:active, .reduce-icon-2:active {
+  opacity: 0.7;
+}
+
 .safari-note {
   padding-top: 0.5rem;
 }
