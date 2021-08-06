@@ -16,7 +16,7 @@
           {{ playlist.name }}
         </option>
       </select>
-      <button :disabled='!savedTrackCounter' class="btn" @click="addToList">Add tracks to this list</button>
+      <button :disabled='!savedTrackCounter || !userPlaylists.length' class="btn" @click="addToList">Add tracks to this list</button>
 
       
       <form @submit.prevent>
