@@ -60,6 +60,9 @@ export default {
   getUserTopTracks() {
     return apiClient.get(`/api/my-top-tracks`);
   },
+  getUserTopArtists() {
+    return apiClient.get(`/api/my-top-artists`);
+  },
   getUserLikedTracks() {
     return apiClient.get(`/api/get-my-liked-tracks`);
   },

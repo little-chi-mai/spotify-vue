@@ -1,6 +1,6 @@
 <template>
   <img
-    v-if="album.images"
+    v-if="album.images && album.images.length"
     :src="album.images[0].url"
     alt=""
     :style="styleObj"
@@ -23,7 +23,12 @@ export default {
   props: ["album", "image", "scrollToEnd"],
   computed: {
     featuredTrack() {
-      return this.album.tracks.items[0].preview_url;
+      if (this.album.tracks.items && this.album.tracks.items.length) {
+        return this.album.tracks.items[0].preview_url;
+      } else {
+        return "";
+      }
+      
     },
   },
   methods: {
@@ -46,8 +51,8 @@ export default {
 
 <style scoped>
 img {
- transition: all 0.2s ease-in-out;
- border: 3px solid rgba(206, 122, 168, 0);
+  transition: all 0.2s ease-in-out;
+  border: 3px solid rgba(206, 122, 168, 0);
 }
 
 img:hover {

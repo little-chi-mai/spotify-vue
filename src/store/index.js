@@ -24,6 +24,7 @@ export default new Vuex.Store({
     userInfo: {},
     userRecentTracks: [],
     userTopTracks: [],
+    userTopArtists: [],
     userLikedTracks: [],
     newRelease: [],
     isLoggedIn: false,
@@ -39,7 +40,6 @@ export default new Vuex.Store({
     albumClicked: {},
     artistIds: [],
     userPlaylists: {},
-    // savedTrackCounter: JSON.parse(localStorage.getItem("savedTracks")).length,
     savedTracks: JSON.parse(localStorage.getItem("savedTracks")),
     selectedTab: "",
     searchResults: []
@@ -65,9 +65,6 @@ export default new Vuex.Store({
       state.userInfo = {};
       state.isLoggedIn = false;
     },
-    // setIsLoggedIn(state, payload) {
-    //   state.isLoggedIn = payload;
-    // },
     setTrackHovered(state, payload) {
       state.trackHovered = payload;
     },
@@ -76,6 +73,9 @@ export default new Vuex.Store({
     },
     setUserTopTracks(state, payload) {
       state.userTopTracks = payload;
+    },
+    setUserTopArtists(state, payload) {
+      state.userTopArtists = payload;
     },
     setUserLikedTracks(state, payload) {
       state.userLikedTracks = payload;
@@ -174,7 +174,11 @@ export default new Vuex.Store({
       context.commit("setTrackClicked", {});
       context.commit("setAlbumClicked", {});
       context.commit("setArtistIds", []);
-      context.commit("setArtistIds", []);
+      context.commit("setSearchResults", []);
+      context.commit("setUserLikedTracks", []);
+      context.commit("setUserTopTracks", []);
+      context.commit("setUserTopArtists", []);
+      // context.commit("setUserTopTracks", []);
     }
   },
   computed: {

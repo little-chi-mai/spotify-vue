@@ -7,21 +7,21 @@
           class="list-info"
           v-for="playlist in userPlaylists.items"
           :key="playlist.id"
-          @click="getPlaylistInfo(playlist.id)"
+          @click="getPlaylistInfo(playlist.id, playlist.name)"
           :class="{ activeTab: playlistId === playlist.id }"
         >
           <h3>{{ playlist.name }}</h3>
 
           <img
             class="playlist"
-            v-if="playlist.images && playlist.images[0]"
+            v-if="playlist.images && playlist.images.length"
             :src="playlist.images[0].url"
             alt=""
           />
 
           <img
             class="playlist"
-            v-if="!playlist.images[0]"
+            v-else
             src="../assets/album.png"
             alt=""
           />
@@ -29,7 +29,8 @@
       </div>
 
       <div v-show="playlistId" class="music-player">
-        <Playlist :tracks="tracks" :name="name" :url="url" />
+
+        <h1>Playlist <span>{{ name }}</span></h1>
         <iframe
           v-if="playlistId"
           :src="'https://open.spotify.com/embed/playlist/' + playlistId"
@@ -46,12 +47,9 @@
 
 <script>
 import EventService from "@/services/EventService";
-import Playlist from "@/components/Playlist.vue";
 
 export default {
-  components: {
-    Playlist,
-  },
+
   data() {
     return {
       tracks: {},
@@ -73,8 +71,15 @@ export default {
     this.userId && this.getUserPlaylists(this.userId);
   },
   methods: {
-    getPlaylistInfo(id) {
-      !this.playlistId ? this.playlistId = id : this.playlistId = '';
+    getPlaylistInfo(id, name) {
+      if (this.playlistId === id) {
+        this.playlistId = "";
+        this.name = "";
+      } else {
+        this.playlistId = id;
+        this.name = name;
+      }
+      
     },
     getUserPlaylists(userId) {
       EventService.getUserPlaylists(userId)
@@ -140,6 +145,10 @@ h1 {
 .music-player {
   border: ridge #ffbad1af 3px;
   padding: 1rem;
+}
+
+span {
+  color: rgb(253, 255, 147);
 }
 
 </style>

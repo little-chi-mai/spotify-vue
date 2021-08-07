@@ -1,60 +1,13 @@
 <template>
   <div class="recent-played" id="container" ref="container">
-    <button
-      @click="getRecentTracks"
-      class="btn"
-      :class="{ activeTab: selectedTab === 'recentTracks' }"
-    >
-      Your recent tracks
-    </button>
-
-    <button
-      @click="getTopTracks"
-      class="btn"
-      :class="{ activeTab: selectedTab === 'topTracks' }"
-    >
-      Your top tracks
-    </button>
-
-    <button
-      @click="getUserLikedTracks"
-      class="btn"
-      :class="{ activeTab: selectedTab === 'likedTracks' }"
-    >
-      Your liked tracks
-    </button>
-
-    <button
-      @click="getNewRelease"
-      class="btn"
-      :class="{ activeTab: selectedTab === 'newRelease' }"
-    >
-      New Release
-    </button>
-
-    <form @submit="search" @submit.prevent>
-      <input
-        @input="onInputTrack"
-        type="text"
-        :value="inputTrack"
-        placeholder="Enter a track's name"
-      />
-      <input
-        @input="onInputArtist"
-        type="text"
-        :value="inputArtist"
-        placeholder="Enter an artist's name"
-      />
-      <button :disabled='!inputTrack && !inputArtist' class="btn" >Search</button>
-    </form>
-
+    <Dashboard />
     <div
       v-if="recentTracks.length && selectedTab === 'recentTracks'"
       class="recent-tracks block"
     >
       <h3>Your Recent Tracks</h3>
       <span v-for="track in recentTracks" :key="track.played_at">
-        <TrackImage :scrollToEnd="scrollToEnd"  :track="track.track" />
+        <TrackImage :scrollToEnd="scrollToEnd" :track="track.track" />
       </span>
     </div>
 
@@ -66,6 +19,12 @@
       <span v-for="track in topTracks" :key="track.id">
         <TrackImage :scrollToEnd="scrollToEnd" :track="track" />
       </span>
+    </div>
+
+    <div
+      v-if="topArtists.length && selectedTab === 'topArtists'"
+    >
+      <BlockTopArtists />
     </div>
 
     <div
@@ -100,7 +59,7 @@
 
     <BlockPreview :scrollToEnd="scrollToEnd" />
 
-    <BlockTrackInfo :scrollToEnd="scrollToEnd"  :getUserLikedTracks="getUserLikedTracks" />
+    <BlockTrackInfo :scrollToEnd="scrollToEnd" />
 
     <div v-for="artistId in artistIds" :key="artistId">
       <BlockArtistTracks :scrollToEnd="scrollToEnd" :artistId="artistId" />
@@ -111,19 +70,20 @@
 </template>
 
 <script>
-import EventService from "@/services/EventService.js";
 import BlockPreview from "@/components/BlockPreview";
 import TrackImage from "@/components/TrackImage";
 import BlockTrackInfo from "@/components/BlockTrackInfo";
 import BlockArtistTracks from "@/components/BlockArtistTracks";
 import BlockAlbumInfo from "@/components/BlockAlbumInfo";
 import NewRelease from "@/components/NewRelease";
+import Dashboard from "@/components/Dashboard";
+import BlockTopArtists from "@/components/BlockTopArtists";
 
 export default {
   data() {
     return {
       inputTrack: "",
-      inputArtist: ""
+      inputArtist: "",
     };
   },
   components: {
@@ -132,7 +92,9 @@ export default {
     BlockTrackInfo,
     BlockArtistTracks,
     BlockAlbumInfo,
-    NewRelease
+    NewRelease,
+    Dashboard,
+    BlockTopArtists,
   },
   computed: {
     artistIds() {
@@ -155,88 +117,15 @@ export default {
     },
     searchResults() {
       return this.$store.state.searchResults;
-    }
+    },
+    topArtists() {
+      return this.$store.state.userTopArtists;
+    },
   },
   methods: {
-    resetSelectedTab(tabName) {
-      if (this.selectedTab === tabName && tabName !== "searchResults") {
-        this.$store.commit("setSelectedTab", "");
-        
-          this.$store.dispatch("resetScreen");
-        return;
-      }
-      this.$store.commit("setSelectedTab", tabName);
-      
-    },
-    getRecentTracks() {
-      this.resetSelectedTab("recentTracks")
-      EventService.getRecentPlayedTracks()
-        .then((response) => {
-          this.$store.commit("setUserRecentTracks", response.data);
-        })
-        .catch((error) => {
-          this.resetSelectedTab("")
-          console.log("There was an error:" + error.response);
-        });
-      
-    },
-    getTopTracks() {
-      this.resetSelectedTab("topTracks")
-      EventService.getUserTopTracks()
-        .then((response) => {
-          this.$store.commit("setUserTopTracks", response.data);
-        })
-        .catch((error) => {
-          this.resetSelectedTab("")
-          console.log("There was an error:" + error.response);
-        });
-    },
-    getUserLikedTracks() {
-      this.resetSelectedTab("likedTracks")
-      EventService.getUserLikedTracks()
-        .then((response) => {
-          this.$store.commit("setUserLikedTracks", response.data.items);
-        })
-        .catch((error) => {
-          this.resetSelectedTab("")
-          console.log("There was an error:" + error.response);
-        });
-    },
-    getNewRelease() {
-      this.resetSelectedTab("newRelease")
-      EventService.getNewRelease()
-        .then(response => {
-          this.$store.commit("setNewRelease", response.data.albums.items);
-        })
-        .catch((error) => {
-          this.resetSelectedTab("")
-          console.log("There was an error:" + error.response);
-        });
-    },
-    search() {
-      console.log("SEARCH");
-      this.resetSelectedTab("searchResults")
-      let term = '';
-      if (this.inputTrack && this.inputArtist) {
-        term = `track: ${this.inputTrack} artist: ${this.inputArtist}`;
-      } else if (this.inputTrack && !this.inputArtist) {
-        term = this.inputTrack 
-      } else if (!this.inputTrack && this.inputArtist) {
-        term = `artist: ${this.inputArtist}`;
-      }
-      EventService.searchTracks(term)
-        .then(response => {
-          console.log("RESPONSE", response.data);
-          this.$store.commit("setSearchResults", response.data.tracks.items)
-        })
-        .catch((error) => {
-          this.resetSelectedTab("")
-          console.log("There was an error:" + error.response);
-        });
-    },
     scrollToEnd() {
       setTimeout(() => {
-         const container = this.$refs.container;
+        const container = this.$refs.container;
         // container.scrollTop = container.scrollHeight;
         let bottom = container.scrollHeight;
         window.scrollTo({
@@ -244,53 +133,19 @@ export default {
           left: 0,
           behavior: "smooth",
         });
-      }, 500)
+      }, 500);
     },
-    onInputTrack(e) {
-      this.inputTrack = e.target.value;
-    },
-    onInputArtist(e) {
-      this.inputArtist = e.target.value;
-    },
-    
   },
-  
 };
 </script>
 
 <style scoped>
-
 .recent-tracks {
-  margin-bottom: 1rem;  
+  margin-bottom: 1rem;
 }
 
-button {
-  color: rgb(46, 46, 46);
-  border-radius: 10px;
-  margin: 2rem 0;
-}
-
-button:hover {
-  color: whitesmoke;
-  background-color: rgb(173, 88, 124);
-}
-
-.activeTab {
-  background-color: #AD1457;
-  color: rgb(255, 255, 255);
-}
-
-h3 {
-  color: rgb(36, 36, 36);
+.recent-tracks > h3 {
+  color: rgb(43, 43, 43);
   text-transform: uppercase;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-}
-
-input {
-  color: rgb(41, 41, 41);
-  /* height: 2rem; */
-  width: 12rem;
-  padding: 0.3rem;
 }
 </style>

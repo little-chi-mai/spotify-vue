@@ -14,7 +14,6 @@
           :album="album"
           :scrollToEnd="scrollToEnd"
         />
-        <!-- <TrackInAlbumImage /> -->
       </span>
     </div>
   </div>
@@ -23,13 +22,11 @@
 <script>
 import AlbumImage from "@/components/AlbumImage";
 import TrackImage from "@/components/TrackImage";
-// import TrackInAlbumImage from "@/components/TrackInAlbumImage";
 
 export default {
   components: {
     AlbumImage,
     TrackImage,
-    // TrackInAlbumImage,
   },
   props: ["scrollToEnd"],
   computed: {
@@ -44,23 +41,7 @@ export default {
         });
       return artists;
     },
-    // artistIds() {
-    //   return this.$store.state.artistIds;
-    // }
   },
-  mounted() {
-    
-    // setTimeout(this.scrollToEnd, 2000);
-    // console.log("this get called");
-  },
-  
-  // watch: {
-  //   artistIds: function (newTrack, oldVal) {
-  //     // watch it
-  //     console.log("Prop TRACK changed: ", newTrack, " | was: ", oldVal);
-  //     this.$store.commit('setAlbumClicked', {});
-  //   },
-  // }
 };
 </script>
 

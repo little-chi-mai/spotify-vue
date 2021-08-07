@@ -1,7 +1,13 @@
 <template>
   <div class="artist-tracks block" v-if="artistId">
     <div>
-      <ArtistImage :size="250" :topTracks="topTracks" :url="artistImage" :artist="artistInfo" :main="true" />
+      <ArtistImage 
+        :size="250" 
+        :topTracks="topTracks" 
+        :url="artistImage" 
+        :artist="artistInfo" 
+        :main="true"
+      />
 
       <h2>{{ artistName }}</h2>
       <p>{{ genres }}</p>
@@ -22,7 +28,7 @@
       </div>
     </div>
     
-    <SimilarArtists :artistId="artistId"/>
+    <SimilarArtists :artistId="artistId" :similarArtists="similarArtists"/>
   </div>
 </template>
 
@@ -46,6 +52,7 @@ export default {
       topTracks: [],
       albums: [],
       suggestedArtists: [],
+      similarArtists: []
     };
   },
   props: ["artistId", "scrollToEnd"],
@@ -74,32 +81,31 @@ export default {
   methods: {
     getArtistInfo() {
       EventService.getArtistInfo(this.artistId).then((response) => {
-        this.artistInfo = response.data;
-      });
-    },
-    getArtistTopTracks() {
-      EventService.getArtistTopTracks(this.artistId).then((response) => {
-        this.topTracks = response.data;
+        console.log("getArtistInfo", response.data);
+        this.artistInfo = response.data.artistInfo;
+        this.topTracks = response.data.artistInfo.topTracks;
+        this.similarArtists = response.data.relatedArtists;
+        console.log(response.data);
       });
     },
     getArtistAlbums() {
       EventService.getArtistAlbums(this.artistId).then((response) => {
-        let albumsArray = [];
-        response.data.items.forEach((album) => {
-          if (album.album_type === "album") {
-            EventService.getAlbum(album.id).then((response) => {
-              albumsArray.push(response.data);
-            });
-          }
-        });
-        this.albums = albumsArray;
+        // let albumsArray = [];
+        // response.data.items.forEach((album) => {
+        //   if (album.album_type === "album") {
+        //     EventService.getAlbum(album.id).then((response) => {
+        //       albumsArray.push(response.data);
+        //     });
+        //   }
+        // });
+        console.log("getArtistAlbums", response.data);
+        this.albums = response.data;
       });
     },
   },
   mounted() {
     if (this.artistId) {
       this.getArtistInfo();
-      this.getArtistTopTracks();
       this.getArtistAlbums();
     }
   },

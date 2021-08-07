@@ -4,14 +4,14 @@
       <source :src="musicUrl" type="audio/mpeg" />
       Your browser does not support the audio tag.
     </audio>
-    <!-- <p v-if="isMusicPlayed && !musicUrl">No music preview</p> -->
+
     <div v-if="isMusicPlayed">
       <p>{{ topTrack && topTrack.name }}</p>
       <h5>{{ trackArtists }}</h5>
-      <!-- <p>{{ artistsAlbum.join(' & ')}}</p> -->
+
       <h5>First track in the album:</h5>
       <p>{{ album && album.name}}</p>
-      <!-- <p>{{artistsTrack.join(' & ')}}</p> -->
+
     </div>
 
     <div v-if="!isMusicPlayed">

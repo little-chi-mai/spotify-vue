@@ -63,6 +63,7 @@ server.get("/api/playlist/:id", getPlaylistInfo);
 server.get("/api/recent-tracks", getRecentPlayedTracks);
 
 server.get("/api/my-top-tracks", getMyTopTracks);
+server.get("/api/my-top-artists", getMyTopArtists);
 
 server.get("/api/get-my-liked-tracks", getMyLikedTracks);
 
@@ -211,8 +212,6 @@ function getPlaylistInfo(req, res) {
   const spotifyApi = new SpotifyWebApi({
     accessToken: req.cookies["spotify_access_token"],
   });
-  // console.log("PLAYLIST ID", id);
-  // console.log("spotifyApi", spotifyApi);
   spotifyApi.getPlaylist(id).then(
     function (data) {
       // console.log("Some information about this playlist", data.body);
@@ -238,24 +237,12 @@ function getRecentPlayedTracks(req, res) {
     })
     .then(
       function (data) {
-        // Output items
-        // console.log("Your 20 most recently played tracks are:");
-        // data.body.items.forEach((item) => console.log(item.track));
         res.status(200).json(data.body.items);
       },
       function (err) {
         console.log("Something went wrong!", err.body);
       }
     );
-
-  // spotifyApi.getMyTopArtists()
-  // .then(function(data) {
-  //   let topArtists = data.body.items;
-  //   console.log(topArtists);
-  //   res.status(200).json(topArtists);
-  // }, function(err) {
-  //   console.log('Something went wrong!', err);
-  // });
 }
 
 function getMyTopTracks(req, res) {
@@ -271,6 +258,26 @@ function getMyTopTracks(req, res) {
       console.log("Something went wrong!", err);
     }
   );
+}
+async function getMyTopArtists(req, res) {
+  const spotifyApi = new SpotifyWebApi({
+    accessToken: req.cookies["spotify_access_token"],
+  });
+
+  let topArtists = await spotifyApi.getMyTopArtists();
+  const getTopTracks = (topArtists) => {
+    const promises = topArtists.body.items.map(async (artist) => {
+      let topTracksInfo = await spotifyApi.getArtistTopTracks(artist.id, "AU");
+      return {
+        ...artist,
+        topTracks: topTracksInfo.body.tracks,
+      };
+    });
+    // return promises
+    return Promise.all(promises);
+  };
+  let topArtistsFullInfo = await getTopTracks(topArtists);
+  res.status(200).json(topArtistsFullInfo);
 }
 
 function getMyLikedTracks(req, res) {
@@ -293,16 +300,15 @@ function getMyLikedTracks(req, res) {
 }
 
 function getArtistTopTracks(req, res) {
-  // spotifyApi.scope = "user-read-recently-played";
+
   const id = req.params.id;
-  // console.log("spotifyApi", spotifyApi);
+  
   const spotifyApi = new SpotifyWebApi({
     accessToken: req.cookies["spotify_access_token"],
   });
 
-  spotifyApi.getArtistTopTracks(id, "AU").then(
-    function (data) {
-      // console.log(data.body);
+  spotifyApi.getArtistTopTracks(id, "AU")
+    .then(function (data) {
       res.status(200).json(data.body.tracks);
     },
     function (err) {
@@ -321,74 +327,88 @@ function createPlaylist(req, res) {
       description: `Playlist ${name} was created with Vue Spotify`,
       public: true,
     })
-    .then(
-      function (data) {
-        // console.log("DATA", data);
-        // console.log("Created playlist!");
+    .then(function (data) {
         res.status(200).json(data.body);
-      },
-      function (err) {
-        console.log("Something went wrong!", err);
-      }
-    );
+    },
+    function (err) {
+      console.log("Something went wrong!", err);
+    });
 }
 
-function getArtistInfo(req, res) {
+async function getArtistInfo(req, res) {
   const id = req.params.id;
   const spotifyApi = new SpotifyWebApi({
     accessToken: req.cookies["spotify_access_token"],
   });
-  spotifyApi.getArtist(id).then(
-    function (data) {
-      // console.log("Artist information", data.body);
-      res.status(200).json(data.body);
-    },
-    function (err) {
-      console.error(err);
-    }
+  let artistInfo = await spotifyApi.getArtist(id);
+
+  let mainArtistTopTracks = await spotifyApi.getArtistTopTracks(
+    artistInfo.body.id,
+    "AU"
   );
+
+  let artistFullInfo = {
+    ...artistInfo.body,
+    topTracks: mainArtistTopTracks.body.tracks,
+  };
+
+  let relatedArtists = await spotifyApi.getArtistRelatedArtists(id);
+
+  const getTopTracks = (relatedArtists) => {
+    const promises = relatedArtists.body.artists.map(async (artist) => {
+      let topTracksInfo = await spotifyApi.getArtistTopTracks(artist.id, "AU");
+      return {
+        ...artist,
+        topTracks: topTracksInfo.body.tracks,
+      };
+    });
+    // return promises
+    return Promise.all(promises);
+  };
+  let relatedArtistsFullInfo = await getTopTracks(relatedArtists);
+
+  res.status(200).json({
+    relatedArtists: relatedArtistsFullInfo,
+    artistInfo: artistFullInfo,
+  });
 }
 
-function getArtistAlbums(req, res) {
+async function getArtistAlbums(req, res) {
   const id = req.params.id;
   const spotifyApi = new SpotifyWebApi({
     accessToken: req.cookies["spotify_access_token"],
   });
-  spotifyApi.getArtistAlbums(id).then(
-    function (data) {
-      // console.log('Artist albums', data.body);
-      res.status(200).json(data.body);
-    },
-    function (err) {
-      console.error(err);
+  let albums = await spotifyApi.getArtistAlbums(id);
+
+  const getAlbumInfo = (albums) => {
+    const promises = albums.body.items.map(async (album) => {
+      let albumsInfo = await spotifyApi.getAlbum(album.id, "AU");
+      return albumsInfo.body;
+    });
+    // return promises
+    return Promise.all(promises);
+  };
+
+  let albumsArray = await getAlbumInfo(albums);
+
+  let albumsOnly = [];
+  albumsArray.map(album => {
+    if (album.album_type === "album") {
+      albumsOnly.push(album);
     }
-  );
+  })
+  res.status(200).json(albumsOnly);
 }
 
-function getAlbum(req, res) {
+async function getAlbum(req, res) {
   const id = req.params.id;
   const spotifyApi = new SpotifyWebApi({
     accessToken: req.cookies["spotify_access_token"],
   });
-  spotifyApi.getAlbum(id).then(
-    function (data) {
-      // console.log('Album information', data.body);
-      res.status(200).json(data.body);
-    },
-    function (err) {
-      console.error("CAN'T GET ALBUM", err);
-    }
-  );
 
-  // spotifyApi.getAlbumTracks(id, { limit: 5, offset: 1 }).then(
-  //   function (data) {
-  //     console.log(data.body);
-  //     res.status(200).json(data.body);
-  //   },
-  //   function (err) {
-  //     console.log("Something went wrong!", err);
-  //   }
-  // );
+  let albumInfo = await spotifyApi.getAlbum(id);
+
+  res.status(200).json(albumInfo.body);
 }
 
 function addTracksToPlaylist(req, res) {
@@ -398,8 +418,7 @@ function addTracksToPlaylist(req, res) {
   let playlistId = req.params.playlistId;
   let tracksArray = JSON.parse(req.params.tracksArray);
   let convertedTracksArray = tracksArray.map((id) => "spotify:track:" + id);
-  console.log("PLAYLISTID", playlistId);
-  console.log("tracksArray", convertedTracksArray);
+
   spotifyApi.addTracksToPlaylist(playlistId, convertedTracksArray).then(
     function (data) {
       console.log("Added tracks to playlist!", data);
@@ -467,7 +486,6 @@ function getNewRelease(req, res) {
   });
   spotifyApi.getNewReleases({ limit: 50, offset: 0, country: "AU" }).then(
     function (data) {
-      console.log(data.body);
       res.status(200).json(data.body);
     },
     function (err) {

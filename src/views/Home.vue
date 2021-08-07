@@ -63,7 +63,6 @@ export default {
 
 video {
   border: solid rgba(255, 201, 195, 0.267) 5px;
-  /* width: 60vw; */
   border-radius: 1.5rem;
   margin: 1.5rem;
 }

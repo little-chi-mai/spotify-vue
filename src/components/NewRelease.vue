@@ -24,11 +24,13 @@
         this.$store.commit("setImageHovered", "")
       },
       onClick() {
-        const albumId = this.album.id
+        const albumId = this.album.id;
+        console.log("CLICKED");
+        console.log("ALBUMID", albumId);
         if (albumId === this.$store.state.albumClicked.id) return;
         EventService.getAlbum(albumId).then(response => {
+          console.log("GET ALBUM", response.data);
           this.$store.commit("setAlbumClicked", response.data);
-
           // reset when users click different albums
           this.$store.commit("setArtistIds", []);
           this.$store.commit("setTrackClicked", {});

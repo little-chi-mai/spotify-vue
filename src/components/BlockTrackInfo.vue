@@ -28,7 +28,7 @@ export default {
   components: {
     TrackImage,
   },
-  props: ["getUserLikedTracks", "scrollToEnd"],
+  props: ["scrollToEnd"],
   computed: {
     track: {
       get() {
@@ -81,6 +81,16 @@ export default {
         })
         .catch((err) => {
           console.log(err);
+        });
+    },
+    getUserLikedTracks() {
+      EventService.getUserLikedTracks()
+        .then((response) => {
+          this.$store.commit("setUserLikedTracks", response.data.items);
+        })
+        .catch((error) => {
+          this.resetSelectedTab("");
+          console.log("There was an error:" + error.response);
         });
     },
   },

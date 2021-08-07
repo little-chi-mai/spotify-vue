@@ -5,50 +5,50 @@
       <p>No Related Artists on Spotify</p>
     </div>
     <div v-else v-for="artist in similarArtists" :key="artist.id">
-      <ArtistImage :artist="artist"  />
+      <ArtistImage :artist="artist" :topTracks="artist.topTracks"/>
     </div>
   </div>
 </template>
 
 <script>
-import EventService from "@/services/EventService";
+// import EventService from "@/services/EventService";
 import ArtistImage from "@/components/ArtistImage";
 
 export default {
-  data() {
-    return {
-      similarArtists: [],
-    };
-  },
+  // data() {
+  //   return {
+  //     similarArtists: [],
+  //   };
+  // },
   components: {
     ArtistImage,
   },
-  props: ["artistId"],
-  computed: {
-    mainArtistId() {
-      return this.artistId;
-    },
-  },
+  props: ["artistId", "similarArtists"],
+  // computed: {
+  //   mainArtistId() {
+  //     return this.artistId;
+  //   },
+  // },
   methods: {
-    getSimilarArtirsts() {
-      EventService.getSimilarArtirsts(this.artistId).then((response) => {
-        this.similarArtists = response.data.artists;
-      });
+    // getSimilarArtirsts() {
+    //   EventService.getSimilarArtirsts(this.artistId).then((response) => {
+    //     this.similarArtists = response.data.artists;
+    //   });
       
-    },
-    getArtistTracks(artistId) {
-      EventService.getArtistTracks(artistId).then((response) => {
-        console.log("GET ARTIST TRACKS", response);
-        this.topTracks = response.data;
-      });
-    },
+    // },
+    // getArtistTracks(artistId) {
+    //   EventService.getArtistTracks(artistId).then((response) => {
+    //     console.log("GET ARTIST TRACKS", response);
+    //     this.topTracks = response.data;
+    //   });
+    // },
   },
   mounted() {
-    this.getSimilarArtirsts();
+    // this.getSimilarArtirsts();
   },
   watch: {
     artistId() {
-      this.getSimilarArtirsts();
+      // this.getSimilarArtirsts();
     },
   },
 };
