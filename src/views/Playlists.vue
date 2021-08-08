@@ -119,6 +119,9 @@ export default {
       console.log(this.input);
     },
     async search() {
+      if (this.input === "") {
+        return;
+      }
       let searchResult = await EventService.searchPlaylists(this.input);
       this.searchResult = searchResult.data.playlists.items;
       this.searchTerm = this.input;
@@ -143,8 +146,6 @@ h1 {
 .container {
   display: flex;
   flex-direction: column;
-  /* align-items: center; */
-  /* justify-content: space-evenly; */
   padding-left: 5rem;
   width: 60%;
 }
@@ -179,7 +180,7 @@ h1 {
   padding: 1rem;
   position: fixed;
   top: 19rem;
-  right: 3rem;
+  right: 10%;
   max-width: 400px;
   background-color: rgba(109, 109, 109, 0.356);
 }
