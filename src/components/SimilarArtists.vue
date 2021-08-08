@@ -5,7 +5,7 @@
       <p>No Related Artists on Spotify</p>
     </div>
     <div v-else v-for="artist in similarArtists" :key="artist.id">
-      <ArtistImage :artist="artist" :topTracks="artist.topTracks"/>
+      <ArtistImage :artist="artist" />
     </div>
   </div>
 </template>

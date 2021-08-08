@@ -63,7 +63,7 @@ export default {
       this.isNotiShown = true;
       setTimeout(() => {
         this.isNotiShown = false;
-      }, 2000);
+      }, 2500);
       const artistIds = [];
       this.track.artists.forEach((artist) => {
         artistIds.push(artist.id);

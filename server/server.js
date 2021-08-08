@@ -354,22 +354,23 @@ async function getArtistInfo(req, res) {
 
   let relatedArtists = await spotifyApi.getArtistRelatedArtists(id);
 
-  const getTopTracks = (relatedArtists) => {
-    const promises = relatedArtists.body.artists.map(async (artist) => {
-      let topTracksInfo = await spotifyApi.getArtistTopTracks(artist.id, "AU");
-      return {
-        ...artist,
-        topTracks: topTracksInfo.body.tracks,
-      };
-    });
-    // return promises
-    return Promise.all(promises);
-  };
-  let relatedArtistsFullInfo = await getTopTracks(relatedArtists);
+  // TOO EXPENSIVE
+  // const getTopTracks = (relatedArtists) => {
+  //   const promises = relatedArtists.body.artists.map(async (artist) => {
+  //     let topTracksInfo = await spotifyApi.getArtistTopTracks(artist.id, "AU");
+  //     return {
+  //       ...artist,
+  //       topTracks: topTracksInfo.body.tracks,
+  //     };
+  //   });
+  //   // return promises
+  //   return Promise.all(promises);
+  // };
+  // let relatedArtistsFullInfo = await getTopTracks(relatedArtists);
 
   res.status(200).json({
-    relatedArtists: relatedArtistsFullInfo,
     artistInfo: artistFullInfo,
+    relatedArtists: relatedArtists.body.artists,
   });
 }
 
@@ -514,3 +515,4 @@ function searchTracks(req, res) {
     }
   );
 }
+

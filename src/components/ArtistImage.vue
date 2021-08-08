@@ -47,11 +47,11 @@ export default {
   methods: {
     setArtistHovered() {
       this.$store.commit("setArtistHovered", this.artist);
-      this.artist.images.length && this.$store.commit("setImageHovered", this.artist.images[0].url);
-      // if (this.main) {
+      this.artist.images && this.artist.images.length && this.$store.commit("setImageHovered", this.artist.images[0].url);
+      if (this.main) {
         this.$store.commit("setArtistHoveredTopTrack", this.track);
         this.$store.commit("setIsMusicPlayed", true);
-      // }
+      }
     },
     unsetArtistHovered() {
       this.$store.commit("setArtistHovered", {});

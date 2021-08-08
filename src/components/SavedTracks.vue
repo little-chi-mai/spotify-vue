@@ -119,7 +119,7 @@ export default {
           this.notiAddToPlaylist = true;
           setTimeout(() => {
             this.notiAddToPlaylist = false;
-          }, 2000);
+          }, 2500);
           this.$store.commit("clearSavedTracks");
         }
       );
@@ -132,7 +132,7 @@ export default {
         this.notiCreatePlaylist = true;
         setTimeout(() => {
           this.notiCreatePlaylist = false;
-        }, 2000);
+        }, 2500);
       });
     },
     onInputChange(e) {
