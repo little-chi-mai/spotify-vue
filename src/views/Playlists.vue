@@ -148,6 +148,7 @@ h1 {
   flex-direction: column;
   padding-left: 5rem;
   width: 60%;
+  margin-bottom: 2rem;
 }
 
 .list {
@@ -202,6 +203,10 @@ input::placeholder {
 }
 
 hr {
-  margin: 2rem 4rem;
+  margin: 4rem 15% 0 15%;
+}
+
+h2 {
+  margin-top: 0;
 }
 </style>
