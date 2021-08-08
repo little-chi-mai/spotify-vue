@@ -82,7 +82,8 @@ server.post("/api/playlist/create/:name", createPlaylist);
 server.get("/api/artist/:id/similar-artists", getSimilarArtists);
 
 // SEARCH FUNCTIONS
-server.get("/api/search/:searchTerm", searchTracks);
+server.get("/api/search/tracks/:searchTerm", searchTracks);
+server.get("/api/search/playlists/:searchTerm", searchPlaylists);
 
 server.post(
   "/api/add-tracks-to-playlist/:playlistId/:tracksArray",
@@ -300,15 +301,14 @@ function getMyLikedTracks(req, res) {
 }
 
 function getArtistTopTracks(req, res) {
-
   const id = req.params.id;
-  
+
   const spotifyApi = new SpotifyWebApi({
     accessToken: req.cookies["spotify_access_token"],
   });
 
-  spotifyApi.getArtistTopTracks(id, "AU")
-    .then(function (data) {
+  spotifyApi.getArtistTopTracks(id, "AU").then(
+    function (data) {
       res.status(200).json(data.body.tracks);
     },
     function (err) {
@@ -327,12 +327,14 @@ function createPlaylist(req, res) {
       description: `Playlist ${name} was created with Vue Spotify`,
       public: true,
     })
-    .then(function (data) {
+    .then(
+      function (data) {
         res.status(200).json(data.body);
-    },
-    function (err) {
-      console.log("Something went wrong!", err);
-    });
+      },
+      function (err) {
+        console.log("Something went wrong!", err);
+      }
+    );
 }
 
 async function getArtistInfo(req, res) {
@@ -393,11 +395,11 @@ async function getArtistAlbums(req, res) {
   let albumsArray = await getAlbumInfo(albums);
 
   let albumsOnly = [];
-  albumsArray.map(album => {
+  albumsArray.map((album) => {
     if (album.album_type === "album") {
       albumsOnly.push(album);
     }
-  })
+  });
   res.status(200).json(albumsOnly);
 }
 
@@ -516,3 +518,13 @@ function searchTracks(req, res) {
   );
 }
 
+async function searchPlaylists(req, res) {
+  const searchTerm = req.params.searchTerm;
+  // const artist = req.params.artist;
+  const spotifyApi = new SpotifyWebApi({
+    accessToken: req.cookies["spotify_access_token"],
+  });
+  let resultInfo = await spotifyApi.searchPlaylists(searchTerm);
+
+  res.status(200).json(resultInfo.body);
+}

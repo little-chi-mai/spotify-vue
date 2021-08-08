@@ -1,7 +1,35 @@
 <template>
   <div v-if="userId" class="about">
-    <h1>Your playlists</h1>
-    <div class="container">
+    <h1>Spotify playlists</h1>
+    <form @submit="search" @submit.prevent>
+      <input
+        @input="onInput"
+        type="text"
+        :value="input"
+        placeholder="Enter an playlist's name"
+      />
+      <button :disabled="!input" class="btn">Search</button>
+    </form>
+    <div v-show="searchTerm" class="container">
+      <h2>SEARCH RESULT FOR <span>{{searchTerm.toUpperCase()}}</span></h2>
+      <div class="list">
+        <div
+          class="list-info"
+          v-for="playlist in searchResult"
+          :key="playlist.id"
+          @click="getPlaylistInfo(playlist.id, playlist.name)"
+          :class="{ activeTab: playlistId === playlist.id }"
+        >
+          <Playlist :playlist="playlist"/>
+        </div>
+      </div>
+      <hr>
+    </div>  
+
+
+    <div v-show="Object.keys(userPlaylists).length" class="container">
+      
+      <h2>YOUR PLAYLISTS</h2>
       <div class="list">
         <div
           class="list-info"
@@ -10,27 +38,14 @@
           @click="getPlaylistInfo(playlist.id, playlist.name)"
           :class="{ activeTab: playlistId === playlist.id }"
         >
-          <h3>{{ playlist.name }}</h3>
-
-          <img
-            class="playlist"
-            v-if="playlist.images && playlist.images.length"
-            :src="playlist.images[0].url"
-            alt=""
-          />
-
-          <img
-            class="playlist"
-            v-else
-            src="../assets/album.png"
-            alt=""
-          />
+          <Playlist :playlist="playlist"/>
         </div>
       </div>
 
       <div v-show="playlistId" class="music-player">
-
-        <h1>Playlist <span>{{ name }}</span></h1>
+        <h2>
+          Playlist <span>{{ name }}</span>
+        </h2>
         <iframe
           v-if="playlistId"
           :src="'https://open.spotify.com/embed/playlist/' + playlistId"
@@ -40,22 +55,24 @@
           allow="encrypted-media"
         ></iframe>
       </div>
-
     </div>
   </div>
 </template>
 
 <script>
 import EventService from "@/services/EventService";
+import Playlist from "@/components/Playlist";
 
 export default {
-
   data() {
     return {
       tracks: {},
       name: "",
       url: "",
       playlistId: "",
+      input: "",
+      searchResult: [],
+      searchTerm: ''
     };
   },
   computed: {
@@ -65,6 +82,9 @@ export default {
     userPlaylists() {
       return this.$store.state.userPlaylists;
     },
+  },
+  components: {
+    Playlist
   },
   mounted() {
     this.$store.commit("setUserInfo");
@@ -79,7 +99,6 @@ export default {
         this.playlistId = id;
         this.name = name;
       }
-      
     },
     getUserPlaylists(userId) {
       EventService.getUserPlaylists(userId)
@@ -95,31 +114,44 @@ export default {
           console.log("There was an error at Home: " + error.response);
         });
     },
+    onInput(e) {
+      this.input = e.target.value;
+      console.log(this.input);
+    },
+    async search() {
+      let searchResult = await EventService.searchPlaylists(this.input);
+      this.searchResult = searchResult.data.playlists.items;
+      this.searchTerm = this.input;
+      this.input = "";
+    },
   },
   watch: {
-      userId() {
-        // getUserPlaylists again when refresh the page
-        this.getUserPlaylists(this.userId);
-      },
+    userId() {
+      // getUserPlaylists again when refresh the page
+      this.getUserPlaylists(this.userId);
+    },
   },
 };
 </script>
 
 <style scoped>
 h1 {
-  margin-bottom: 4rem;
+  margin-bottom: 2rem;
 }
+
 
 .container {
   display: flex;
-  justify-content: space-evenly;
+  flex-direction: column;
+  /* align-items: center; */
+  /* justify-content: space-evenly; */
+  padding-left: 5rem;
+  width: 60%;
 }
 
 .list {
   display: grid;
-  width: 60%;
   grid-template-columns: repeat(3, 3fr);
-  /* grid-row: auto; */
   grid-gap: 2rem;
 }
 
@@ -145,10 +177,30 @@ h1 {
 .music-player {
   border: ridge #ffbad1af 3px;
   padding: 1rem;
+  position: fixed;
+  top: 19rem;
+  right: 3rem;
+  max-width: 400px;
+  background-color: rgba(109, 109, 109, 0.356);
 }
 
 span {
   color: rgb(253, 255, 147);
 }
 
+input {
+  color: rgb(255, 255, 255);
+  height: 2.5rem;
+  width: 15rem;
+  background-color: rgb(110, 85, 133);
+  padding: 0.5rem;
+}
+
+input::placeholder {
+  color: rgb(182, 182, 182);
+}
+
+hr {
+  margin: 2rem 4rem;
+}
 </style>
