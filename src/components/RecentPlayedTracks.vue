@@ -1,6 +1,6 @@
 <template>
   <div class="recent-played" id="container" ref="container">
-    <Dashboard />
+    <Dashboard :setSearchTerm="setSearchTerm"/>
     <div
       v-if="recentTracks.length && selectedTab === 'recentTracks'"
       class="recent-tracks block"
@@ -51,7 +51,7 @@
       v-if="searchResults.length && selectedTab === 'searchResults'"
       class="recent-tracks block"
     >
-      <h3>Your search result</h3>
+      <h3>Your search result for <span>{{searchTerm}}</span></h3>
       <span v-for="track in searchResults" :key="track.id">
         <TrackImage :scrollToEnd="scrollToEnd" :track="track" />
       </span>
@@ -82,9 +82,8 @@ import BlockTopArtists from "@/components/BlockTopArtists";
 export default {
   data() {
     return {
-      inputTrack: "",
-      inputArtist: "",
-    };
+      searchTerm: ""
+    }
   },
   components: {
     BlockPreview,
@@ -121,6 +120,7 @@ export default {
     topArtists() {
       return this.$store.state.userTopArtists;
     },
+    
   },
   methods: {
     scrollToEnd() {
@@ -135,6 +135,9 @@ export default {
         });
       }, 500);
     },
+    setSearchTerm(term) {
+      return this.searchTerm = term;
+    }
   },
 };
 </script>
@@ -142,10 +145,16 @@ export default {
 <style scoped>
 .recent-tracks {
   margin-bottom: 1rem;
+  padding: 0.5rem;
 }
 
 .recent-tracks > h3 {
   color: rgb(43, 43, 43);
   text-transform: uppercase;
 }
+
+span {
+  color: rgb(255, 127, 7);
+}
+
 </style>

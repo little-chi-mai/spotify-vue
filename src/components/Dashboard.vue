@@ -5,7 +5,7 @@
       class="btn"
       :class="{ activeTab: selectedTab === 'recentTracks' }"
     >
-      Your recent tracks
+      Your Recent Tracks
     </button>
 
     <button
@@ -13,7 +13,7 @@
       class="btn"
       :class="{ activeTab: selectedTab === 'topTracks' }"
     >
-      Your top tracks
+      Your Top Tracks
     </button>
 
     <button
@@ -21,7 +21,7 @@
       class="btn"
       :class="{ activeTab: selectedTab === 'topArtists' }"
     >
-      Your top artists
+      Your Top Artists
     </button>
 
     <button
@@ -29,7 +29,7 @@
       class="btn"
       :class="{ activeTab: selectedTab === 'likedTracks' }"
     >
-      Your liked tracks
+      Your Liked Tracks
     </button>
 
     <button
@@ -70,6 +70,7 @@
         inputArtist: "",
       };
     },
+    props: ["setSearchTerm"],
     computed: {
     artistIds() {
       return this.$store.state.artistIds;
@@ -179,6 +180,7 @@
           .then((response) => {
             console.log("RESPONSE", response.data);
             this.$store.commit("setSearchResults", response.data.tracks.items);
+            this.setSearchTerm(term);
             this.inputTrack = "";
             this.inputArtist = "";
           })

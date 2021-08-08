@@ -1,6 +1,6 @@
 <template>
   <div class="artist-tracks block" v-if="artistId">
-    <div>
+    <div class="artist">
       <ArtistImage 
         :size="250" 
         :topTracks="topTracks" 
@@ -127,7 +127,15 @@ export default {
   padding: 1rem;
   display: flex;
   align-items: flex-start;
-  justify-content: space-evenly;
+  justify-content: space-between;
+  
+}
+
+.artist {
+ display: flex;
+ flex-direction: column;
+ justify-self: center;
+ flex-grow: 1;
 }
 
 * {

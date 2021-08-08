@@ -6,7 +6,18 @@
 
     <div v-if="isListShown" class="list">
       <button class="close-btn" @click="closeList">X</button>
-      <label for="playlists">Choose from your playlists</label>
+      <form @submit.prevent>
+        <span>Create a new playlist</span>
+        <input
+          @input="onInputChange"
+          type="text"
+          :value="input"
+          placeholder="Give your playlist a name"
+        />
+        <button :disabled='!input' class="btn" @click="createPlaylist">Create playlist</button>
+      </form>
+
+      <label for="playlists">Or choose from your existing playlists</label>
       <select name="playlists" id="playlists" v-model="list" @change="onChange">
         <option
           v-for="playlist in userPlaylists.items"
@@ -19,16 +30,7 @@
       <button :disabled='!savedTrackCounter || !userPlaylists.length' class="btn" @click="addToList">Add tracks to this list</button>
 
       
-      <form @submit.prevent>
-        <span>Or create a new playlist</span>
-        <input
-          @input="onInputChange"
-          type="text"
-          :value="input"
-          placeholder="Give your playlist a name"
-        />
-        <button :disabled='!input' class="btn" @click="createPlaylist">Create playlist</button>
-      </form>
+      
 
       <div v-if="notiCreatePlaylist" class="noti">
         <p>Created a playlist!</p>
