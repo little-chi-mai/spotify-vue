@@ -5,11 +5,11 @@
       Your browser does not support the audio tag.
     </audio>
     <p v-if="isMusicPlayed && !musicUrl">No music preview</p>
-    <h3>{{ albumHovered.name }}</h3>
-    <p>{{ artistsAlbum.join(' & ')}}</p>
-    <h5>First track in the album: </h5>
     <p>{{trackName}}</p>
-    <p>{{artistsTrack.join(' & ')}}</p>
+    <h4>{{artistsTrack.join(' & ')}}</h4>
+    <h5>First track in album</h5>
+    <h3>{{ albumHovered.name }}</h3>
+    <p>by {{ artistsAlbum.join(' & ')}}</p>
   </div>
 </template>
 

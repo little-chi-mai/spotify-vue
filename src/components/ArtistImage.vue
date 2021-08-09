@@ -64,6 +64,7 @@ export default {
     showTrackAndArtistInfo() {
       this.$store.commit("setTrackClicked", this.track);
       this.$store.commit("setArtistIds", [this.artistId]);
+      this.unsetArtistHovered();
     },
   },
 };

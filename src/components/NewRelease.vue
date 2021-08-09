@@ -35,8 +35,7 @@
           this.$store.commit("setArtistIds", []);
           this.$store.commit("setTrackClicked", {});
         })
-
-        
+        this.onMouseleave();
       }
     }
   }

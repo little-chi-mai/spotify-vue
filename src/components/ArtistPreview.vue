@@ -14,7 +14,7 @@
 
     </div>
 
-    <div v-if="!isMusicPlayed">
+    <div v-else>
       <p>Click to discover more songs from</p>
     </div>
 

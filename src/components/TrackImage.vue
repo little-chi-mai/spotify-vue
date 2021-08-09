@@ -69,6 +69,9 @@ export default {
         artistIds.push(artist.id);
       });
       this.$store.commit("setArtistIds", artistIds);
+
+      // unset after clicking
+      this.unsetTrackHovered();
     },
   },
   watch: {

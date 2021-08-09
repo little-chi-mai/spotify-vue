@@ -29,14 +29,15 @@ export default {
       } else {
         return "";
       }
-      
     },
   },
   methods: {
     getAlbum() {
-      this.scrollToEnd && this.scrollToEnd();
+      console.log("GET ALBUM");
       EventService.getAlbum(this.album.id).then((response) => {
+        this.scrollToEnd && this.scrollToEnd();
         this.$store.commit("setAlbumClicked", response.data);
+        this.setAlbumHovered({}, false, '');
       });
     },
     setAlbumHovered(album, isPlayed, imageUrl) {
