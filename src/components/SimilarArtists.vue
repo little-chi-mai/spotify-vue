@@ -4,53 +4,22 @@
     <div v-if="similarArtists.length === 0">
       <p>No Related Artists on Spotify</p>
     </div>
-    <div v-else v-for="artist in similarArtists" :key="artist.id">
-      <ArtistImage :artist="artist" />
+    <div v-else class="artists">
+      <div v-for="artist in similarArtists" :key="artist.id">
+        <ArtistImage :artist="artist" />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-// import EventService from "@/services/EventService";
 import ArtistImage from "@/components/ArtistImage";
 
 export default {
-  // data() {
-  //   return {
-  //     similarArtists: [],
-  //   };
-  // },
   components: {
     ArtistImage,
   },
   props: ["artistId", "similarArtists"],
-  // computed: {
-  //   mainArtistId() {
-  //     return this.artistId;
-  //   },
-  // },
-  methods: {
-    // getSimilarArtirsts() {
-    //   EventService.getSimilarArtirsts(this.artistId).then((response) => {
-    //     this.similarArtists = response.data.artists;
-    //   });
-      
-    // },
-    // getArtistTracks(artistId) {
-    //   EventService.getArtistTracks(artistId).then((response) => {
-    //     console.log("GET ARTIST TRACKS", response);
-    //     this.topTracks = response.data;
-    //   });
-    // },
-  },
-  mounted() {
-    // this.getSimilarArtirsts();
-  },
-  watch: {
-    artistId() {
-      // this.getSimilarArtirsts();
-    },
-  },
 };
 </script>
 
@@ -58,15 +27,23 @@ export default {
 .similar-artists {
   display: flex;
   flex-wrap: wrap;
-  max-width: 7rem;
-  margin: 0 1rem;
-  
+  flex-direction: column;
+  align-items: center;
 }
+
 .similar-artists > h3 {
   color: rgb(94, 94, 94);
 }
+
 .similar-artists > div {
   margin: 0;
+}
+
+.artists {
+  display: flex;
+  width: 8rem;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 p {

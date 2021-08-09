@@ -17,6 +17,7 @@ export default {
     return {
       styleObj: {
         height: this.$attrs.size ? this.$attrs.size + "px" : 70 + "px",
+        width: this.$attrs.size ? this.$attrs.size + "px" : 70 + "px",
       },
     };
   },
@@ -53,6 +54,7 @@ export default {
 img {
   transition: all 0.2s ease-in-out;
   border: 3px solid rgba(206, 122, 168, 0);
+  object-fit: cover;
 }
 
 img:hover {

@@ -17,12 +17,12 @@
 </template>
 
 <script>
-
 export default {
   data() {
     return {
       styleObj: {
         height: this.size ? this.size + "px" : 70 + "px",
+        width: this.size ? this.size + "px" : 70 + "px",
       },
       isNotiShown: false,
     };
@@ -85,6 +85,7 @@ export default {
   display: inline-block !important;
   transition: all 0.1s ease-in-out;
   border: 3px solid transparent;
+  object-fit: cover;
 }
 
 .image:hover {
@@ -95,7 +96,6 @@ export default {
 
 .image-track {
   display: inline-block;
-  /* position: relative; */
 }
 
 .noti {

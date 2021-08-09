@@ -11,7 +11,10 @@
       <button :disabled="!input" class="btn">Search</button>
     </form>
     <div v-show="searchTerm" class="container">
-      <h2>SEARCH RESULT FOR <span>{{searchTerm.toUpperCase()}}</span></h2>
+      <h2>
+        SEARCH RESULT FOR
+        <span>{{ searchTerm.toUpperCase() }}</span>
+      </h2>
       <div class="list">
         <div
           class="list-info"
@@ -20,15 +23,13 @@
           @click="getPlaylistInfo(playlist.id, playlist.name)"
           :class="{ activeTab: playlistId === playlist.id }"
         >
-          <Playlist :playlist="playlist"/>
+          <Playlist :playlist="playlist" />
         </div>
       </div>
-      <hr>
-    </div>  
-
+      <hr />
+    </div>
 
     <div v-show="Object.keys(userPlaylists).length" class="container">
-      
       <h2>YOUR PLAYLISTS</h2>
       <div class="list">
         <div
@@ -38,7 +39,7 @@
           @click="getPlaylistInfo(playlist.id, playlist.name)"
           :class="{ activeTab: playlistId === playlist.id }"
         >
-          <Playlist :playlist="playlist"/>
+          <Playlist :playlist="playlist" />
         </div>
       </div>
 
@@ -72,7 +73,7 @@ export default {
       playlistId: "",
       input: "",
       searchResult: [],
-      searchTerm: ''
+      searchTerm: "",
     };
   },
   computed: {
@@ -84,7 +85,7 @@ export default {
     },
   },
   components: {
-    Playlist
+    Playlist,
   },
   mounted() {
     this.$store.commit("setUserInfo");
@@ -141,7 +142,6 @@ export default {
 h1 {
   margin-bottom: 2rem;
 }
-
 
 .container {
   display: flex;

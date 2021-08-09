@@ -28,7 +28,8 @@ export default {
   data() {
     return {
       styleObj: {
-        height: this.size ? this.size + "px" : 50 + "px",
+        height: this.size ? this.size + "px" : 3.5 + "rem",
+        width: this.size ? this.size + "px" : 3.5 + "rem",
       },
     };
   },
@@ -38,16 +39,18 @@ export default {
       return this.artist.id;
     },
     track() {
-      return this.topTracks ? this.topTracks[0] : {}
+      return this.topTracks ? this.topTracks[0] : {};
     },
     url() {
-      return this.artist.images && this.artist.images.length && this.artist.images[0].url
-    }
+      return this.artist.images && this.artist.images.length && this.artist.images[0].url;
+    },
   },
   methods: {
     setArtistHovered() {
       this.$store.commit("setArtistHovered", this.artist);
-      this.artist.images && this.artist.images.length && this.$store.commit("setImageHovered", this.artist.images[0].url);
+      this.artist.images &&
+        this.artist.images.length &&
+        this.$store.commit("setImageHovered", this.artist.images[0].url);
       if (this.main) {
         this.$store.commit("setArtistHoveredTopTrack", this.track);
         this.$store.commit("setIsMusicPlayed", true);
@@ -61,17 +64,16 @@ export default {
     showTrackAndArtistInfo() {
       this.$store.commit("setTrackClicked", this.track);
       this.$store.commit("setArtistIds", [this.artistId]);
-      // !this.main && this.$store.commit("setAlbumClicked", {})
-    }
+    },
   },
 };
 </script>
 
 <style scoped>
 .artist-image {
-  height: 12rem;
   border-radius: 10rem;
   transition: all 0.1s ease-in-out;
+  object-fit: cover;
 }
 
 .artist-image:hover {
