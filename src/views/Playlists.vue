@@ -50,7 +50,7 @@
         <iframe
           v-if="playlistId"
           :src="'https://open.spotify.com/embed/playlist/' + playlistId"
-          height="600"
+          height="500"
           frameBorder="0"
           allowtransparency="true"
           allow="encrypted-media"
@@ -180,7 +180,7 @@ h1 {
   border: ridge #ffbad1af 3px;
   padding: 1rem;
   position: fixed;
-  top: 19rem;
+  top: 20%;
   right: 10%;
   max-width: 400px;
   background-color: rgba(109, 109, 109, 0.356);
