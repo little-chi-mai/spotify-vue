@@ -23,6 +23,8 @@
     </div>
 
     <h4>Then follow your ears to find new music you love.</h4>
+
+    <h5>*This is a desktop-only version. Mobile version coming soon ❤️</h5>
     
 
   </div>

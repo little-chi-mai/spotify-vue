@@ -78,6 +78,7 @@ video {
   width: 10rem;
   height: 3rem;
   border-radius: 3rem;
+  margin-top: 0.5rem;
 }
 
 .btn-wrapper {
